@@ -11,6 +11,9 @@ build/
 ### QueryDSL ###
 /src/main/generated/
 
+### Source ###
+/src/main/resources/application.yml
+
 ### STS ###
 .apt_generated
 .classpath
