@@ -21,12 +21,6 @@ public class SmallBlockReviewController {
         return ResponseEntity.status(HttpStatus.OK).body(reviews);
     }
 
-    @GetMapping("/my/{smallBlockId}")
-    public ResponseEntity<?> getMyReviews(@PathVariable Long memberId){
-        List<SmallBlockReviewDto> reviews = smallBlockReviewService.getMyReviews(memberId);
-        return ResponseEntity.status(HttpStatus.OK).body(reviews);
-    }
-
     @GetMapping("/{smallBlockReviewId}")
     public ResponseEntity<?> getReview(@PathVariable Long smallBlockReviewId){
         SmallBlockReviewDto reviews = smallBlockReviewService.getReview(smallBlockReviewId);
@@ -34,7 +28,7 @@ public class SmallBlockReviewController {
     }
 
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<?> addReview(@RequestBody SmallBlockReviewDto smallBlockReviewDto){
         smallBlockReviewService.addReview(
                 smallBlockReviewDto.getMemberId(),
@@ -43,7 +37,7 @@ public class SmallBlockReviewController {
         return ResponseEntity.status(HttpStatus.CREATED).body("리뷰 작성 성공");
     }
 
-    @PutMapping("/{smallBlockReviewId}")
+    @PutMapping
     public ResponseEntity<?> modifyReview(@RequestBody SmallBlockReviewDto smallBlockReviewDto){
         smallBlockReviewService.modifyReview(
                 smallBlockReviewDto.getSmallBlockReviewId(),
@@ -51,11 +45,12 @@ public class SmallBlockReviewController {
         return ResponseEntity.status(HttpStatus.OK).body("리뷰 수정 성공");
     }
 
-    @DeleteMapping("/{smallBlockReviewId}")
-    public ResponseEntity<?> removeReview(@PathVariable Long smallBlockReviewId){
-        smallBlockReviewService.removeReview(smallBlockReviewId);
+    @DeleteMapping
+    public ResponseEntity<?> removeReview(@RequestBody SmallBlockReviewDto smallBlockReviewDto){
+        smallBlockReviewService.removeReview(smallBlockReviewDto.getSmallBlockReviewId(), smallBlockReviewDto.getMemberId());
         return ResponseEntity.status(HttpStatus.OK).body("리뷰 삭제 성공");
     }
+
 
 
 

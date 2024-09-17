@@ -9,4 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
+    public void login(String email){}
+    public void register(String email){}
 }

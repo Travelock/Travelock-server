@@ -15,12 +15,16 @@ public class DailyCourseScrap extends BaseTime{
     private Long dailyCourseScrapId;
 
     @ManyToOne
-    @JoinColumn(name = "dailyCourseScraps")
+    @JoinColumn(name = "daily_course_scraps_id")
     private Member member;
 
     @ManyToOne
-    @JoinColumn(name = "dailyCourseScraps")
+    @JoinColumn(name = "daily_course_scraps_id")
     private DailyCourse dailyCourse;
 
 
+    public void addScrap(Member member, DailyCourse dailyCourse) {
+        this.member = member;
+        this.dailyCourse = dailyCourse;
+    }
 }

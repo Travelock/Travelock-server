@@ -26,11 +26,17 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, String> redisTemplate() {
+    public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
-//        redisTemplate.setKeySerializer(new StringRedisSerializer());
-//        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-//        redisTemplate.setConnectionFactory(redisConnectionFactory());
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
+
+//        객체나 구조화된 데이터(json) 저장시 사용.
+//        redisTemplate.setKeySerializer(new StringRedisSerializer()); // 키 직렬화
+//        redisTemplate.setValueSerializer(new StringRedisSerializer()); // 값 직렬화
+//        redisTemplate.setHashKeySerializer(new StringRedisSerializer()); // 해시 키 직렬화
+//        redisTemplate.setHashValueSerializer(new StringRedisSerializer()); // 해시 값 직렬화
+//        redisTemplate.afterPropertiesSet(); // 설정 완료 후 초기화
+
         return redisTemplate;
     }
 

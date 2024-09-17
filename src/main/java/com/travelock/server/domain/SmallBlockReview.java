@@ -16,11 +16,11 @@ public class SmallBlockReview extends BaseTime{
     private Long smallBlockReviewId;
 
     @ManyToOne
-    @JoinColumn(name = "smallBlockReviews")
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @ManyToOne
-    @JoinColumn(name = "smallBlockReviews")
+    @JoinColumn(name = "small_block_id")
     private SmallBlock smallBlock;
 
     @Column(columnDefinition = "varchar(255)")
