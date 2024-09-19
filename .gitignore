@@ -44,3 +44,5 @@ out/
 
 ### VS Code ###
 .vscode/
+
+/Users/fastball/Project/Travelock-server/src/main/resources/application.yml

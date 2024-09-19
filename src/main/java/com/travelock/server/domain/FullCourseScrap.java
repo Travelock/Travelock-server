@@ -15,10 +15,15 @@ public class FullCourseScrap extends BaseTime{
     private Long fullCourseScrapId;
 
     @ManyToOne
-    @JoinColumn(name = "fullCourseScraps")
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @ManyToOne
-    @JoinColumn(name = "fullCourseScraps")
+    @JoinColumn(name = "full_course_id")
     private FullCourse fullCourse;
+
+    public void addScrap(Member member, FullCourse fullCourse) {
+        this.member = member;
+        this.fullCourse = fullCourse;
+    }
 }

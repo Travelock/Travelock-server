@@ -15,10 +15,15 @@ public class FullCourseFavorite extends BaseTime {
     private Long fullCourseFavoriteId;
 
     @ManyToOne
-    @JoinColumn(name = "fullCourseFavorites")
+    @JoinColumn(name = "full_course_id")
     private Member member;
 
     @ManyToOne
-    @JoinColumn(name = "fullCourseFavorites")
+    @JoinColumn(name = "full_course_id")
     private FullCourse fullCourse;
+
+    public void addFavorite(Member member, FullCourse fullCourse) {
+        this.member = member;
+        this.fullCourse = fullCourse;
+    }
 }
