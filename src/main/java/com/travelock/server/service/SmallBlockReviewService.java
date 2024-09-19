@@ -127,11 +127,12 @@ public class SmallBlockReviewService {
         }
 
     }
-    public void removeReview(Long smallBlockReviewId){
+    public void removeReview(Long smallBlockReviewId, Long memberId){
         QSmallBlockReview qSmallBlockReview = QSmallBlockReview.smallBlockReview;
 
         long executed = query.update(qSmallBlockReview).set(qSmallBlockReview.activeStatus, "n")
-                .where(qSmallBlockReview.smallBlockReviewId.eq(smallBlockReviewId))
+                .where(qSmallBlockReview.smallBlockReviewId.eq(smallBlockReviewId)
+                        .and(qSmallBlockReview.member.memberId.eq(memberId)))
                 .execute();
 
         if (executed != 1L) {
