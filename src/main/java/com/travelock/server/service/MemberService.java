@@ -20,6 +20,7 @@ public class MemberService {
         long result = query.update(qMember)
                 .set(qMember.email, rEmail)
                 .set(qMember.nickName, rNickName)
+                .set(qMember.active_status, "n")
                 .where(qMember.memberId.eq(memberId))
                 .execute();
     }
