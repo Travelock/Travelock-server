@@ -1,7 +1,5 @@
 package com.travelock.server.domain;
 
-import com.travelock.server.domain.BaseTime;
-import com.travelock.server.domain.MiddleBlock;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

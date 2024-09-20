@@ -21,9 +21,9 @@ import java.util.List;
 public class SmallBlockReviewController {
     private final SmallBlockReviewService smallBlockReviewService;
 
-    @Operation(summary = "스몰블럭의 모든 리뷰 조회",
-            tags = {"스몰블럭 리뷰 API - V1"},
-            description = "스몰블럭의 모든 리뷰 조회",
+    @Operation(summary = "스몰블록의 모든 리뷰 조회",
+            tags = {"스몰블록 리뷰 API - V1"},
+            description = "스몰블록의 모든 리뷰 조회",
             parameters = {
                     @Parameter(name = "smallBlockId", description = "조회할 리뷰의 스몰블록 ID", required = true, in = ParameterIn.PATH),
             },
@@ -40,9 +40,9 @@ public class SmallBlockReviewController {
         return ResponseEntity.status(HttpStatus.OK).body(reviews);
     }
 
-    @Operation(summary = "스몰블럭의 특정 리뷰 조회",
-            tags = {"스몰블럭 리뷰 API - V1"},
-            description = "스몰블럭의 특정 리뷰 조회",
+    @Operation(summary = "스몰블록의 특정 리뷰 조회",
+            tags = {"스몰블록 리뷰 API - V1"},
+            description = "스몰블록의 특정 리뷰 조회",
             parameters = {
                     @Parameter(name = "smallBlockReviewId", description = "조회할 스몰블록 리뷰의 ID", required = true, in = ParameterIn.PATH),
             },
@@ -60,11 +60,11 @@ public class SmallBlockReviewController {
     }
 
 
-    @Operation(summary = "스몰블럭 리뷰 추가",
-            tags = {"스몰블럭 리뷰 API - V1"},
-            description = "스몰블럭 리뷰 추가",
+    @Operation(summary = "스몰블록 리뷰 추가",
+            tags = {"스몰블록 리뷰 API - V1"},
+            description = "스몰블록 리뷰 추가",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "스몰블럭 리뷰 추가",
+                    description = "스몰블록 리뷰 추가",
                     required = true,
                     content = @Content(schema = @Schema(implementation = SmallBlockReviewDto.class))
             ),
@@ -83,11 +83,11 @@ public class SmallBlockReviewController {
     }
 
 
-    @Operation(summary = "스몰블럭 리뷰 수정",
-            tags = {"스몰블럭 리뷰 API - V1"},
-            description = "스몰블럭 리뷰 수정",
+    @Operation(summary = "스몰블록 리뷰 수정",
+            tags = {"스몰블록 리뷰 API - V1"},
+            description = "스몰블록 리뷰 수정",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "스몰블럭 리뷰 수정",
+                    description = "스몰블록 리뷰 수정",
                     required = true,
                     content = @Content(schema = @Schema(implementation = SmallBlockReviewDto.class))
             ),
@@ -105,11 +105,11 @@ public class SmallBlockReviewController {
     }
 
 
-    @Operation(summary = "스몰블럭 리뷰 삭제",
-            tags = {"스몰블럭 리뷰 API - V1"},
-            description = "스몰블럭 리뷰 삭제",
+    @Operation(summary = "스몰블록 리뷰 삭제",
+            tags = {"스몰블록 리뷰 API - V1"},
+            description = "스몰블록 리뷰 삭제",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "스몰블럭 리뷰 삭제",
+                    description = "스몰블록 리뷰 삭제",
                     required = true,
                     content = @Content(schema = @Schema(implementation = SmallBlockReviewDto.class))
             ),

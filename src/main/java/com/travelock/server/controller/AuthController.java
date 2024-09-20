@@ -1,5 +1,6 @@
 package com.travelock.server.controller;
 
+import com.travelock.server.service.AuthService;
 import com.travelock.server.service.MemberService;
 import com.travelock.server.service.cache.ProviderCacheService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,10 +22,47 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final ProviderCacheService providerCacheService;
     private final MemberService memberService;
+    private final AuthService authService;
 
     public void register(String email, String nickName){
-
+        authService.register(email, nickName);
     }
+
+    public void verifyEmail(String email){}
+    public void checkEmail(){}
+
+    @Operation(summary = "이메일 중복 조회",
+            tags = {"인증 API - V1"},
+            description = "회원가입시 닉네임 중복 조회",
+            parameters = {
+                    @Parameter(name = "email", description = "중복 확인할 이메일", required = true, in = ParameterIn.PATH),
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "이메일 사용 가능", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "409", description = "이메일 중복", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
+            })
+    @GetMapping("/validate/{email}/email")
+    public void validateEmail(@PathVariable String email){
+        authService.validateEmail(email);
+    }
+
+    @Operation(summary = "닉네임 중복 조회",
+            tags = {"인증 API - V1"},
+            description = "회원가입시 닉네임 중복 조회",
+            parameters = {
+                    @Parameter(name = "nickName", description = "중복 확인할 닉네임", required = true, in = ParameterIn.PATH),
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "닉네임 사용 가능", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "409", description = "닉네임 중복", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
+            })
+    @GetMapping("/validate/{nickName}/nickname")
+    public void validateNickName(@PathVariable String nickName){
+        authService.validateNickName(nickName);
+    }
+
 
     @Operation(summary = "Provider 조회",
             tags = {"인증 API - V1"},
@@ -39,7 +77,9 @@ public class AuthController {
             })
     @GetMapping("/provider/{email}")
     public ResponseEntity<?> getProvider(@PathVariable String email){
+        /*캐시에서 조회 */
         String provider =  providerCacheService.getProvider(email);
+        /*캐시에 없으면 DB에서 조회*/
         if(provider == null){
             provider = memberService.getProvider(email);
         }

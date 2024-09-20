@@ -1,7 +1,5 @@
 package com.travelock.server.exception;
-
-import com.travelock.server.exception.course.CourseException;
-import com.travelock.server.exception.review.ReviewException;
+import com.travelock.server.exception.base_exceptions.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,15 +24,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
-    /*400 리뷰관련*/
-    @ExceptionHandler(ReviewException.class)
-    public ResponseEntity<String> handleReviewExceptions(ReviewException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-    }
-
-    /*400 일정관련(전체, 일일)*/
-    @ExceptionHandler(CourseException.class)
-    public ResponseEntity<String> handleCourseExceptions(ReviewException e) {
+    /*400 통합*/
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<String> handleBadRequestExceptions(BadRequestException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
@@ -43,4 +35,18 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleValidationExceptions(ValidationException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
+
+    /*503 서비스 사용 불가*/
+    @ExceptionHandler(ServiceUnavailableException.class)
+    public ResponseEntity<String> handleServiceUnavailableExceptions(ServiceUnavailableException e) {
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(e.getMessage());
+    }
+
+    /*500 데이터 접근, 처리 실패*/
+    @ExceptionHandler(DataAccessFailException.class)
+    public ResponseEntity<String> handleDataAccessExceptions(DataAccessFailException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("데이터 처리 중 오류가 발생했습니다.");
+    }
+
+
 }

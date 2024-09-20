@@ -1,6 +1,5 @@
 package com.travelock.server.domain;
 
-import com.travelock.server.domain.BigBlock;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
