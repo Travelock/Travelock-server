@@ -42,9 +42,7 @@ public class SmallBlockReviewService {
         if (reviews == null) {
             throw new ResourceNotFoundException("Review not found with SmallBlock id: " + smallBlockId);
         }
-
         return reviews;
-
     }
     public List<SmallBlockReviewDto> getMyReviews(Long memberId){
         QSmallBlockReview qSmallBlockReview = QSmallBlockReview.smallBlockReview;

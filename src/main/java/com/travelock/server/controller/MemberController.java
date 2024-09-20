@@ -6,7 +6,9 @@ import com.travelock.server.domain.FullCourseScrap;
 import com.travelock.server.dto.SmallBlockReviewDto;
 import com.travelock.server.service.DailyCourseService;
 import com.travelock.server.service.FullCourseService;
+import com.travelock.server.service.MemberService;
 import com.travelock.server.service.SmallBlockReviewService;
+import com.travelock.server.util.GenerateRandomData;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -32,9 +34,13 @@ public class MemberController {
     private final FullCourseService fullCourseService;
     private final DailyCourseService dailyCourseService;
     private final SmallBlockReviewService smallBlockReviewService;
+    private final MemberService memberService;
 
-    public void setNickName(String nickName){}
-    public void leave(Long memberId){}
+    public ResponseEntity<?> leave(Long memberId){
+        memberService.leave(memberId);
+        return ResponseEntity.status(HttpStatus.OK).body("또 만나요");
+
+    }
 
 //    사용안하기로함
 //

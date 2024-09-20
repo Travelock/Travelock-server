@@ -1,6 +1,8 @@
 package com.travelock.server.controller;
 
+import com.travelock.server.domain.DailyCourse;
 import com.travelock.server.service.DailyCourseService;
+import com.travelock.server.service.cache.CourseRecommendService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -12,12 +14,30 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/course/daily")
 @RequiredArgsConstructor
 @Slf4j
 public class DailyCourseController {
     private final DailyCourseService dailyCourseService;
+    private final CourseRecommendService courseRecommendService;
+
+
+    @Operation(summary = "추천 일일일정",
+            tags = {"일일일정 API - V1"},
+            description = "캐시된 추천 일일일정 조회",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "404", description = "조회 실패", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
+            })
+    @GetMapping("/recommend")
+    public ResponseEntity<?> getRecommendedDailyCourses(){
+        List<DailyCourse> topDailyCoursesFromCache = courseRecommendService.getTopDailyCoursesFromCache();
+        return ResponseEntity.status(HttpStatus.OK).body(topDailyCoursesFromCache);
+    }
 
 
     @Operation(summary = "일일일정 좋아요",
