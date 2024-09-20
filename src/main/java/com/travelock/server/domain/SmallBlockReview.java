@@ -23,9 +23,9 @@ public class SmallBlockReview extends BaseTime{
     @JoinColumn(name = "small_block_id")
     private SmallBlock smallBlock;
 
-    @Column(columnDefinition = "varchar(255)")
+    @Column(columnDefinition = "varchar(255) COMMENT '명소/핫플레이스 단위 이름'")
     private String review;
-    @Size(max = 1) @Column(columnDefinition = "varchar(1)")
+    @Size(max = 1) @Column(columnDefinition = "varchar(1) COMMENT '활성화 상태'")
     private String activeStatus;
 
 

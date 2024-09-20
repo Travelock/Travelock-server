@@ -54,7 +54,6 @@ public class FullCourseService {
 
 
     }
-
     public void setScrap(Long fullCourseId, Long memberId) {
 
         QMember qMember = QMember.member;
@@ -98,7 +97,6 @@ public class FullCourseService {
 
         return fullCourseFavorites;
     }
-
     public List<FullCourseScrap> getMyScraps(Long memberId) {
         QFullCourseScrap qFullCourseScrap = QFullCourseScrap.fullCourseScrap;
 
