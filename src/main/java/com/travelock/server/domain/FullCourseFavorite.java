@@ -15,7 +15,7 @@ public class FullCourseFavorite extends BaseTime {
     private Long fullCourseFavoriteId;
 
     @ManyToOne
-    @JoinColumn(name = "full_course_id")
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @ManyToOne

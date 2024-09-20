@@ -24,11 +24,11 @@ public class BigBlock extends BaseTime {
 
     private String areacode;
 
-    public String getAreacode() {
+    public String getAreaCode() {
         return areacode;
     }
 
-    public void setAreacode(String areacode) {
+    public void setAreaCode(String areacode) {
         this.areacode = areacode;
     }
 
