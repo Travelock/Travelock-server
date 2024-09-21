@@ -31,4 +31,3 @@ public class MiddleBlock extends BaseTime {
     @OneToMany(mappedBy = "middleBlock")
     private List<SmallBlock> smallBlocks;
 }
-

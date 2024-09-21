@@ -6,13 +6,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DailyCourse {
+public class DailyCourse implements Serializable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long dailyCourseId;
 

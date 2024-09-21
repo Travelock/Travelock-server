@@ -1,5 +1,7 @@
 package com.travelock.server.config;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -26,18 +28,48 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(redisConnectionFactory);
+    public RedisTemplate<String, Object> jsonRedisTemplate() {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(redisConnectionFactory());
 
+        // ObjectMapper 설정: 타입 정보를 포함하여 직렬화/역직렬화 오류 방지
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.activateDefaultTyping(
+                objectMapper.getPolymorphicTypeValidator(),
+                ObjectMapper.DefaultTyping.NON_FINAL,
+                JsonTypeInfo.As.PROPERTY
+        );
+
+        // GenericJackson2JsonRedisSerializer를 사용하여 타입 정보를 포함하여 직렬화
+        GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
+
+
+        // 키와 값을 위한 직렬화 설정
 //        객체나 구조화된 데이터(json) 저장시 사용.
-//        redisTemplate.setKeySerializer(new StringRedisSerializer()); // 키 직렬화
-//        redisTemplate.setValueSerializer(new StringRedisSerializer()); // 값 직렬화
-//        redisTemplate.setHashKeySerializer(new StringRedisSerializer()); // 해시 키 직렬화
-//        redisTemplate.setHashValueSerializer(new StringRedisSerializer()); // 해시 값 직렬화
-//        redisTemplate.afterPropertiesSet(); // 설정 완료 후 초기화
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(serializer);
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setHashValueSerializer(serializer);
+        template.afterPropertiesSet();
 
-        return redisTemplate;
+        return template;
     }
+
+    // 두 번째 RedisTemplate: String 직렬화 사용
+    @Bean
+    public RedisTemplate<String, String> stringRedisTemplate() {
+        RedisTemplate<String, String> template = new RedisTemplate<>();
+        template.setConnectionFactory(redisConnectionFactory());
+
+        // String 직렬화 설정
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new StringRedisSerializer());
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setHashValueSerializer(new StringRedisSerializer());
+        template.afterPropertiesSet();
+
+        return template;
+    }
+
 
 }
