@@ -1,7 +1,9 @@
 package com.travelock.server.exception.course;
 
 
-public class AddFullCourseScrapException extends CourseException {
+import com.travelock.server.exception.base_exceptions.BadRequestException;
+
+public class AddFullCourseScrapException extends BadRequestException {
     public AddFullCourseScrapException(String message) {
         super(message);
     }

@@ -19,10 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -36,7 +33,20 @@ public class MemberController {
     private final SmallBlockReviewService smallBlockReviewService;
     private final MemberService memberService;
 
-    public ResponseEntity<?> leave(Long memberId){
+
+    @Operation(summary = "회원 탈퇴",
+            tags = {"사용자 API - V1"},
+            description = "회원 탈퇴. 활성화 상태 Off, 랜덤데이터로 대체",
+            parameters = {
+                    @Parameter(name = "memberId", description = "사용자 ID", required = true, in = ParameterIn.PATH),
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "탈퇴 완료", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "400", description = "탈퇴 실패", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
+            })
+    @DeleteMapping("/{memberId}")
+    public ResponseEntity<?> leave(@PathVariable Long memberId){
         memberService.leave(memberId);
         return ResponseEntity.status(HttpStatus.OK).body("또 만나요");
 
@@ -73,7 +83,6 @@ public class MemberController {
     public ResponseEntity<?> getMyFullCourseScraps(@PathVariable Long memberId){
         List<FullCourseScrap> myScraps = fullCourseService.getMyScraps(memberId);
         return ResponseEntity.status(HttpStatus.OK).body(myScraps);
-
     }
 
     @Operation(summary = "사용자의 일일일정 스크랩 조회",
@@ -115,7 +124,4 @@ public class MemberController {
         List<SmallBlockReviewDto> reviews = smallBlockReviewService.getMyReviews(memberId);
         return ResponseEntity.status(HttpStatus.OK).body(reviews);
     }
-
-
-
 }

@@ -3,7 +3,7 @@ package com.travelock.server.service;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.travelock.server.domain.*;
-import com.travelock.server.exception.ResourceNotFoundException;
+import com.travelock.server.exception.base_exceptions.ResourceNotFoundException;
 import com.travelock.server.exception.course.AddFullCourseFavoriteException;
 import com.travelock.server.exception.course.AddFullCourseScrapException;
 import com.travelock.server.exception.review.AddReviewException;

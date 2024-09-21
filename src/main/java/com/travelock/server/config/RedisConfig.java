@@ -57,7 +57,7 @@ public class RedisConfig {
 
     // 두 번째 RedisTemplate: String 직렬화 사용
     @Bean
-    public RedisTemplate<String, String> stringRedisTemplate() {
+    public RedisTemplate<String, String> customStringRedisTemplate() {
         RedisTemplate<String, String> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory());
 

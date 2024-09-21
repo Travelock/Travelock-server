@@ -1,7 +1,9 @@
 package com.travelock.server.exception.course;
 
 
-public class AddDailyCourseFavoriteException extends CourseException {
+import com.travelock.server.exception.base_exceptions.BadRequestException;
+
+public class AddDailyCourseFavoriteException extends BadRequestException {
     public AddDailyCourseFavoriteException(String message) {
         super(message);
     }
