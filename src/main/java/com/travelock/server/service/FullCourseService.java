@@ -2,10 +2,8 @@ package com.travelock.server.service;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.travelock.server.converter.DTOConverter;
 import com.travelock.server.domain.*;
 import com.travelock.server.dto.FullCourseRequestDTO;
-import com.travelock.server.dto.FullCourseResponseDTO;
 import com.travelock.server.exception.base_exceptions.ResourceNotFoundException;
 import com.travelock.server.exception.course.AddFullCourseFavoriteException;
 import com.travelock.server.exception.course.AddFullCourseScrapException;
@@ -34,7 +32,7 @@ public class FullCourseService {
     /**
      * 멤버가 생성한 Full Course 조회
      */
-    public List<FullCourseResponseDTO> findMemberFullCourses(Long memberId) {
+    public List<FullCourse> findMemberFullCourses(Long memberId) {
         QFullCourse qFullCourse = QFullCourse.fullCourse;
         // 특정 멤버가 생성한 전체 일정을 최근 생성일자순으로 조회
         List<FullCourse> fullCourses = query
@@ -44,18 +42,37 @@ public class FullCourseService {
                 .orderBy(qFullCourse.fullCourseId.desc())
                 .fetch(); // 데이터가 없으면 빈리스트 반환
 
-        return DTOConverter.toFullCourseResponseDTOList(fullCourses);
+        return fullCourses;
+    }
+
+    /**
+     * FullCourse ID로 Full Course 조회
+     */
+    public FullCourse findFullCourse(Long fullCourseId) {
+        QFullCourse qFullCourse = QFullCourse.fullCourse;
+        // 특정 멤버가 생성한 전체 일정을 최근 생성일자순으로 조회
+        FullCourse fullCourse = query
+                .select(qFullCourse)
+                .from(qFullCourse)
+                .where(qFullCourse.fullCourseId.eq(fullCourseId))
+                .fetchOne(); // 데이터가 없으면 빈리스트 반환
+
+        if (fullCourse == null) {
+            throw new ResourceNotFoundException("Full Course not found by ID("+fullCourseId+")");
+        }
+
+        return fullCourse;
     }
 
     /**
      * 전체일정 생성
      */
-    public FullCourseResponseDTO saveFullCourse(FullCourseRequestDTO fullCourseRequestDTO) {
+    public FullCourse saveCourse(FullCourseRequestDTO requestDTO) {
         // 유효성 검사
         // @TODO title Null | 빈 문자열인 경우 정책
-        if (fullCourseRequestDTO.getTitle() == null || fullCourseRequestDTO.getTitle().isBlank()) {
+        if (requestDTO.getTitle() == null || requestDTO.getTitle().isBlank()) {
             // 일단 임의 값 설정
-            fullCourseRequestDTO.setTitle("임의 타이틀");
+            requestDTO.setTitle("임의 타이틀");
         }
         // @TODO 멤버 조회
         Member member = memberRepository.findById(1L).get(); // 테스트
@@ -63,13 +80,11 @@ public class FullCourseService {
         // DB INSERT
         FullCourse fullCourse = new FullCourse();
         fullCourse.addFullCourse(
-                fullCourseRequestDTO.getTitle(),
+                requestDTO.getTitle(),
                 member
         );
         try {
-            FullCourse savedData = fullCourseRepository.save(fullCourse);
-            // Response DTO로 변환한 객체를 반환
-            return DTOConverter.toFullCourseResponseDTO(savedData);
+            return fullCourseRepository.save(fullCourse);
         } catch (Exception e) {
             // @TODO Add log
 
