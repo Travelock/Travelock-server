@@ -2,13 +2,18 @@ package com.travelock.server.service;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.travelock.server.converter.DTOConverter;
 import com.travelock.server.domain.*;
+import com.travelock.server.dto.FullCourseRequestDTO;
+import com.travelock.server.dto.FullCourseResponseDTO;
 import com.travelock.server.exception.base_exceptions.ResourceNotFoundException;
 import com.travelock.server.exception.course.AddFullCourseFavoriteException;
 import com.travelock.server.exception.course.AddFullCourseScrapException;
 import com.travelock.server.exception.review.AddReviewException;
 import com.travelock.server.repository.FullCourseFavoriteRepository;
+import com.travelock.server.repository.FullCourseRepository;
 import com.travelock.server.repository.FullCourseScrapRepository;
+import com.travelock.server.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,8 +25,57 @@ import java.util.List;
 @Slf4j
 public class FullCourseService {
     private final JPAQueryFactory query;
+    private final FullCourseRepository fullCourseRepository;
     private final FullCourseFavoriteRepository fullCourseFavoriteRepository;
     private final FullCourseScrapRepository fullCourseScrapRepository;
+    private final MemberRepository memberRepository;
+
+
+    /**
+     * 멤버가 생성한 Full Course 조회
+     */
+    public List<FullCourseResponseDTO> findMemberFullCourses(Long memberId) {
+        QFullCourse qFullCourse = QFullCourse.fullCourse;
+        // 특정 멤버가 생성한 전체 일정을 최근 생성일자순으로 조회
+        List<FullCourse> fullCourses = query
+                .select(qFullCourse)
+                .from(qFullCourse)
+                .where(qFullCourse.member.memberId.eq(memberId))
+                .orderBy(qFullCourse.fullCourseId.desc())
+                .fetch(); // 데이터가 없으면 빈리스트 반환
+
+        return DTOConverter.toFullCourseResponseDTOList(fullCourses);
+    }
+
+    /**
+     * 전체일정 생성
+     */
+    public FullCourseResponseDTO saveFullCourse(FullCourseRequestDTO fullCourseRequestDTO) {
+        // 유효성 검사
+        // @TODO title Null | 빈 문자열인 경우 정책
+        if (fullCourseRequestDTO.getTitle() == null || fullCourseRequestDTO.getTitle().isBlank()) {
+            // 일단 임의 값 설정
+            fullCourseRequestDTO.setTitle("임의 타이틀");
+        }
+        // @TODO 멤버 조회
+        Member member = memberRepository.findById(1L).get(); // 테스트
+
+        // DB INSERT
+        FullCourse fullCourse = new FullCourse();
+        fullCourse.addFullCourse(
+                fullCourseRequestDTO.getTitle(),
+                member
+        );
+        try {
+            FullCourse savedData = fullCourseRepository.save(fullCourse);
+            // Response DTO로 변환한 객체를 반환
+            return DTOConverter.toFullCourseResponseDTO(savedData);
+        } catch (Exception e) {
+            // @TODO Add log
+
+            throw new AddReviewException("저장에 실패했습니다." + e.getMessage() );
+        }
+    }
 
     public void setFavorite(Long fullCourseId, Long memberId) {
 
