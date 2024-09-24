@@ -1,6 +1,9 @@
 package com.travelock.server.controller;
 
+import com.travelock.server.converter.DTOConverter;
 import com.travelock.server.domain.DailyCourse;
+import com.travelock.server.dto.DailyCourseRequestDTO;
+import com.travelock.server.dto.DailyCourseResponseDTO;
 import com.travelock.server.service.DailyCourseService;
 import com.travelock.server.service.cache.CourseRecommendService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,6 +26,14 @@ import java.util.List;
 public class DailyCourseController {
     private final DailyCourseService dailyCourseService;
     private final CourseRecommendService courseRecommendService;
+
+    // 일자별 일정 생성 (/api/course/daily)
+    @PostMapping
+    public ResponseEntity<?> createFullCourse(@RequestBody DailyCourseRequestDTO request) {
+        // Response DTO로 변환해서 반환
+        DailyCourseResponseDTO response = DTOConverter.toDailyCourseResponseDTO(dailyCourseService.saveCourse(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 
 
     @Operation(summary = "추천 일일일정",

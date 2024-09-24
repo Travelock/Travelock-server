@@ -1,14 +1,15 @@
 package com.travelock.server.controller;
 
+import com.travelock.server.converter.DTOConverter;
 import com.travelock.server.domain.FullCourse;
-import com.travelock.server.domain.FullCourseScrap;
+import com.travelock.server.dto.FullCourseRequestDTO;
+import com.travelock.server.dto.FullCourseResponseDTO;
 import com.travelock.server.service.FullCourseService;
 import com.travelock.server.service.cache.CourseRecommendService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,21 @@ public class FullCourseController {
     private final FullCourseService fullCourseService;
     private final CourseRecommendService courseRecommendService;
 
+    // 멤버가 생성한 전체일정 조회
+    @GetMapping("/member/{memberId}")
+    public ResponseEntity<?> getFullCoursesByMember(@PathVariable Long memberId) {
+        // Response DTO로 변환해서 반환
+        List<FullCourseResponseDTO> response = DTOConverter.toFullCourseResponseDTOList(fullCourseService.findMemberFullCourses(memberId));
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    // 전체일정 생성 (/api/course/full)
+    @PostMapping
+    public ResponseEntity<?> createFullCourse(@RequestBody FullCourseRequestDTO request) {
+        // Response DTO로 변환해서 반환
+        FullCourseResponseDTO response = DTOConverter.toFullCourseResponseDTO(fullCourseService.saveCourse(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 
     @Operation(summary = "추천 전체일정",
             tags = {"전체일정 API - V1"},

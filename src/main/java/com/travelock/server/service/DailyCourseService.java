@@ -3,12 +3,16 @@ package com.travelock.server.service;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.travelock.server.domain.*;
+import com.travelock.server.dto.DailyCourseRequestDTO;
+import com.travelock.server.exception.base_exceptions.BadRequestException;
 import com.travelock.server.exception.base_exceptions.ResourceNotFoundException;
 import com.travelock.server.exception.course.AddDailyCourseFavoriteException;
 import com.travelock.server.exception.course.AddDailyCourseScrapException;
 import com.travelock.server.exception.review.AddReviewException;
 import com.travelock.server.repository.DailyCourseFavoriteRepository;
+import com.travelock.server.repository.DailyCourseRepository;
 import com.travelock.server.repository.DailyCourseScrapRepository;
+import com.travelock.server.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,8 +24,44 @@ import java.util.List;
 @Slf4j
 public class DailyCourseService {
     private final JPAQueryFactory query;
+    private final DailyCourseRepository dailyCourseRepository;
     private final DailyCourseFavoriteRepository dailyCourseFavoriteRepository;
     private final DailyCourseScrapRepository dailyCourseScrapRepository;
+    private final MemberRepository memberRepository;
+    private final FullCourseService fullCourseService;
+
+    /**
+     * 일자별 일정 생성
+     */
+    public DailyCourse saveCourse(DailyCourseRequestDTO requestDTO) {
+        // 유효성 검사
+        // 필수값 체크
+        if (requestDTO.getFullCourseId() == null || requestDTO.getFullCourseId() == 0
+        || requestDTO.getMemberId() == null || requestDTO.getMemberId() == 0) {
+            // @TODO 일단 내부 확인용도로 응답메시지 작성
+            throw new BadRequestException("fullCourseId or memberId is required");
+        }
+        // 멤버 조회
+        Member member = memberRepository.findById(1L).get(); // 테스트
+        // 전체 일정 조회
+        FullCourse fullCourse = fullCourseService.findFullCourse(requestDTO.getFullCourseId());
+
+        // DB INSERT
+        DailyCourse dailyCourse = new DailyCourse();
+        dailyCourse.addDailyCourse(
+                requestDTO.getDayNum(),
+                member,
+                fullCourse
+        );
+        try {
+            return dailyCourseRepository.save(dailyCourse);
+        } catch (Exception e) {
+            // @TODO Add log
+
+            throw new AddReviewException("저장에 실패했습니다." + e.getMessage() );
+        }
+
+    }
 
     public void setFavorite(Long dailyCourseId, Long memberId) {
 
