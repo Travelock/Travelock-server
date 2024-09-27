@@ -11,10 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -24,8 +21,21 @@ public class AuthController {
     private final MemberService memberService;
     private final AuthService authService;
 
-    public void register(String email, String nickName){
+    @Operation(summary = "회원가입",
+            tags = {"인증 API - V1"},
+            description = "회원가입",
+            parameters = {
+                    @Parameter(name = "email", description = "식별자로 사용될 이메일", required = true, in = ParameterIn.PATH),
+                    @Parameter(name = "nickName", description = "서비스에서 사용할 닉네임", required = true, in = ParameterIn.PATH),
+            },
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "회원가입 성공", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
+            })
+    @PostMapping("/member/{email}/{nickName}")
+    public ResponseEntity<?> register(@PathVariable String email, @PathVariable String nickName){
         authService.register(email, nickName);
+        return ResponseEntity.status(HttpStatus.CREATED).body("회원가입 성공");
     }
 
     public void verifyEmail(String email){}
