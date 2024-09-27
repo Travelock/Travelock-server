@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class StateController {
-    private StateService stateService;
+    private final StateService stateService;
 
     // 시,도 목록 조회
     @GetMapping
