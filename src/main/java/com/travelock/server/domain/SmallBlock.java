@@ -20,7 +20,7 @@ public class SmallBlock {
     private String apiId;
 
     @Column(columnDefinition = "INT COMMENT '일정에 추가된(참조된) 수'")
-    private Integer referencedCount;
+    private Integer referenceCount;
 
     // Small Block : Middle Block = N : 1
     @ManyToOne(fetch = FetchType.LAZY)
