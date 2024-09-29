@@ -20,7 +20,7 @@ public class MiddleBlock extends BaseTime {
     private String placeTag;
 
     @Column(columnDefinition = "INT COMMENT '일정에 추가된(참조된) 수'")
-    private Integer referencedCount;
+    private Integer referenceCount;
 
     // Middle Block : Big Block = N : 1
     @ManyToOne(fetch = FetchType.LAZY)
