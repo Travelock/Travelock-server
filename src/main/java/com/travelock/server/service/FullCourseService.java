@@ -37,8 +37,7 @@ public class FullCourseService {
         QFullCourse qFullCourse = QFullCourse.fullCourse;
         // 특정 멤버가 생성한 전체 일정을 최근 생성일자순으로 조회
         List<FullCourse> fullCourses = query
-                .select(qFullCourse)
-                .from(qFullCourse)
+                .selectFrom(qFullCourse)
                 .where(qFullCourse.member.memberId.eq(memberId))
                 .orderBy(qFullCourse.fullCourseId.desc())
                 .fetch(); // 데이터가 없으면 빈리스트 반환
@@ -53,8 +52,7 @@ public class FullCourseService {
         QFullCourse qFullCourse = QFullCourse.fullCourse;
         // 특정 멤버가 생성한 전체 일정을 최근 생성일자순으로 조회
         FullCourse fullCourse = query
-                .select(qFullCourse)
-                .from(qFullCourse)
+                .selectFrom(qFullCourse)
                 .where(qFullCourse.fullCourseId.eq(fullCourseId))
                 .fetchOne(); // 데이터가 없으면 빈리스트 반환
 

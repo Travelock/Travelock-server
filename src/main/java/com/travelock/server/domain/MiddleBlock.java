@@ -21,6 +21,8 @@ public class MiddleBlock extends BaseTime {
     @Column(columnDefinition = "VARCHAR(255) COMMENT '명소/특정지역 단위 코드'")
     private String categoryCode;
 
+    @Column(columnDefinition = "INT COMMENT '일정에 추가된(참조된) 수'")
+    private Integer referenceCount;
 
     // Middle Block : Big Block = N : 1
     @ManyToOne(fetch = FetchType.LAZY)
