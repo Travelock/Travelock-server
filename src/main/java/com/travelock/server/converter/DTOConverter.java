@@ -43,6 +43,7 @@ public class DTOConverter {
                 dailyCourse.getDayNum(),
                 dailyCourse.getFullCourse().getFullCourseId(),
                 dailyCourse.getMember().getMemberId(),
+                dailyCourse.getMember().getNickName(),
                 dailyCourse.getFavoriteCount(),
                 dailyCourse.getScarpCount(),
                 null

@@ -18,4 +18,6 @@ public class DailyCourseResponseDTO {
     private Integer favoriteCount;  // 좋아요 수
     private Integer scarpCount;     // 스크랩 수
     private List<DailyBlockConnectDTO> dailyBlockConnects;
+
+
 }

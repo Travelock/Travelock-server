@@ -60,6 +60,13 @@ spring:
     #  show-sql: true
       naming:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 50  # 한 번에 처리할 엔티티 수
+        order_inserts: true
+        order_updates: true
+        jdbc.batch_versioned_data: true
 
     #Swagger 3.0
   mvc:
