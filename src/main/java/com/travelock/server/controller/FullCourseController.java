@@ -2,6 +2,7 @@ package com.travelock.server.controller;
 
 import com.travelock.server.converter.DTOConverter;
 import com.travelock.server.domain.FullCourse;
+import com.travelock.server.dto.DailyCourseRequestDTO;
 import com.travelock.server.dto.FullCourseRequestDTO;
 import com.travelock.server.dto.FullCourseResponseDTO;
 import com.travelock.server.service.FullCourseService;
@@ -42,6 +43,13 @@ public class FullCourseController {
         FullCourseResponseDTO response = DTOConverter.toFullCourseResponseDTO(fullCourseService.saveCourse(request));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+
+//    //일정 교체
+//    public ResponseEntity<?> changeDailyCourse(@RequestBody DailyCourseRequestDTO requestDTO){
+//        fullCourseService.changeDailyCourse(requestDTO);
+//    }
+
 
     @Operation(summary = "추천 전체일정",
             tags = {"전체일정 API - V1"},

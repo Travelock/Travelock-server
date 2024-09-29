@@ -55,21 +55,21 @@ public class RedisConfig {
         return template;
     }
 
-    // 두 번째 RedisTemplate: String 직렬화 사용
-    @Bean
-    public RedisTemplate<String, String> customStringRedisTemplate() {
-        RedisTemplate<String, String> template = new RedisTemplate<>();
-        template.setConnectionFactory(redisConnectionFactory());
-
-        // String 직렬화 설정
-        template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new StringRedisSerializer());
-        template.setHashKeySerializer(new StringRedisSerializer());
-        template.setHashValueSerializer(new StringRedisSerializer());
-        template.afterPropertiesSet();
-
-        return template;
-    }
+//    // 두 번째 RedisTemplate: String 직렬화 사용
+//    @Bean
+//    public RedisTemplate<String, String> customStringRedisTemplate() {
+//        RedisTemplate<String, String> template = new RedisTemplate<>();
+//        template.setConnectionFactory(redisConnectionFactory());
+//
+//        // String 직렬화 설정
+//        template.setKeySerializer(new StringRedisSerializer());
+//        template.setValueSerializer(new StringRedisSerializer());
+//        template.setHashKeySerializer(new StringRedisSerializer());
+//        template.setHashValueSerializer(new StringRedisSerializer());
+//        template.afterPropertiesSet();
+//
+//        return template;
+//    }
 
 
 }

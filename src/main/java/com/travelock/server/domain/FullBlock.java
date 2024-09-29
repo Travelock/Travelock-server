@@ -35,5 +35,11 @@ public class FullBlock extends BaseTime{
     // Full Block : Daily Block Connect = 1 : N
     @OneToMany(mappedBy = "fullBlock")
     private List<DailyBlockConnect> dailyBlockConnects;
+
+    public void newFullBlock(BigBlock bigBlock, MiddleBlock middleBlock, SmallBlock smallBlock){
+        this.bigBlock = bigBlock;
+        this.middleBlock = middleBlock;
+        this.smallBlock = smallBlock;
+    }
 }
 

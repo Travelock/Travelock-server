@@ -3,6 +3,7 @@ package com.travelock.server.service;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.travelock.server.domain.*;
+import com.travelock.server.dto.DailyCourseRequestDTO;
 import com.travelock.server.dto.FullCourseRequestDTO;
 import com.travelock.server.exception.base_exceptions.ResourceNotFoundException;
 import com.travelock.server.exception.course.AddFullCourseFavoriteException;
@@ -92,6 +93,7 @@ public class FullCourseService {
         }
     }
 
+    /**좋아요 설정*/
     public void setFavorite(Long fullCourseId, Long memberId) {
 
         QMember qMember = QMember.member;
@@ -123,6 +125,8 @@ public class FullCourseService {
 
 
     }
+
+    /**스크랩 설정*/
     public void setScrap(Long fullCourseId, Long memberId) {
 
         QMember qMember = QMember.member;
@@ -152,6 +156,8 @@ public class FullCourseService {
             throw new AddFullCourseScrapException("Failed to save FullCourseScrap");
         }
     }
+
+    /**좋아요한 전체일정 목록*/
     public List<FullCourseFavorite> getMyFavorites(Long memberId) {
         QFullCourseFavorite qFullCourseFavorite = QFullCourseFavorite.fullCourseFavorite;
 
@@ -166,6 +172,8 @@ public class FullCourseService {
 
         return fullCourseFavorites;
     }
+
+    /**스크랩한 전체일정 목로*/
     public List<FullCourseScrap> getMyScraps(Long memberId) {
         QFullCourseScrap qFullCourseScrap = QFullCourseScrap.fullCourseScrap;
 
@@ -179,5 +187,13 @@ public class FullCourseService {
         }
 
         return fullCourseScraps;
+    }
+
+    /**일일일정 수정*/
+    public DailyCourse changeDailyCourse(DailyCourseRequestDTO requestDTO){
+
+
+        return null;
+
     }
 }
