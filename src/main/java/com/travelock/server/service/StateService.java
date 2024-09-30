@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,7 +33,7 @@ public class StateService {
             return bigBlockRepository.findByState(state);
         }
         log.warn("State not found for stateCode: {}", stateCode);
-        return null;
+        return new ArrayList<>();
 
     }
 }

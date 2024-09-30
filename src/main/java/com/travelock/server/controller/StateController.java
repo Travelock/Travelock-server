@@ -19,12 +19,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class StateController {
-    private StateService stateService;
+
+    private final StateService stateService;
 
     // 시,도 목록 조회
-    @GetMapping
+    @GetMapping("/statesearch")
     public List<State> getAllStates() {
-        log.info("getAllStates 호출");
+        log.info("getAllStates 호출 - 전체 시/도 목록 조회");
         return stateService.getAllStates();
 
     }

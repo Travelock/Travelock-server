@@ -1,16 +1,19 @@
 package com.travelock.server.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.travelock.server.domain.BigBlock;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class State {
@@ -27,5 +30,6 @@ public class State {
 
     // State가 여러 BigBlock을 참조하는 관계 (1:N)
     @OneToMany(mappedBy = "state")
+    @JsonManagedReference
     private List<BigBlock> bigBlockList = new ArrayList<>();  // BigBlock 리스트 초기화
 }
