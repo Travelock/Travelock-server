@@ -36,9 +36,9 @@ public class BigBlock extends BaseTime {
     @JsonBackReference
     private State state;  // State 테이블 참조
 
-    // 미들블록 관계
-    @OneToMany(mappedBy = "bigBlock")
-    private List<MiddleBlock> middleBlocks = new ArrayList<>();  // 중간 블록 리스트
+//    // 미들블록 관계
+//    @OneToMany(mappedBy = "bigBlock")
+//    private List<MiddleBlock> middleBlocks = new ArrayList<>();  // 중간 블록 리스트
 }
 
 //
