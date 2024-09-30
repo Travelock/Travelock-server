@@ -9,7 +9,7 @@ import com.travelock.server.domain.QSmallBlockReview;
 import com.travelock.server.domain.SmallBlockReview;
 import com.travelock.server.dto.SmallBlockReviewDto;
 import com.travelock.server.exception.review.AddReviewException;
-import com.travelock.server.exception.ResourceNotFoundException;
+import com.travelock.server.exception.base_exceptions.ResourceNotFoundException;
 import com.travelock.server.exception.review.ReviewModificationException;
 import com.travelock.server.repository.SmallBlockReviewRepository;
 import lombok.RequiredArgsConstructor;
@@ -42,9 +42,7 @@ public class SmallBlockReviewService {
         if (reviews == null) {
             throw new ResourceNotFoundException("Review not found with SmallBlock id: " + smallBlockId);
         }
-
         return reviews;
-
     }
     public List<SmallBlockReviewDto> getMyReviews(Long memberId){
         QSmallBlockReview qSmallBlockReview = QSmallBlockReview.smallBlockReview;

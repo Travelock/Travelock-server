@@ -1,41 +1,37 @@
 package com.travelock.server.domain;
 
 import jakarta.persistence.*;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@EnableJpaAuditing
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class BigBlock extends BaseTime {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long bigBlockId;  // 빅블럭 고유 ID
 
-    // cityName과 areacode 저장
-    private String blockName;
+    @Column(columnDefinition = "VARCHAR(3) COMMENT '시/구 코드(3자리)'")
+    private String cityCode;  // 시/구 코드 (3자리)
 
-    public String getBlockName() {
-        return blockName;
-    }
+    @Column(columnDefinition = "VARCHAR(50) COMMENT '시/구 이름'")
+    private String cityName;  // 시/구 이름
 
-    public void setBlockName(String cityName) {
-        this.blockName = cityName;
-    }
+    // BigBlock이 하나의 State를 참조 (N:1)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "city_info_id", nullable = false)
+    private State state;  // State 테이블 참조
 
-
-    private String areacode;
-
-    public String getAreacode() {
-        return areacode;
-    }
-
-    public void setAreacode(String areacode) {
-        this.areacode = areacode;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "city_info_id")
-    private CityInfo cityInfo;
-
-
-
+    // 미들블록 관계
+    @OneToMany(mappedBy = "bigBlock")
+    private List<MiddleBlock> middleBlocks = new ArrayList<>();  // 중간 블록 리스트
 }
