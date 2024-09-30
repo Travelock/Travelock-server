@@ -43,7 +43,7 @@ public class JWTUtil {
         Claims claims = Jwts.claims();
         claims.put("username", username);
         claims.put("role", role);
-        claims.put("memberId", memberId); // memberId 추가햇는데...
+        claims.put("memberId", memberId); // memberId 추가햇는데... 왜안되지
 
         return Jwts.builder()
                 .setClaims(claims)
