@@ -43,6 +43,7 @@ public class JWTUtil {
         Claims claims = Jwts.claims();
         claims.put("username", username);
         claims.put("role", role);
+        claims.put("memberId", memberId); // memberId 추가
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -56,6 +57,7 @@ public class JWTUtil {
 
         Claims claims = Jwts.claims();
         claims.put("username", username);
+        claims.put("memberId", memberId);
 
         return Jwts.builder()
                 .setClaims(claims)
