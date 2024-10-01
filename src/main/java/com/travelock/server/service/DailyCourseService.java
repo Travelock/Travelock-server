@@ -41,6 +41,18 @@ public class DailyCourseService {
     @Transactional
     public DailyCourse saveDailyCourse(DailyCourseCreateDto createDto){
 
+
+//        json 데이터 입력 예
+//        DailyCourse = {
+//                FullBlock = [
+//                    {FID=1,  block_num, BID=1, MB={ID, place_name, place_id}, SB={ID, map_x, map+y, link_url, reference_count }},
+//                    {FID=2,  block_num,  BID=2, MB={ID, place_name, place_id,}, SB={ID, map_x, map+y, link_url, reference_count }},
+//                    {FID=3,  block_num,  BID=3, MB={ID, place_name, place_id }, SB={ID, map_x, map+y, link_url, reference_count }},
+//                    {FID=4,  block_num,  BID=4, MB={ID, place_name, place_id}, SB={ID, map_x, map+y, link_url, reference_count }},
+//                    {FID=5,  block_num, BID=5, MB={ID, place_name, place_id}, SB={ID, map_x, map+y, link_url, reference_count }},
+//                ]
+//        }
+
         if(createDto == null){
             throw new BadRequestException("createDto is null");
         }
@@ -60,6 +72,8 @@ public class DailyCourseService {
 //        List<BigBlock> bigBlocks = new ArrayList<>();
 //        List<MiddleBlock> middleBlocks = new ArrayList<>();
 //        List<SmallBlock> exsistingSmallBlocks = new ArrayList<>();
+
+        //Map으로 중복순회 방지
         Map<Long, BigBlock> bigBlockMap = new HashMap<>();
         Map<Long, MiddleBlock> middleBlockMap = new HashMap<>();
         Map<String, SmallBlock> existingSmallBlockMap = new HashMap<>();
@@ -80,7 +94,7 @@ public class DailyCourseService {
             smaillBlockPlaceIdList.add(dto.getSmallBlockDto().getPlaceId());
         }
 
-        // BigBlock과 MiddleBlock, SmallBlock, FullCourse를 조회 --------------------------------------------- DB SELECT
+        // BigBlock과 MiddleBlock, SmallBlock, FullCourse를 조회 --------------------------------------------- DB SELECT(한방쿼리로 필요한 데이터 모두 가져오기)
         List<Tuple> list = query.select(qMember, qBigBlock, qMiddleBlock, qSmallBlock, qFullCourse)
                 .from(qMember, qBigBlock, qMiddleBlock, qSmallBlock, qFullCourse)
                 .where(
@@ -93,7 +107,7 @@ public class DailyCourseService {
 
 
         if (list.isEmpty()) {
-            throw new ResourceNotFoundException("No matching data found.");
+            throw new ResourceNotFoundException("No matching data.");
         }
 
         Tuple firstTuple = list.get(0);
@@ -125,11 +139,6 @@ public class DailyCourseService {
             existingSmallBlockMap.put(smallBlock.getPlaceId(), smallBlock);
         }
 
-        if (fullCourse.getFullCourseId() == null) {
-            throw new ResourceNotFoundException("FullCourse not found");
-        }
-
-
 
 
         for (FullBlockDto fullBlockDto : fullBlockDtoList) {
@@ -142,17 +151,23 @@ public class DailyCourseService {
 //                    .filter(sb -> sb.getPlaceId().equals(smallBlockDto.getPlaceId()))
 //                    .findFirst()
 //                    .orElse(null);
+
+
             // Map을 이용하여 존재하는 SmallBlock을 확인
             SmallBlock smallBlock = existingSmallBlockMap.get(smallBlockDto.getPlaceId());
 
             // 존재하지 않으면 새로운 SmallBlock 생성
             if (smallBlock == null) {
                 smallBlock = new SmallBlock();
-                MiddleBlock middleBlock = middleBlockMap.get(fullBlockDto.getMiddleBlockId());
+
+//                각 루프마다 미들블록 리스트 순회
 //                MiddleBlock middleBlock = middleBlocks.stream()
 //                        .filter(m -> m.getMiddleBlockId().equals(fullBlockDto.getMiddleBlockId()))
 //                        .findFirst()
 //                        .orElseThrow(() -> new RuntimeException("MiddleBlock not found"));
+
+                //Map 사용
+                MiddleBlock middleBlock = middleBlockMap.get(fullBlockDto.getMiddleBlockId());
 
                 if (middleBlock == null) {
                     throw new ResourceNotFoundException("MiddleBlock not found");
@@ -174,11 +189,14 @@ public class DailyCourseService {
             }
 
 
-            BigBlock bigBlock = bigBlockMap.get(fullBlockDto.getBigBlockId());
+//            각 루프마다 빅블록 리스트 순회
 //            BigBlock bigBlock = bigBlocks.stream()
 //                    .filter(b -> b.getBigBlockId().equals(fullBlockDto.getBigBlockId()))
 //                    .findFirst()
 //                    .orElseThrow(() -> new RuntimeException("BigBlock not found"));// 연관된 BigBlock 객체 설정
+
+            //Map사용
+            BigBlock bigBlock = bigBlockMap.get(fullBlockDto.getBigBlockId());
 
             if (bigBlock == null) {
                 throw new ResourceNotFoundException("BigBlock not found");
@@ -193,7 +211,7 @@ public class DailyCourseService {
 
             fullBlocksToBatchSave.add(fullBlock);
 
-//            //Full Block 저장 ----------------------------------------------------------------------- DB INSERT ( * n )(Batch INSERT처리로 DB와 통신 1번으로 줄임)
+//            //Full Block 저장 ----------------------------------------------------------------------- DB INSERT ( * n ) -> (Batch INSERT처리로 DB와 통신 1번으로 줄임)
 //            fullBlockRepository.save(fullBlock);
         }
 
@@ -207,12 +225,13 @@ public class DailyCourseService {
             createDto.getDayNum(), member, fullCourse
         );
 
-        //FullBlock Batch 저장 -------------------------------------------------------------------------------- DB INSERT ( 1 )
+        //FullBlock Batch 저장 ----------------------------------------------------------------------- DB INSERT ( 1 )
         fullBlockRepository.saveAll(fullBlocksToBatchSave);
         //연결객체 저장 -------------------------------------------------------------------------------- DB INSERT ( 1 )
         fullAndDailyCourseConnectRepository.save(connect);
         // Daily Course 저장 ------------------------------------------------------------------------- DB INSERT ( 1 )
         return dailyCourseRepository.save(dailyCourse);
+
     }
 
 
