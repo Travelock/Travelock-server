@@ -1,21 +1,15 @@
 package com.travelock.server.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.travelock.server.domain.BaseTime;
-import com.travelock.server.domain.MiddleBlock;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class BigBlock extends BaseTime {
@@ -36,9 +30,12 @@ public class BigBlock extends BaseTime {
     @JsonBackReference
     private State state;  // State 테이블 참조
 
-//    // 미들블록 관계
-//    @OneToMany(mappedBy = "bigBlock")
-//    private List<MiddleBlock> middleBlocks = new ArrayList<>();  // 중간 블록 리스트
-}
+    // 추후에 새로운 State가 생길 경우를 대비한 메서드, (빅블럭은 state에 소속되어야 하므로 bigblock 도메인에 위치)
+    public void setState(State state) {
+        this.state = state;
+        if (!state.getBigBlockList().contains(this)) {
+            state.addBigBlock(this);
+        }
+    }
 
-//
+}

@@ -11,7 +11,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter  // 아노테이션이 왜 작동하지 않는걸까..! 어쩔 수 없이 세터 사용
 @AllArgsConstructor
 @NoArgsConstructor
 public class SmallBlock {
@@ -27,30 +26,38 @@ public class SmallBlock {
     @JsonBackReference
     private MiddleBlock middleBlock;
 
-
+    @Column(columnDefinition = "VARCHAR(100) COMMENT '장소 ID'")
     private String placeId;
+
+    @Column(columnDefinition = "VARCHAR(29) COMMENT '장소 이름'")
     private String placeName;
+
+    @Column(columnDefinition = "VARCHAR(100) COMMENT '지도 X 좌표'")
     private String mapX;
+
+    @Column(columnDefinition = "VARCHAR(100) COMMENT '지도 Y 좌표'")
     private String mapY;
+
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '장소 URL'")
     private String url;
 
 
     @Column(columnDefinition = "INT COMMENT '일정에 추가된(참조된) 수'")
-    private Integer referenceCount;
+    private Integer referenceCount = 0;
 
 
 
     @OneToMany(mappedBy = "smallBlock", fetch = FetchType.LAZY)
     private List<SmallBlockReview> smallBlockReviews;
 
-    public SmallBlock(MiddleBlock middleBlock, String placeId, String placeName, String mapX, String mapY, String url) {
+    public void setSmallBlockData(MiddleBlock middleBlock, String placeId, String placeName, String mapX, String mapY, String url) {
         this.middleBlock = middleBlock;
         this.placeId = placeId;
         this.placeName = placeName;
         this.mapX = mapX;
         this.mapY = mapY;
         this.url = url;
-        this.referenceCount = 0; // 레퍼카운트 초기값 0
+        this.referenceCount = 1;
     }
 
     // 레퍼 카운트 1씩 증가

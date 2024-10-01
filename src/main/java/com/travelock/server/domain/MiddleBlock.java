@@ -10,33 +10,31 @@ import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor // 이거 왜 작동 안되는지... 아노테이션...
+@NoArgsConstructor
 @AllArgsConstructor
 public class MiddleBlock extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long middleBlockId;
 
-    @Column(name = "category_code", nullable = false, unique = true)
+    @Column(name = "category_code", nullable = false, unique = true, columnDefinition = "VARCHAR(10) COMMENT '카테고리 코드'")
     private String categoryCode;
 
-    @Column(name = "category_name", nullable = false)
+    @Column(name = "category_name", nullable = false, columnDefinition = "VARCHAR(50) COMMENT '카테고리 이름'")
     private String categoryName;
 
-    // 결국 생성자 추가,,,
-    public MiddleBlock(String categoryCode, String categoryName) {
-        this.categoryCode = categoryCode;
-        this.categoryName = categoryName;
-    }
-
-    //
-//    // Middle Block : Big Block = N : 1
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "big_block_id")
-//    private BigBlock bigBlock;
-
-    // Middle Block : Small Block = 1 : N
+    // 미들 1 스몰 N
     @OneToMany(mappedBy = "middleBlock")
     @JsonManagedReference
     private List<SmallBlock> smallBlocks;
+
+
+//    // 세터 대체 메서드 -> DB에 넣고 쓰는데 굳이 필요할까요.
+//    public void setCategoryData(String categoryCode, String categoryName) {
+//        this.categoryCode = categoryCode;
+//        this.categoryName = categoryName;
+//    }
+
+
+
 }

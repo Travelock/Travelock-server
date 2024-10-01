@@ -46,6 +46,7 @@ public class SmallBlockService {
         JsonNode jsonNode = objectMapper.readTree(response.getBody());
 //        List<JsonNode> documents = jsonNode.get("documents").findValues("documents");
         JsonNode documents = jsonNode.get("documents");
+
         // 미들블록 id를 통해 middleblock을 가져옴
         MiddleBlock middleBlock = middleBlockRepository.findById(middleBlockId)
                 .orElseThrow(() -> new Exception("MiddleBlock not found"));
@@ -57,28 +58,19 @@ public class SmallBlockService {
             String mapY = document.get("y").asText();
             String placeUrl = document.get("place_url").asText();
 
-            // 스몰블록 생성
+            // 스몰블록 생성 또는 업데이트
+            SmallBlock smallBlock = smallBlockRepository.findByPlaceId(placeId)
+                    .orElseGet(() -> {
+                        SmallBlock newSmallBlock = new SmallBlock();
+                        newSmallBlock.setSmallBlockData(middleBlock, placeId, placeName, mapX, mapY, placeUrl);
+                        return smallBlockRepository.save(newSmallBlock);
+                    });
 
-            SmallBlock smallBlock = smallBlockRepository.findByPlaceId(placeId);
-            if (smallBlock == null) {
-                smallBlock = new SmallBlock();
-                smallBlock.setPlaceId(placeId);
-                smallBlock.setPlaceName(placeName);
-                smallBlock.setMapX(mapX);
-                smallBlock.setMapY(mapY);
-                smallBlock.setUrl(placeUrl);
-                smallBlock.setMiddleBlock(middleBlock);
-                smallBlock.setReferenceCount(1);
-                SmallBlock savedBlock = smallBlockRepository.save(smallBlock);
-
-                System.out.println("Saved SmallBlock ID: " + savedBlock.getSmallBlockId());
-
-            } else {
-                // 이미 있는 블록이라면, 레퍼카운트 증가
-                smallBlock.setReferenceCount(smallBlock.getReferenceCount() + 1);
-                smallBlockRepository.save(smallBlock);
-            }
+            // 이미 존재하는 스몰블록일 경우 레퍼 카운트 증가
+            smallBlock.incrementReferenceCount();
+            smallBlockRepository.save(smallBlock);
         }
+
     }
 
     // 전체 스몰블록 조회

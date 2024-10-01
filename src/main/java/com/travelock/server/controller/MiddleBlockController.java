@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/middle-blocks")
+@RequestMapping("/api/middle")
 @RequiredArgsConstructor
 public class MiddleBlockController {
 
     private final MiddleBlockService middleBlockService;
 
     // 카테고리 목록 조회
-    @GetMapping
+    @GetMapping("/category")
     public List<MiddleBlock> getAllMiddleBlocks() {
         return middleBlockService.getAllCategories();
     }

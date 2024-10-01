@@ -16,7 +16,6 @@ import java.util.List;
 @Slf4j
 public class StateService {
     private final StateRepository stateRepository;
-    private final BigBlockRepository blockRepository;
     private final BigBlockRepository bigBlockRepository;
 
     // 전체 시,도 목록 조회하기
