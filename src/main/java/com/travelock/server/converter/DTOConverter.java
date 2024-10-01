@@ -18,7 +18,8 @@ public class DTOConverter {
         return new FullCourseResponseDTO(
                 fullCourse.getFullCourseId(),
                 fullCourse.getMember().getMemberId(),
-                fullCourse.getMember().getNickName(),
+//                fullCourse.getMember().getNickName(),
+                fullCourse.getMember().getName(), // 닉네임 대체
                 fullCourse.getTitle(),
                 fullCourse.getFavoriteCount(),
                 fullCourse.getScarpCount(),
