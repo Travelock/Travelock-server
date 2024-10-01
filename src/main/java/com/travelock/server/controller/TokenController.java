@@ -25,9 +25,10 @@ public class TokenController {
         }
 
         String username = jwtUtil.getUsername(refreshToken);
-        String newAccessToken = jwtUtil.createJwt(username, "ROLE_USER", 60*60*60L); // 새로운 액세스 토큰 발급
+        Number memberId = jwtUtil.getMemberId(refreshToken);
+        String newAccessToken = jwtUtil.createJwt(username, "ROLE_USER", 60*60*60L,memberId); // 새로운 액세스 토큰 발급
 
         // 새로운 액세스 토큰을 반환
-        return ResponseEntity.ok().header("Authorization", newAccessToken).build();
+        return ResponseEntity.ok().header("Authorization", newAccessToken).build(); // 수정수정, 필터도 수정수정 -> 이해 안가서 다시 물어보기
     }
 }
