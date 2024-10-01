@@ -58,6 +58,7 @@ spring:
     #  show-sql: true
       naming:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+    # SpringDataJpa의 batch처리를위한 설정
     properties:
       hibernate:
         jdbc:
