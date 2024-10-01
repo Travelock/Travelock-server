@@ -8,7 +8,6 @@ import com.travelock.server.service.DailyCourseService;
 import com.travelock.server.service.FullCourseService;
 import com.travelock.server.service.MemberService;
 import com.travelock.server.service.SmallBlockReviewService;
-import com.travelock.server.util.GenerateRandomData;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -49,7 +48,6 @@ public class MemberController {
     public ResponseEntity<?> leave(@PathVariable Long memberId){
         memberService.leave(memberId);
         return ResponseEntity.status(HttpStatus.OK).body("또 만나요");
-
     }
 
 //    사용안하기로함
