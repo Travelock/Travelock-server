@@ -27,6 +27,14 @@ public class Member extends BaseTime{
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<SmallBlockReview> smallBlockReviews;
 
+    // Member : 일일 일정 리스트 = 1 : N
+    @OneToMany(mappedBy = "member")
+    private List<DailyCourse> dailyCourses;
+
+    // Member : 전체 일정 리스트 = 1 : N
+    @OneToMany(mappedBy = "member")
+    private List<FullCourse> fullCourses;
+
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<DailyCourseFavorite> dailyCourseFavorites;
 

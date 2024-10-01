@@ -1,6 +1,8 @@
 package com.travelock.server.exception.review;
 
-public class ReviewModificationException extends ReviewException {
+import com.travelock.server.exception.base_exceptions.BadRequestException;
+
+public class ReviewModificationException extends BadRequestException {
     public ReviewModificationException(String message) {
         super(message);
     }
