@@ -2,14 +2,19 @@ package com.travelock.server.controller;
 
 import com.travelock.server.converter.DTOConverter;
 import com.travelock.server.domain.FullCourse;
+import com.travelock.server.dto.DailyCourseRequestDTO;
 import com.travelock.server.dto.FullCourseRequestDTO;
 import com.travelock.server.dto.FullCourseResponseDTO;
+import com.travelock.server.dto.SmallBlockReviewDto;
+import com.travelock.server.dto.course.daily_create.DailyCourseCreateDto;
+import com.travelock.server.dto.course.full_create.FullCourseCreateDto;
 import com.travelock.server.service.FullCourseService;
 import com.travelock.server.service.cache.CourseRecommendService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +32,19 @@ public class FullCourseController {
     private final FullCourseService fullCourseService;
     private final CourseRecommendService courseRecommendService;
 
-    // 멤버가 생성한 전체일정 조회
+    @Operation(summary = "사용자의 전체일정 조회",
+            tags = {"전체일정 API - V1"},
+            description = "사용자의 전체일정 조회",
+            parameters = {
+                    @Parameter(name = "memberId", description = "사용자 ID", required = true, in = ParameterIn.QUERY)
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(
+                            schema = @Schema(implementation = FullCourseResponseDTO.class),
+                            mediaType = "application/json")),
+                    @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
+            })
     @GetMapping("/member/{memberId}")
     public ResponseEntity<?> getFullCoursesByMember(@PathVariable Long memberId) {
         // Response DTO로 변환해서 반환
@@ -35,13 +52,32 @@ public class FullCourseController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    // 전체일정 생성 (/api/course/full)
+    @Operation(summary = "전체일정 저장",
+            tags = {"전체일정 API - V1"},
+            description = "전체일정 저장",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "전체일정 생성 Dto",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = FullCourseCreateDto.class))
+            ),
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "전체일정 저장 성공", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "400", description = "전체일정 저장 실패", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
+            })
     @PostMapping
-    public ResponseEntity<?> createFullCourse(@RequestBody FullCourseRequestDTO request) {
+    public ResponseEntity<?> createFullCourse(@RequestBody FullCourseCreateDto request) {
         // Response DTO로 변환해서 반환
-        FullCourseResponseDTO response = DTOConverter.toFullCourseResponseDTO(fullCourseService.saveCourse(request));
+        FullCourseResponseDTO response = DTOConverter.toFullCourseResponseDTO(fullCourseService.saveFullCourse(request));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+
+//    //일정 교체
+//    public ResponseEntity<?> changeDailyCourse(@RequestBody DailyCourseRequestDTO requestDTO){
+//        fullCourseService.changeDailyCourse(requestDTO);
+//    }
+
 
     @Operation(summary = "추천 전체일정",
             tags = {"전체일정 API - V1"},

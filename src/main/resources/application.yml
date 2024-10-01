@@ -46,11 +46,13 @@ spring:
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
 
+
+
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:3306/travelock_db?useSSL=false&useServerPrepStmts=true&useUnicode=true&characterEncoding=utf8mb4&serverTimezone=Asia/Seoul
     username: root
-    password: 1234
+    password: 123123
 
   jpa:
     hibernate:
@@ -58,6 +60,14 @@ spring:
     #  show-sql: true
       naming:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+    # SpringDataJpa의 batch처리를위한 설정
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 50  # 한 번에 처리할 엔티티 수
+        order_inserts: true
+        order_updates: true
+        jdbc.batch_versioned_data: true
 
     #Swagger 3.0
   mvc:
@@ -80,7 +90,9 @@ springdoc:
 
 application:
   security:
-    jwt: awefawefawefawef123412341234
+    jwt:
+      secret-key: awefawefawefawef123412341234a23ta23ta23ta23ta23ta23t
+
 
 server:
   port: 8080
