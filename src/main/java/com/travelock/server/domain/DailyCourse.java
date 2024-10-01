@@ -32,10 +32,9 @@ public class DailyCourse implements Serializable {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    // Daily Course : Full Course = N : 1
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "full_course_id", nullable = false)
-    private FullCourse fullCourse;
+    // Daily Course : Connect entity = 1 : N
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<FullAndDailyCourseConnect> fullAndDailyCourseConnects;
 
     // Daily Course : Daily Block Connect = 1 : N
     @OneToMany(mappedBy = "dailyCourse")
@@ -50,9 +49,8 @@ public class DailyCourse implements Serializable {
     /**
      * DailyCourse Set Function
      */
-    public void addDailyCourse(Member member, FullCourse fullCourse) {
+    public void addDailyCourse(Member member) {
         this.member = member;
-        this.fullCourse = fullCourse;
 
         // 좋아요, 스크랩 수 기본값
         this.favoriteCount = 0;

@@ -31,14 +31,14 @@ public class FullCourse implements Serializable {
     @Column(columnDefinition = "VARCHAR(1) COMMENT '활성화 상태'")
     private String activeStatus;
 
-    // Full Course : Member = N : 1
+    // Full Course : Connect entity = N : 1
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    // Full Course : Daily Course = 1 : N
-    @OneToMany(mappedBy = "fullCourse")
-    private List<DailyCourse> dailyCourses;
+    // Full Course : Connect entity = 1 : N
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<FullAndDailyCourseConnect> fullAndDailyCourseConnects;
 
     @OneToMany(mappedBy = "fullCourse", fetch = FetchType.LAZY)
     private List<FullCourseFavorite> fullCourseFavorites;

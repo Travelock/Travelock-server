@@ -60,7 +60,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             Member member = new Member();
             member.setUsername(username);
             member.setEmail(oAuth2Response.getEmail());
-            member.setName(oAuth2Response.getName());
+            member.setNickName(oAuth2Response.getName());
             member.setRole("ROLE_USER");
 
             memberRepository.save(member); // 새로운 데이터 저장
@@ -76,7 +76,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         else { // 한번이라도 로그인을 해서 데이터가 존재하는 경우
 
             existData.setEmail(oAuth2Response.getEmail()); // 데이터 업데이트
-            existData.setName(oAuth2Response.getName());
+            existData.setNickName(oAuth2Response.getName());
 
             memberRepository.save(existData);
 

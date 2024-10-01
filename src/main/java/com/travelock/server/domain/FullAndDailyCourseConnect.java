@@ -1,9 +1,6 @@
 package com.travelock.server.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -13,13 +10,27 @@ import lombok.NoArgsConstructor;
 public class FullAndDailyCourseConnect {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long fullDailyCourseConnectId;
-    private Long memberId;
-    private Long fullCourseId;
     private Integer dailyNum;
 
-    public void createNewConnect(Long memberId, Long fullCourseId, Integer dailyNum){
-        this.memberId = memberId;
-        this.fullCourseId = fullCourseId;
+    // Full Course Connect : Full Block = N : 1
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
+    // Full Course Connect : Full Block = N : 1
+    @ManyToOne
+    @JoinColumn(name = "full_course_id", nullable = false)
+    private FullCourse fullCourse;
+
+    // Daily Course Connect : Full Block = N : 1
+    @ManyToOne
+    @JoinColumn(name = "daily_course_id", nullable = false)
+    private DailyCourse dailyCourse;
+
+
+    public void createNewConnect(Member member, FullCourse fullCourse, Integer dailyNum){
+        this.member = member;
+        this.fullCourse = fullCourse;
         this.dailyNum = dailyNum;
     }
 }

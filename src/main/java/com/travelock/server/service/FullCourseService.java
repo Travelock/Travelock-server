@@ -99,8 +99,8 @@ public class FullCourseService {
         for (DailyCourseDto dailyCourseDto : dailyCourseDtoList) {
             FullAndDailyCourseConnect tmp = new FullAndDailyCourseConnect();
             tmp.createNewConnect(
-                    memberId,
-                    dailyCourseDto.getDailyCourseId(),
+                    member,
+                    fullCourse,
                     dailyCourseDto.getDailyCourseNum()
             );
             fullAndDailyCourseConnects.add(tmp);

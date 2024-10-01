@@ -19,11 +19,11 @@ public class DTOConverter {
                 fullCourse.getFullCourseId(),
                 fullCourse.getMember().getMemberId(),
 //                fullCourse.getMember().getNickName(),
-                fullCourse.getMember().getName(), // 닉네임 대체
+                fullCourse.getMember().getNickName(),
                 fullCourse.getTitle(),
                 fullCourse.getFavoriteCount(),
                 fullCourse.getScarpCount(),
-                fullCourse.getDailyCourses()
+                null
         );
     }
     // 2개 이상의 FullCourse를 FullCourseResponseDTO로 변환
@@ -41,7 +41,7 @@ public class DTOConverter {
     public static DailyCourseResponseDTO toDailyCourseResponseDTO(DailyCourse dailyCourse) {
         return new DailyCourseResponseDTO(
                 dailyCourse.getDailyCourseId(),
-                dailyCourse.getFullCourse().getFullCourseId(),
+                null,
                 dailyCourse.getMember().getMemberId(),
                 dailyCourse.getMember().getNickName(),
                 dailyCourse.getFavoriteCount(),

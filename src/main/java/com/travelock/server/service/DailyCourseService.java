@@ -218,11 +218,11 @@ public class DailyCourseService {
 
         //연결객체 생성
         FullAndDailyCourseConnect connect = new FullAndDailyCourseConnect();
-        connect.createNewConnect(member.getMemberId(), fullCourse.getFullCourseId(), createDto.getDayNum());
+        connect.createNewConnect(member, fullCourse, createDto.getDayNum());
 
         // DailyCourse 설정 및 저장
         dailyCourse.addDailyCourse(
-            member, fullCourse
+            member
         );
 
         //FullBlock Batch 저장 ----------------------------------------------------------------------- DB INSERT ( 1 )

@@ -20,12 +20,17 @@ public class TokenController {
 
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshToken(@CookieValue("RefreshToken") String refreshToken) {
+
+
+        //임시
+        Long memberId = 1L;
+
         if (jwtUtil.isExpired(refreshToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Refresh token expired");
         }
 
         String username = jwtUtil.getUsername(refreshToken);
-        String newAccessToken = jwtUtil.createJwt(username, "ROLE_USER", 60*60*60L); // 새로운 액세스 토큰 발급
+        String newAccessToken = jwtUtil.createJwt(username, "ROLE_USER", 60*60*60L, memberId); // 새로운 액세스 토큰 발급
 
         // 새로운 액세스 토큰을 반환
         return ResponseEntity.ok().header("Authorization", newAccessToken).build();
