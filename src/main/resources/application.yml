@@ -3,6 +3,7 @@ spring:
     allow-bean-definition-overriding: true
   application:
     name: Travelock-server
+
   security:
     oauth2:
       client:
@@ -89,4 +90,7 @@ application:
 server:
   port: 8080
 
+kakao:
+  api:
+    key: 4aaa36264fe334153cd809a1918d41b2
 

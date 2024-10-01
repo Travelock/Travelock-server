@@ -1,5 +1,6 @@
 package com.travelock.server.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,5 +37,6 @@ public class MiddleBlock extends BaseTime {
 
     // Middle Block : Small Block = 1 : N
     @OneToMany(mappedBy = "middleBlock")
+    @JsonManagedReference
     private List<SmallBlock> smallBlocks;
 }
