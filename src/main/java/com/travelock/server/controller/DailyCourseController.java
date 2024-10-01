@@ -50,6 +50,28 @@ public class DailyCourseController {
     }
 
 
+    @Operation(summary = "일일일정 수정",
+            tags = {"일일일정 API - V1"},
+            description = "일일일정 수정",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "일일일정 생성 Dto",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = DailyCourseCreateDto.class))
+            ),
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "일일일정 저장 성공", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "400", description = "일일일정 저장 실패", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
+            })
+    @PutMapping
+    public ResponseEntity<?> modifyDailyCourse(@RequestBody DailyCourseCreateDto request){
+
+        // Response DTO로 변환해서 반환
+        DailyCourseResponseDTO response = DTOConverter.toDailyCourseResponseDTO(dailyCourseService.modifyDailyCourse(request));
+        return ResponseEntity.status(HttpStatus.OK).body("수정됨");
+    }
+
+
 //    //일일일정 조회
 //   조회 public ResponseEntity<?> getDailyCourse(){getDailyCourse
 //        dailyCourseService

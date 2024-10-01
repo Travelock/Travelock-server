@@ -222,7 +222,7 @@ public class DailyCourseService {
 
         // DailyCourse 설정 및 저장
         dailyCourse.addDailyCourse(
-            createDto.getDayNum(), member, fullCourse
+            member, fullCourse
         );
 
         //FullBlock Batch 저장 ----------------------------------------------------------------------- DB INSERT ( 1 )
@@ -232,6 +232,13 @@ public class DailyCourseService {
         // Daily Course 저장 ------------------------------------------------------------------------- DB INSERT ( 1 )
         return dailyCourseRepository.save(dailyCourse);
 
+    }
+
+
+    /** 일일일정 수정*/
+    public DailyCourse modifyDailyCourse(DailyCourseCreateDto request) {
+
+        return null;
     }
 
 
@@ -334,7 +341,5 @@ public class DailyCourseService {
         return dailyCourseScraps;
 
     }
-
-
 }
 

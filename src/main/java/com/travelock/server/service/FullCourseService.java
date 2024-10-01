@@ -5,18 +5,21 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.travelock.server.domain.*;
 import com.travelock.server.dto.DailyCourseRequestDTO;
 import com.travelock.server.dto.FullCourseRequestDTO;
+import com.travelock.server.dto.course.full_create.DailyCourseDto;
+import com.travelock.server.dto.course.full_create.FullCourseCreateDto;
+import com.travelock.server.exception.GlobalExceptionHandler;
+import com.travelock.server.exception.base_exceptions.DataAccessFailException;
 import com.travelock.server.exception.base_exceptions.ResourceNotFoundException;
 import com.travelock.server.exception.course.AddFullCourseFavoriteException;
 import com.travelock.server.exception.course.AddFullCourseScrapException;
+import com.travelock.server.exception.course.EmptyTitleException;
 import com.travelock.server.exception.review.AddReviewException;
-import com.travelock.server.repository.FullCourseFavoriteRepository;
-import com.travelock.server.repository.FullCourseRepository;
-import com.travelock.server.repository.FullCourseScrapRepository;
-import com.travelock.server.repository.MemberRepository;
+import com.travelock.server.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,6 +30,7 @@ public class FullCourseService {
     private final FullCourseRepository fullCourseRepository;
     private final FullCourseFavoriteRepository fullCourseFavoriteRepository;
     private final FullCourseScrapRepository fullCourseScrapRepository;
+    private final FullAndDailyCourseConnectRepository fullAndDailyCourseConnectRepository;
     private final MemberRepository memberRepository;
 
 
@@ -63,33 +67,84 @@ public class FullCourseService {
         return fullCourse;
     }
 
-    /**
-     * 전체일정 생성
-     */
-    public FullCourse saveCourse(FullCourseRequestDTO requestDTO) {
-        // 유효성 검사
-        // @TODO title Null | 빈 문자열인 경우 정책
-        if (requestDTO.getTitle() == null || requestDTO.getTitle().isBlank()) {
-            // 일단 임의 값 설정
-            requestDTO.setTitle("임의 타이틀");
+
+    /**전체일정 생성*/
+    public FullCourse saveFullCourse(FullCourseCreateDto createDto){
+
+        if (createDto.getTitle() == null || createDto.getTitle().isBlank()) {
+            throw new EmptyTitleException("Title is empty");
         }
-        // @TODO 멤버 조회
-        Member member = memberRepository.findById(1L).get(); // 테스트
 
-        // DB INSERT
+        //수정필요
+        Long memberId = 1L;
+
+        //초기화
         FullCourse fullCourse = new FullCourse();
-        fullCourse.addFullCourse(
-                requestDTO.getTitle(),
-                member
-        );
-        try {
-            return fullCourseRepository.save(fullCourse);
-        } catch (Exception e) {
-            // @TODO Add log
+        QDailyCourse qDailyCourse = QDailyCourse.dailyCourse;
+        QMember qMember = QMember.member;
+        List<DailyCourseDto> dailyCourseDtoList = createDto.getDailyCourseDtoList();
+        List<FullAndDailyCourseConnect> fullAndDailyCourseConnects = new ArrayList<>();
 
-            throw new AddReviewException("저장에 실패했습니다." + e.getMessage() );
+        //현재 사용자 조회 ------------------------------------------------------------------------------DB SELECT (1)
+        Member member = query.selectFrom(qMember).where(qMember.memberId.eq(memberId)).fetchOne();
+
+        if(member == null){
+            throw new ResourceNotFoundException("Member not found");
+        }
+
+        //FullCourse 객체 데이터 입력
+        fullCourse.addFullCourse(createDto.getTitle(), member);
+
+        //일정 연결객체 리스트 생성
+        for (DailyCourseDto dailyCourseDto : dailyCourseDtoList) {
+            FullAndDailyCourseConnect tmp = new FullAndDailyCourseConnect();
+            tmp.createNewConnect(
+                    memberId,
+                    dailyCourseDto.getDailyCourseId(),
+                    dailyCourseDto.getDailyCourseNum()
+            );
+            fullAndDailyCourseConnects.add(tmp);
+        }
+
+
+        //batch 처리 ----------------------------------------------------------------------------------DB INSERT (1)
+        fullAndDailyCourseConnectRepository.saveAll(fullAndDailyCourseConnects);
+        //--------------------------------------------------------------------------------------------DB INSERT (1)
+        return fullCourseRepository.save(fullCourse);
+    }
+
+    /**제목 수정*/
+    public void modifyTitle(FullCourseRequestDTO requestDTO){
+        QFullCourse qFullCourse = QFullCourse.fullCourse;
+
+        if (requestDTO.getTitle() == null || requestDTO.getTitle().isBlank()) {
+            //404
+            throw new EmptyTitleException("Title is empty");
+        }
+
+        long result = query.update(qFullCourse)
+                .set(qFullCourse.title, requestDTO.getTitle())
+                .where(
+                        qFullCourse.fullCourseId.eq(requestDTO.getFullCourseId())
+                        .and(qFullCourse.member.memberId.eq(requestDTO.getMemberId()))
+                )
+                .execute();
+
+        if(result == 0){
+            //500
+            throw new DataAccessFailException("FullCourse update failed");
         }
     }
+
+    /**전체일정 수정*/
+    public FullCourse modifyFullCourse(){
+
+
+
+        return null;
+    }
+
+
 
     /**좋아요 설정*/
     public void setFavorite(Long fullCourseId, Long memberId) {
@@ -187,10 +242,5 @@ public class FullCourseService {
         return fullCourseScraps;
     }
 
-    /**일일일정 수정*/
-    public DailyCourse changeDailyCourse(DailyCourseRequestDTO requestDTO){
 
-        return null;
-
-    }
 }

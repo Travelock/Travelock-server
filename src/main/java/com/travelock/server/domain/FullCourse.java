@@ -59,7 +59,7 @@ public class FullCourse implements Serializable {
         this.scarpCount = 0;
 
         // 최초 생성시 활성화 상태는 Y
-        this.activeStatus = "Y";
+        this.activeStatus = "y";
 
         // Member, DailyCourses
         this.member = member;

@@ -17,8 +17,9 @@ public class DailyCourse implements Serializable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long dailyCourseId;
 
-    @Column(columnDefinition = "INT COMMENT '일자 정보(N일차)'")
-    private Integer dayNum;
+//    전체<->일일 일정간 연결객체가 생기면서 필요없을듯
+//    @Column(columnDefinition = "INT COMMENT '일자 정보(N일차)'")
+//    private Integer dayNum;
 
     @Column(columnDefinition="INT NOT NULL DEFAULT 0 COMMENT '좋아요 수'")
     private Integer favoriteCount;
@@ -49,8 +50,7 @@ public class DailyCourse implements Serializable {
     /**
      * DailyCourse Set Function
      */
-    public void addDailyCourse(Integer dayNum, Member member, FullCourse fullCourse) {
-        this.dayNum = dayNum;
+    public void addDailyCourse(Member member, FullCourse fullCourse) {
         this.member = member;
         this.fullCourse = fullCourse;
 

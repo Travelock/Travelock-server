@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 public class DailyCourseResponseDTO {
     private Long dailyCourseId;
-    private Integer dayNum;         // 일자 정보(N일차)
+//    private Integer dayNum;         // 일자 정보(N일차)
     private Long fullCourseId;      // 포함되어있는 전체일정 ID
     private Long memberId;          // 생성한 멤버 ID
     private String memberNickName;  // 생성한 멤버 닉네임 - JK

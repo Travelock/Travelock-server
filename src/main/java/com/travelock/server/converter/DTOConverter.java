@@ -41,7 +41,6 @@ public class DTOConverter {
     public static DailyCourseResponseDTO toDailyCourseResponseDTO(DailyCourse dailyCourse) {
         return new DailyCourseResponseDTO(
                 dailyCourse.getDailyCourseId(),
-                dailyCourse.getDayNum(),
                 dailyCourse.getFullCourse().getFullCourseId(),
                 dailyCourse.getMember().getMemberId(),
                 dailyCourse.getMember().getNickName(),
