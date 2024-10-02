@@ -25,4 +25,18 @@ public class SmallBlockRepositoryImpl implements SmallBlockCustomRepository {
         return Optional.ofNullable(result);
     }
 
+        public SmallBlock getSmallBlock(String placeId) {
+        QSmallBlock qSmallBlock = QSmallBlock.smallBlock;
+
+        SmallBlock smallblock = queryFactory
+                .selectFrom(smallBlock)
+                .where(qSmallBlock.placeId.eq(placeId))
+                .fetchOne();
+        if(smallBlock == null){
+            throw new ResourceNotFoundException("SmallBlock not found.");
+        }
+            
+        return smallblock;
+    }
+
 }
