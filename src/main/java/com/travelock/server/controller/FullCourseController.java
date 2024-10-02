@@ -48,7 +48,8 @@ public class FullCourseController {
     @GetMapping("/member/{memberId}")
     public ResponseEntity<?> getFullCoursesByMember(@PathVariable Long memberId) {
         // Response DTO로 변환해서 반환
-        List<FullCourseResponseDTO> response = DTOConverter.toFullCourseResponseDTOList(fullCourseService.findMemberFullCourses(memberId));
+        List<FullCourseResponseDTO> response = DTOConverter.toDtoList(fullCourseService.findMemberFullCourses(memberId)
+                , FullCourseResponseDTO::fromDomainToResponseDTO);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -68,7 +69,8 @@ public class FullCourseController {
     @PostMapping
     public ResponseEntity<?> createFullCourse(@RequestBody FullCourseCreateDto request) {
         // Response DTO로 변환해서 반환
-        FullCourseResponseDTO response = DTOConverter.toFullCourseResponseDTO(fullCourseService.saveFullCourse(request));
+        FullCourseResponseDTO response = DTOConverter.toDto(fullCourseService.saveFullCourse(request)
+                , FullCourseResponseDTO::fromDomainToResponseDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

@@ -1,60 +1,21 @@
 package com.travelock.server.converter;
 
-import com.travelock.server.domain.DailyCourse;
-import com.travelock.server.domain.FullCourse;
-import com.travelock.server.dto.DailyCourseResponseDTO;
-import com.travelock.server.dto.FullCourseResponseDTO;
-
-import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 // Entity를 DTO로 변환하는 클래스
 public class DTOConverter {
 
-    /**
-     * 전체 일정 Entity to Response DTO
-     */
-    public static FullCourseResponseDTO toFullCourseResponseDTO(FullCourse fullCourse) {
-        return new FullCourseResponseDTO(
-                fullCourse.getFullCourseId(),
-                fullCourse.getMember().getMemberId(),
-//                fullCourse.getMember().getNickName(),
-                fullCourse.getMember().getNickName(),
-                fullCourse.getTitle(),
-                fullCourse.getFavoriteCount(),
-                fullCourse.getScarpCount(),
-                null
-        );
-    }
-    // 2개 이상의 FullCourse를 FullCourseResponseDTO로 변환
-    public static List<FullCourseResponseDTO> toFullCourseResponseDTOList(List<FullCourse> fullCourses) {
-        List<FullCourseResponseDTO> responseDTOList = new ArrayList<>();
-        for (FullCourse fullCourse : fullCourses) {
-            responseDTOList.add(toFullCourseResponseDTO(fullCourse));
-        }
-        return responseDTOList;
+    // 단일 객체 변환 함수
+    public static <D, E> D toDto(E entity, Function<E, D> converter) {
+        return converter.apply(entity);
     }
 
-    /**
-     * 일자별 일정 Entity to Response DTO
-     */
-    public static DailyCourseResponseDTO toDailyCourseResponseDTO(DailyCourse dailyCourse) {
-        return new DailyCourseResponseDTO(
-                dailyCourse.getDailyCourseId(),
-                null,
-                dailyCourse.getMember().getMemberId(),
-                dailyCourse.getMember().getNickName(),
-                dailyCourse.getFavoriteCount(),
-                dailyCourse.getScarpCount(),
-                null
-        );
-    }
-    // 2개 이상의 DailyCourse를 DailyCourseResponseDTO로 변환
-    public static List<DailyCourseResponseDTO> toDailyCourseResponseDTOList(List<DailyCourse> dailyCourses) {
-        List<DailyCourseResponseDTO> responseDTOList = new ArrayList<>();
-        for (DailyCourse dailyCourse : dailyCourses) {
-            responseDTOList.add(toDailyCourseResponseDTO(dailyCourse));
-        }
-        return responseDTOList;
+    // 여러 개의 객체 변환 함수 (리스트 변환)
+    public static <D, E> List<D> toDtoList(List<E> entities, Function<E, D> converter) {
+        return entities.stream()  // 스트림 생성
+                .map(converter)  // 각각의 객체를 변환
+                .collect(Collectors.toList());  // 리스트로 수집
     }
 }

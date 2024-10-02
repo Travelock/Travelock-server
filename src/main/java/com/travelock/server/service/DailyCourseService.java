@@ -35,6 +35,23 @@ public class DailyCourseService {
 
 
     /**
+     * 일자별 일정 조회 By DailyCourseId
+     */
+    public DailyCourse findDailyCourse(Long dailyCourseId) {
+        QDailyCourse qDailyCourse = QDailyCourse.dailyCourse;
+        DailyCourse dailyCourse = query
+                .selectFrom(qDailyCourse)
+                .where(qDailyCourse.dailyCourseId.eq(dailyCourseId))
+                .fetchOne(); // 데이터가 없으면 빈리스트 반환
+
+        if (dailyCourse == null) {
+            throw new ResourceNotFoundException("Full Course not found by ID("+dailyCourseId+")");
+        }
+
+        return dailyCourse;
+    }
+
+    /**
      * 일자별 일정 생성
      * - 프론트에서 일일일정 확정시 저장됨.
      */
@@ -94,6 +111,7 @@ public class DailyCourseService {
             smaillBlockPlaceIdList.add(dto.getSmallBlockDto().getPlaceId());
         }
 
+        // @TODO SmallBlock이 새로 생성되는 경우엔 아래 쿼리로 조회 불가 | 테스트는 small Block 값 저장하고 수행
         // BigBlock과 MiddleBlock, SmallBlock, FullCourse를 조회 --------------------------------------------- DB SELECT(한방쿼리로 필요한 데이터 모두 가져오기)
         List<Tuple> list = query.select(qMember, qBigBlock, qMiddleBlock, qSmallBlock, qFullCourse)
                 .from(qMember, qBigBlock, qMiddleBlock, qSmallBlock, qFullCourse)
@@ -217,21 +235,29 @@ public class DailyCourseService {
 
 
         //연결객체 생성
-        FullAndDailyCourseConnect connect = new FullAndDailyCourseConnect();
-        connect.createNewConnect(member, fullCourse, createDto.getDayNum());
+        // @TODO daily_course_id null > INSERT 수행 순서 : daily도 저장한 후 id가져와야됨 > 확인 해주세요 (아래도 있습니다)
+        //FullAndDailyCourseConnect connect = new FullAndDailyCourseConnect();
+        //connect.createNewConnect(member, fullCourse, createDto.getDayNum());
 
         // DailyCourse 설정 및 저장
         dailyCourse.addDailyCourse(
             member
         );
 
+        // @TODO Full block - Daily Connect에 저장이 안됩니다
         //FullBlock Batch 저장 ----------------------------------------------------------------------- DB INSERT ( 1 )
         fullBlockRepository.saveAll(fullBlocksToBatchSave);
-        //연결객체 저장 -------------------------------------------------------------------------------- DB INSERT ( 1 )
-        fullAndDailyCourseConnectRepository.save(connect);
         // Daily Course 저장 ------------------------------------------------------------------------- DB INSERT ( 1 )
-        return dailyCourseRepository.save(dailyCourse);
+        DailyCourse savedDailyCourse = dailyCourseRepository.save(dailyCourse);
+        //연결객체 저장 -------------------------------------------------------------------------------- DB INSERT ( 1 )
+        // @TODO daily_course_id null > INSERT 수행 순서 변경 필요해서 수정해두었습니다. 확인부탁드려요
+        FullAndDailyCourseConnect connect = new FullAndDailyCourseConnect();
+        connect.createNewConnect(member, fullCourse, savedDailyCourse, createDto.getDayNum());
+        fullAndDailyCourseConnectRepository.save(connect);
 
+        return savedDailyCourse;
+        // Daily Course 저장 ------------------------------------------------------------------------- DB INSERT ( 1 )
+        // return dailyCourseRepository.save(dailyCourse);
     }
 
 

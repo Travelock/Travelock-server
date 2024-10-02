@@ -29,6 +29,23 @@ public class DailyCourseController {
     private final DailyCourseService dailyCourseService;
     private final CourseRecommendService courseRecommendService;
 
+    @Operation(summary = "일일일정 조회",
+            tags = {"일일일정 API - V1"},
+            description = "일일일정 조회",
+            parameters = {
+                    @Parameter(name = "dailyCourseId", description = "일일일정 ID", required = true, in = ParameterIn.PATH),
+            },
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "조회 성공", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
+            })
+    @GetMapping("/{dailyCourseId}")
+    public ResponseEntity<?> getDailyCourseById(@PathVariable Long dailyCourseId) {
+        return ResponseEntity.ok(DTOConverter.toDto(dailyCourseService.findDailyCourse(dailyCourseId)
+                ,DailyCourseResponseDTO::fromDomainToResponseDTO));
+    }
+
     @Operation(summary = "일일일정 저장",
             tags = {"일일일정 API - V1"},
             description = "일일일정 저장",
@@ -45,7 +62,8 @@ public class DailyCourseController {
     @PostMapping
     public ResponseEntity<?> createDailyCourse(@RequestBody DailyCourseCreateDto request) {
         // Response DTO로 변환해서 반환
-        DailyCourseResponseDTO response = DTOConverter.toDailyCourseResponseDTO(dailyCourseService.saveDailyCourse(request));
+        DailyCourseResponseDTO response = DTOConverter.toDto(dailyCourseService.saveDailyCourse(request),
+                DailyCourseResponseDTO::fromDomainToResponseDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -67,7 +85,8 @@ public class DailyCourseController {
     public ResponseEntity<?> modifyDailyCourse(@RequestBody DailyCourseCreateDto request){
 
         // Response DTO로 변환해서 반환
-        DailyCourseResponseDTO response = DTOConverter.toDailyCourseResponseDTO(dailyCourseService.modifyDailyCourse(request));
+        DailyCourseResponseDTO response = DTOConverter.toDto(dailyCourseService.modifyDailyCourse(request)
+                , DailyCourseResponseDTO::fromDomainToResponseDTO);
         return ResponseEntity.status(HttpStatus.OK).body("수정됨");
     }
 
