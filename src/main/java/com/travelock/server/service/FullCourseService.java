@@ -82,7 +82,9 @@ public class FullCourseService {
         FullCourse fullCourse = new FullCourse();
         QDailyCourse qDailyCourse = QDailyCourse.dailyCourse;
         QMember qMember = QMember.member;
-        List<DailyCourseDto> dailyCourseDtoList = createDto.getDailyCourseDtoList();
+        // @TODO Daily Course List 없을 경우 존재 : 처음에는 빈 행으로 FullCourse 생성
+        List<DailyCourseDto> dailyCourseDtoList = new ArrayList<>();
+                //= createDto.getDailyCourseDtoList();
         List<FullAndDailyCourseConnect> fullAndDailyCourseConnects = new ArrayList<>();
 
         //현재 사용자 조회 ------------------------------------------------------------------------------DB SELECT (1)
@@ -101,14 +103,16 @@ public class FullCourseService {
             tmp.createNewConnect(
                     member,
                     fullCourse,
+                    null, // @TODO for test
                     dailyCourseDto.getDailyCourseNum()
             );
             fullAndDailyCourseConnects.add(tmp);
         }
 
 
+        // @TODO 전체일정 첫 생성시에는 daily 일정이 없어서 연결 테이블에 insert할 daily_id 없음
         //batch 처리 ----------------------------------------------------------------------------------DB INSERT (1)
-        fullAndDailyCourseConnectRepository.saveAll(fullAndDailyCourseConnects);
+         fullAndDailyCourseConnectRepository.saveAll(fullAndDailyCourseConnects);
         //--------------------------------------------------------------------------------------------DB INSERT (1)
         return fullCourseRepository.save(fullCourse);
     }

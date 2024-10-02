@@ -2,9 +2,11 @@ package com.travelock.server.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class FullAndDailyCourseConnect {
@@ -28,9 +30,11 @@ public class FullAndDailyCourseConnect {
     private DailyCourse dailyCourse;
 
 
-    public void createNewConnect(Member member, FullCourse fullCourse, Integer dailyNum){
+    public void createNewConnect(Member member, FullCourse fullCourse, DailyCourse dailyCourse, Integer dailyNum){
         this.member = member;
         this.fullCourse = fullCourse;
+        // @TODO Full - Daily 연결시, full이랑 daily랑 둘 다 필수값
+        this.dailyCourse = dailyCourse;
         this.dailyNum = dailyNum;
     }
 }
