@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    include: API-KEY
   main:
     allow-bean-definition-overriding: true
   application:
@@ -100,7 +102,5 @@ application:
 server:
   port: 8080
 
-kakao:
-  api:
-    key: 4aaa36264fe334153cd809a1918d41b2
+
 

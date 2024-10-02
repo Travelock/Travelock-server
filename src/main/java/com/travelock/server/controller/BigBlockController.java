@@ -21,6 +21,7 @@ public class BigBlockController {
     // 특정 시/도에 속한 시/군/구(BigBlock) 조회 메서드
     @GetMapping("/{stateCode}/{cityCode}")
     public BigBlock getBigBlock(@PathVariable String stateCode, @PathVariable String cityCode) {
+        log.info("API 호출: stateCode={}, cityCode={}", stateCode, cityCode);
         return bigBlockService.getBigBlock(stateCode, cityCode);
     }
 }

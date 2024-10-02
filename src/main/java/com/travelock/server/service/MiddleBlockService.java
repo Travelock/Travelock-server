@@ -22,6 +22,11 @@ public class MiddleBlockService {
         return middleBlockRepository.findAll();
     }
 
+    public MiddleBlock getCategoryByCode(String categoryCode) {
+        log.info("카테고리 조회, categoryCode = {}", categoryCode);
+        return middleBlockRepository.findByCategoryCode(categoryCode);
+    }
+
     // data.sql 로 대체
 //    @PostConstruct
 //    public void init() {
