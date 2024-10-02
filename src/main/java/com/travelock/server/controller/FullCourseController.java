@@ -57,9 +57,9 @@ public class FullCourseController {
             tags = {"전체일정 API - V1"},
             description = "전체일정 저장",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "전체일정 생성 Dto",
+                    description = "전체일정 요청 Dto",
                     required = true,
-                    content = @Content(schema = @Schema(implementation = FullCourseCreateDto.class))
+                    content = @Content(schema = @Schema(implementation = FullCourseRequestDTO.class))
             ),
             responses = {
                     @ApiResponse(responseCode = "201", description = "전체일정 저장 성공", content = @Content(mediaType = "application/json")),
@@ -67,7 +67,7 @@ public class FullCourseController {
                     @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
             })
     @PostMapping
-    public ResponseEntity<?> createFullCourse(@RequestBody FullCourseCreateDto request) {
+    public ResponseEntity<?> createFullCourse(@RequestBody FullCourseRequestDTO request) {
         // Response DTO로 변환해서 반환
         FullCourseResponseDTO response = DTOConverter.toDto(fullCourseService.saveFullCourse(request)
                 , FullCourseResponseDTO::fromDomainToResponseDTO);

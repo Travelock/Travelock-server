@@ -67,9 +67,10 @@ public class FullCourseService {
         return fullCourse;
     }
 
-
-    /**전체일정 생성*/
-    public FullCourse saveFullCourse(FullCourseCreateDto createDto){
+    /**전체일정 생성
+     * -> 일일일정 생성시 연결객체 생성됨. 전체일정은 간단하게 저장해도 될듯
+     * */
+    public FullCourse saveFullCourse(FullCourseRequestDTO createDto){
 
         if (createDto.getTitle() == null || createDto.getTitle().isBlank()) {
             throw new EmptyTitleException("Title is empty");
@@ -79,40 +80,20 @@ public class FullCourseService {
         Long memberId = 1L;
 
         //초기화
-        FullCourse fullCourse = new FullCourse();
-        QDailyCourse qDailyCourse = QDailyCourse.dailyCourse;
         QMember qMember = QMember.member;
-        // @TODO Daily Course List 없을 경우 존재 : 처음에는 빈 행으로 FullCourse 생성
-        List<DailyCourseDto> dailyCourseDtoList = new ArrayList<>();
-                //= createDto.getDailyCourseDtoList();
-        List<FullAndDailyCourseConnect> fullAndDailyCourseConnects = new ArrayList<>();
 
         //현재 사용자 조회 ------------------------------------------------------------------------------DB SELECT (1)
         Member member = query.selectFrom(qMember).where(qMember.memberId.eq(memberId)).fetchOne();
 
-        if(member == null){
+        if(member == null) {
             throw new ResourceNotFoundException("Member not found");
         }
 
-        //FullCourse 객체 데이터 입력
-        fullCourse.addFullCourse(createDto.getTitle(), member);
-
-        //일정 연결객체 리스트 생성
-        for (DailyCourseDto dailyCourseDto : dailyCourseDtoList) {
-            FullAndDailyCourseConnect tmp = new FullAndDailyCourseConnect();
-            tmp.createNewConnect(
-                    member,
-                    fullCourse,
-                    null, // @TODO for test
-                    dailyCourseDto.getDailyCourseNum()
-            );
-            fullAndDailyCourseConnects.add(tmp);
-        }
-
-
-        // @TODO 전체일정 첫 생성시에는 daily 일정이 없어서 연결 테이블에 insert할 daily_id 없음
-        //batch 처리 ----------------------------------------------------------------------------------DB INSERT (1)
-         fullAndDailyCourseConnectRepository.saveAll(fullAndDailyCourseConnects);
+        FullCourse fullCourse = new FullCourse();
+        fullCourse.addFullCourse(
+                createDto.getTitle(),
+                member
+        );
         //--------------------------------------------------------------------------------------------DB INSERT (1)
         return fullCourseRepository.save(fullCourse);
     }

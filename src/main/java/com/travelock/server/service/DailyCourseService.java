@@ -81,15 +81,6 @@ public class DailyCourseService {
         QSmallBlock qSmallBlock = QSmallBlock.smallBlock;
         QFullCourse qFullCourse = QFullCourse.fullCourse;
 
-//        현재 사용자 조회 ------------------------------------------------------------------------------------ DB SELECT (아래 select로 병합)
-//        Member member = memberRepository.findById(createDto.getMemberId())
-//                .orElseThrow(() -> new UsernameNotFoundException("Member not Found"));
-
-        // 초기화
-//        List<BigBlock> bigBlocks = new ArrayList<>();
-//        List<MiddleBlock> middleBlocks = new ArrayList<>();
-//        List<SmallBlock> exsistingSmallBlocks = new ArrayList<>();
-
         //Map으로 중복순회 방지
         Map<Long, BigBlock> bigBlockMap = new HashMap<>();
         Map<Long, MiddleBlock> middleBlockMap = new HashMap<>();
@@ -111,17 +102,14 @@ public class DailyCourseService {
             smaillBlockPlaceIdList.add(dto.getSmallBlockDto().getPlaceId());
         }
 
-        // @TODO SmallBlock이 새로 생성되는 경우엔 아래 쿼리로 조회 불가 | 테스트는 small Block 값 저장하고 수행
+        // @TODO SmallBlock이 새로 생성되는 경우엔 아래 쿼리로 조회 불가 | 테스트는 small Block 값 저장하고 수행 -> 쿼리수정
         // BigBlock과 MiddleBlock, SmallBlock, FullCourse를 조회 --------------------------------------------- DB SELECT(한방쿼리로 필요한 데이터 모두 가져오기)
-        List<Tuple> list = query.select(qMember, qBigBlock, qMiddleBlock, qSmallBlock, qFullCourse)
-                .from(qMember, qBigBlock, qMiddleBlock, qSmallBlock, qFullCourse)
-                .where(
-                        qMember.memberId.eq(createDto.getMemberId()),
-                        qBigBlock.bigBlockId.in(bigBlockIdList),
-                        qMiddleBlock.middleBlockId.in(middleBlockIdList),
-                        qSmallBlock.placeId.in(smaillBlockPlaceIdList),
-                        qFullCourse.fullCourseId.eq(createDto.getFullCourseId())
-                ).fetch();
+        List<Tuple> list = query.select(qBigBlock, qMiddleBlock, qSmallBlock)
+                .from(qBigBlock)
+                .join(qMiddleBlock).on(qMiddleBlock.middleBlockId.in(middleBlockIdList))
+                .leftJoin(qSmallBlock).on(qSmallBlock.placeId.in(smaillBlockPlaceIdList)) // LEFT JOIN으로 smallBlock이 없으면 null
+                .where(qBigBlock.bigBlockId.in(bigBlockIdList))
+                .fetch();
 
 
         if (list.isEmpty()) {
@@ -147,14 +135,13 @@ public class DailyCourseService {
             MiddleBlock middleBlock = tuple.get(qMiddleBlock);
             SmallBlock smallBlock = tuple.get(qSmallBlock);
 
-//            bigBlocks.add(bigBlock);
-//            middleBlocks.add(middleBlock);
-            //이미 존재하는 SmallBlock 리스트
-//            exsistingSmallBlocks.add(smallBlock);
-
             bigBlockMap.put(bigBlock.getBigBlockId(), bigBlock);
             middleBlockMap.put(middleBlock.getMiddleBlockId(), middleBlock);
-            existingSmallBlockMap.put(smallBlock.getPlaceId(), smallBlock);
+
+            if (smallBlock != null) {
+                // SmallBlock이 있을때만 처리
+                existingSmallBlockMap.put(smallBlock.getPlaceId(), smallBlock);
+            }
         }
 
 
@@ -164,27 +151,12 @@ public class DailyCourseService {
             FullBlock fullBlock = new FullBlock();
             SmallBlockDto smallBlockDto = fullBlockDto.getSmallBlockDto();
 
-            // 존재하는 SmallBlock을 확인
-//            SmallBlock smallBlock = exsistingSmallBlocks.stream()
-//                    .filter(sb -> sb.getPlaceId().equals(smallBlockDto.getPlaceId()))
-//                    .findFirst()
-//                    .orElse(null);
-
-
-            // Map을 이용하여 존재하는 SmallBlock을 확인
             SmallBlock smallBlock = existingSmallBlockMap.get(smallBlockDto.getPlaceId());
 
             // 존재하지 않으면 새로운 SmallBlock 생성
             if (smallBlock == null) {
                 smallBlock = new SmallBlock();
 
-//                각 루프마다 미들블록 리스트 순회
-//                MiddleBlock middleBlock = middleBlocks.stream()
-//                        .filter(m -> m.getMiddleBlockId().equals(fullBlockDto.getMiddleBlockId()))
-//                        .findFirst()
-//                        .orElseThrow(() -> new RuntimeException("MiddleBlock not found"));
-
-                //Map 사용
                 MiddleBlock middleBlock = middleBlockMap.get(fullBlockDto.getMiddleBlockId());
 
                 if (middleBlock == null) {
@@ -199,28 +171,15 @@ public class DailyCourseService {
                         middleBlock
                 );
 
-                // 새로 생성된 SmallBlock을 리스트에 추가하여 중복 방지
-//                exsistingSmallBlocks.add(smallBlock);
-
-                // 새로 생성된 SmallBlock을 Map에 추가
                 existingSmallBlockMap.put(smallBlock.getPlaceId(), smallBlock);
             }
 
-
-//            각 루프마다 빅블록 리스트 순회
-//            BigBlock bigBlock = bigBlocks.stream()
-//                    .filter(b -> b.getBigBlockId().equals(fullBlockDto.getBigBlockId()))
-//                    .findFirst()
-//                    .orElseThrow(() -> new RuntimeException("BigBlock not found"));// 연관된 BigBlock 객체 설정
-
-            //Map사용
             BigBlock bigBlock = bigBlockMap.get(fullBlockDto.getBigBlockId());
 
             if (bigBlock == null) {
                 throw new ResourceNotFoundException("BigBlock not found");
             }
 
-            // FullBlock객체 생성
             fullBlock.newFullBlock(
                     bigBlock,
                     smallBlock.getMiddleBlock(),
@@ -228,11 +187,10 @@ public class DailyCourseService {
             );
 
             fullBlocksToBatchSave.add(fullBlock);
-
-//            //Full Block 저장 ----------------------------------------------------------------------- DB INSERT ( * n ) -> (Batch INSERT처리로 DB와 통신 1번으로 줄임)
-//            fullBlockRepository.save(fullBlock);
         }
 
+
+        //=====================이 아래로 확인 필요...
 
         //연결객체 생성
         // @TODO daily_course_id null > INSERT 수행 순서 : daily도 저장한 후 id가져와야됨 > 확인 해주세요 (아래도 있습니다)
@@ -250,14 +208,13 @@ public class DailyCourseService {
         // Daily Course 저장 ------------------------------------------------------------------------- DB INSERT ( 1 )
         DailyCourse savedDailyCourse = dailyCourseRepository.save(dailyCourse);
         //연결객체 저장 -------------------------------------------------------------------------------- DB INSERT ( 1 )
-        // @TODO daily_course_id null > INSERT 수행 순서 변경 필요해서 수정해두었습니다. 확인부탁드려요
+        // @TODO daily_course_id null > INSERT 수행 순서 변경 필요해서 수정해두었습니다. 확인부탁드려요 -> 확인
         FullAndDailyCourseConnect connect = new FullAndDailyCourseConnect();
         connect.createNewConnect(member, fullCourse, savedDailyCourse, createDto.getDayNum());
+        // Daily Course 저장 ------------------------------------------------------------------------- DB INSERT ( 1 )
         fullAndDailyCourseConnectRepository.save(connect);
 
         return savedDailyCourse;
-        // Daily Course 저장 ------------------------------------------------------------------------- DB INSERT ( 1 )
-        // return dailyCourseRepository.save(dailyCourse);
     }
 
 
