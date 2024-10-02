@@ -2,6 +2,10 @@ spring:
   application:
     name: Travelock-server
 
+  # include key properties file
+  profiles:
+    include: API-KEY
+
   security:
     oauth2:
       client:
