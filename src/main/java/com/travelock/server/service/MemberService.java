@@ -36,7 +36,7 @@ public class MemberService {
     public String getProvider(String email){
         QMember qMember = QMember.member;
 
-        String provider = query.select(qMember.provider).from(qMember)
+        String provider = query.select(qMember.username).from(qMember)
                 .where(qMember.email.eq(email))
                 .fetchOne();
         if (provider == null){

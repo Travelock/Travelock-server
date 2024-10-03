@@ -18,6 +18,18 @@ public class SmallBlock {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long smallBlockId;
 
+    @Column(columnDefinition = "VARCHAR(50) COMMENT 'API에서 받은 고유값'")
+    private String placeId;
+
+    @Column(columnDefinition = "VARCHAR(100) COMMENT '경도값'")
+    private String mapX;
+    @Column(columnDefinition = "VARCHAR(100) COMMENT '위도값'")
+    private String mapY;
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '카카오 Place 링크 주소'")
+    private String linkURL;
+
+    @Column(columnDefinition = "INT COMMENT '일정에 추가된(참조된) 수'")
+    private Integer referenceCount;
 
     // Small Block : Middle Block = N : 1
     // 이 말은 즉, 여러개의 스몰블록이 하나의 미들블록을 참조할 수 있다는 것.

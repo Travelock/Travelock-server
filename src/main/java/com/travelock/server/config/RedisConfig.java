@@ -49,30 +49,31 @@ public class RedisConfig {
 
        // 키와 값을 위한 직렬화 설정
 //        객체나 구조화된 데이터(json) 저장시 사용.
-       template.setKeySerializer(new StringRedisSerializer());
-       template.setValueSerializer(serializer);
-       template.setHashKeySerializer(new StringRedisSerializer());
-       template.setHashValueSerializer(serializer);
-       template.afterPropertiesSet();
 
-       return template;
-   }
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(serializer);
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setHashValueSerializer(serializer);
+        template.afterPropertiesSet();
 
-   // 두 번째 RedisTemplate: String 직렬화 사용
-   // @Bean
-   // public RedisTemplate<String, String> customStringRedisTemplate() {
-   //     RedisTemplate<String, String> template = new RedisTemplate<>();
-   //     template.setConnectionFactory(redisConnectionFactory());
+        return template;
+    }
 
-   //     // String 직렬화 설정
-   //     template.setKeySerializer(new StringRedisSerializer());
-   //     template.setValueSerializer(new StringRedisSerializer());
-   //     template.setHashKeySerializer(new StringRedisSerializer());
-   //     template.setHashValueSerializer(new StringRedisSerializer());
-   //     template.afterPropertiesSet();
-
-   //     return template;
-   // }
+//    // 두 번째 RedisTemplate: String 직렬화 사용
+//    @Bean
+//    public RedisTemplate<String, String> customStringRedisTemplate() {
+//        RedisTemplate<String, String> template = new RedisTemplate<>();
+//        template.setConnectionFactory(redisConnectionFactory());
+//
+//        // String 직렬화 설정
+//        template.setKeySerializer(new StringRedisSerializer());
+//        template.setValueSerializer(new StringRedisSerializer());
+//        template.setHashKeySerializer(new StringRedisSerializer());
+//        template.setHashValueSerializer(new StringRedisSerializer());
+//        template.afterPropertiesSet();
+//
+//        return template;
+//    }
 
 
 }
