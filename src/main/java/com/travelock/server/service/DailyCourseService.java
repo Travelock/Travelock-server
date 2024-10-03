@@ -191,13 +191,13 @@ public class DailyCourseService {
                     throw new ResourceNotFoundException("MiddleBlock not found");
                 }
 
-                // SmallBlock 엔티티 설정
-                smallBlock.createNewSmallBlock(
-                        smallBlockDto.getMapX(),
-                        smallBlockDto.getMapY(),
-                        smallBlockDto.getPlaceId(),
-                        middleBlock
-                );
+//                // SmallBlock 엔티티 설정
+//                smallBlock.createNewSmallBlock(
+//                        smallBlockDto.getMapX(),
+//                        smallBlockDto.getMapY(),
+//                        smallBlockDto.getPlaceId(),
+//                        middleBlock
+//                );
 
                 // 새로 생성된 SmallBlock을 리스트에 추가하여 중복 방지
 //                exsistingSmallBlocks.add(smallBlock);

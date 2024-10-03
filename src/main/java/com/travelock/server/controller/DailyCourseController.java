@@ -26,7 +26,7 @@ import java.util.List;
 @Slf4j
 public class DailyCourseController {
    private final DailyCourseService dailyCourseService;
-   private final CourseRecommendService courseRecommendService;
+//   private final CourseRecommendService courseRecommendService;
 
     @Operation(summary = "일일일정 조회",
             tags = {"일일일정 API - V1"},
@@ -101,19 +101,19 @@ public class DailyCourseController {
 
 
 
-    @Operation(summary = "추천 일일일정",
-            tags = {"일일일정 API - V1"},
-            description = "캐시된 추천 일일일정 조회",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json")),
-                    @ApiResponse(responseCode = "404", description = "조회 실패", content = @Content(mediaType = "application/json")),
-                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
-            })
-    @GetMapping("/recommend")
-    public ResponseEntity<?> getRecommendedDailyCourses(){
-        List<DailyCourse> topDailyCoursesFromCache = courseRecommendService.getTopDailyCoursesFromCache();
-        return ResponseEntity.status(HttpStatus.OK).body(topDailyCoursesFromCache);
-    }
+//    @Operation(summary = "추천 일일일정",
+//            tags = {"일일일정 API - V1"},
+//            description = "캐시된 추천 일일일정 조회",
+//            responses = {
+//                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json")),
+//                    @ApiResponse(responseCode = "404", description = "조회 실패", content = @Content(mediaType = "application/json")),
+//                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
+//            })
+//    @GetMapping("/recommend")
+//    public ResponseEntity<?> getRecommendedDailyCourses(){
+//        List<DailyCourse> topDailyCoursesFromCache = courseRecommendService.getTopDailyCoursesFromCache();
+//        return ResponseEntity.status(HttpStatus.OK).body(topDailyCoursesFromCache);
+//    }
 
 
    @Operation(summary = "일일일정 좋아요",

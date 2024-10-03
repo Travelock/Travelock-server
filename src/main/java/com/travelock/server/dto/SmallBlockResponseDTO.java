@@ -6,14 +6,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class SmallBlockResponseDTO {
-    private Long smallBlockId;
-    private String placeId;
-    private String mapX;
-    private String mapY;
-    private Integer referenceCount;
+    private Long smallBlockId;    // SmallBlock 고유 ID
+    private String placeId;       // 장소 ID
+    private String placeName;     // 장소 이름
+    private String mapX;          // 지도 X 좌표
+    private String mapY;          // 지도 Y 좌표
+    private Integer referenceCount; // 참조 횟수
 
     public static SmallBlockResponseDTO fromDomainToResponseDTO(SmallBlock smallBlock) {
         if (smallBlock == null) {
@@ -23,6 +24,7 @@ public class SmallBlockResponseDTO {
         return new SmallBlockResponseDTO(
                 smallBlock.getSmallBlockId(),
                 smallBlock.getPlaceId(),
+                smallBlock.getPlaceName(),
                 smallBlock.getMapX(),
                 smallBlock.getMapY(),
                 smallBlock.getReferenceCount()

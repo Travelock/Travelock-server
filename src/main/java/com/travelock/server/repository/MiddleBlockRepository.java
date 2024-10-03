@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface MiddleBlockRepository extends JpaRepository<MiddleBlock, Long>, MiddleBlockCustomRepository {
+public interface MiddleBlockRepository extends JpaRepository<MiddleBlock, Long> {
 //    Optional<MiddleBlock> findByCategoryCode(String categoryCode);
 
 }

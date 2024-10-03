@@ -38,24 +38,8 @@ public class SmallBlock {
     @JsonBackReference
     private MiddleBlock middleBlock;
 
-    @Column(columnDefinition = "VARCHAR(100) COMMENT '장소 ID'")
-    private String placeId;
-
     @Column(columnDefinition = "VARCHAR(29) COMMENT '장소 이름'")
     private String placeName;
-
-    @Column(columnDefinition = "VARCHAR(100) COMMENT '지도 X 좌표'")
-    private String mapX;
-
-    @Column(columnDefinition = "VARCHAR(100) COMMENT '지도 Y 좌표'")
-    private String mapY;
-
-    @Column(columnDefinition = "VARCHAR(255) COMMENT '장소 URL'")
-    private String url;
-
-
-    @Column(columnDefinition = "INT COMMENT '일정에 추가된(참조된) 수'")
-    private Integer referenceCount = 0;
 
 
 
@@ -68,7 +52,7 @@ public class SmallBlock {
         this.placeName = placeName;
         this.mapX = mapX;
         this.mapY = mapY;
-        this.url = url;
+//        this.url = url;
         this.referenceCount = 1;
     }
 
