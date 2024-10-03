@@ -1,4 +1,8 @@
 spring:
+  profiles:
+    include: API-KEY
+  main:
+    allow-bean-definition-overriding: true
   application:
     name: Travelock-server
 
@@ -53,15 +57,22 @@ spring:
 
 
   datasource:
+
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:3306/travelock_db?useSSL=false&useServerPrepStmts=true&useUnicode=true&characterEncoding=utf8mb4&serverTimezone=Asia/Seoul
     username: root
     password: 123123
 
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data.sql
+
   jpa:
     hibernate:
       ddl-auto: update
     #  show-sql: true
+
       naming:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
     # SpringDataJpa의 batch처리를위한 설정
@@ -73,6 +84,8 @@ spring:
         order_updates: true
         jdbc.batch_versioned_data: true
 
+
+    defer-datasource-initialization: true
     #Swagger 3.0
   mvc:
     pathmatch:

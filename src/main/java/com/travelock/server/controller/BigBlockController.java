@@ -1,27 +1,30 @@
 package com.travelock.server.controller;
 
 import com.travelock.server.domain.BigBlock;
-import com.travelock.server.dto.BigBlockRequest;
 import com.travelock.server.service.BigBlockService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import static org.hibernate.query.sqm.tree.SqmNode.log;
 
 @RestController
-@RequestMapping("/api/bigblock")
+@RequestMapping("/api/big")
 @RequiredArgsConstructor
 @Slf4j
 public class BigBlockController {
     private final BigBlockService bigBlockService;
 
-    @PostMapping
-    public BigBlock createBigBlock(@RequestBody BigBlockRequest request) {
-        log.info("createBigBlock 호출, stateCode: {}, cityCode: {}", request.getStatecode(), request.getCityCode());
-        return bigBlockService.createBigBlock(request.getStatecode(), request.getCityCode());
+
+    // 기존 빅블럭 생성+조회 메서드 삭제
+
+
+    // 특정 시/도에 속한 시/군/구(BigBlock) 조회 메서드
+    @GetMapping("/{stateCode}/{cityCode}")
+    public BigBlock getBigBlock(@PathVariable String stateCode, @PathVariable String cityCode) {
+        log.info("API 호출: stateCode={}, cityCode={}", stateCode, cityCode);
+        return bigBlockService.getBigBlock(stateCode, cityCode);
     }
 }
+
+
+
