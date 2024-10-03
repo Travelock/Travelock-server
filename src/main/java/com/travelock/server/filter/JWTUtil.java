@@ -17,8 +17,9 @@ public class JWTUtil {
 
     private Key key;
 
-    public JWTUtil(@Value("${spring.jwt.secret}")String secret) {
 
+    //yml파일에 등록된 임시키의 길이가 짧아서 에러발생. yml파일경로 수정함.
+    public JWTUtil(@Value("${application.security.jwt.secret-key}")String secret) {
         byte[] byteSecretKey = Decoders.BASE64.decode(secret);
         key = Keys.hmacShaKeyFor(byteSecretKey);
     }

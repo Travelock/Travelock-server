@@ -5,8 +5,6 @@ import com.travelock.server.domain.State;
 import com.travelock.server.service.StateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.A;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,24 +13,29 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/states")
+@RequestMapping("/api/state")
 @RequiredArgsConstructor
 @Slf4j
 public class StateController {
+
     private final StateService stateService;
 
-    // 시,도 목록 조회
-    @GetMapping
-    public List<State> getAllStates() {
-        log.info("getAllStates 호출");
-        return stateService.getAllStates();
+    // 메서드 흐름 :
+    // 사용자가 프론트에서 전체 시/도 목록 조회, 선택 (getAllStates)
+    // -> 그 시/도에 맞는 도시 리스트 노출 (getCitiesByStates)
 
+
+    // 시/도 목록 조회하는 메서드
+    @GetMapping("/list")
+    public List<State> getAllStates() {
+        log.info("모든 시/도 목록 조회 호출 - ");
+        return stateService.getAllStates();
     }
 
-    // 시,구 목록 조회
+    // 특정 시/도의 시/군/구 조회하는 메서드
     @GetMapping("/{stateCode}/cities")
     public List<BigBlock> getCitiesByState(@PathVariable String stateCode) {
-        log.info("getCitiesByState 호출, stateCode: {}", stateCode);
         return stateService.getCitiesByState(stateCode);
     }
+
 }

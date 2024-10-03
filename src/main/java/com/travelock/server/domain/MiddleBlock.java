@@ -1,5 +1,6 @@
 package com.travelock.server.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,18 +17,23 @@ public class MiddleBlock extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long middleBlockId;
 
-    @Column(columnDefinition = "VARCHAR(255) COMMENT '명소/특정지역 단위 이름'")
-    private String placeTag;
+    @Column(name = "category_code", nullable = false, unique = true, columnDefinition = "VARCHAR(10) COMMENT '카테고리 코드'")
+    private String categoryCode;
 
-    @Column(columnDefinition = "INT COMMENT '일정에 추가된(참조된) 수'")
-    private Integer referenceCount;
+    @Column(name = "category_name", null
 
-    // Middle Block : Big Block = N : 1
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "big_block_id")
-    private BigBlock bigBlock;
-
-    // Middle Block : Small Block = 1 : N
+    // 미들 1 스몰 N
     @OneToMany(mappedBy = "middleBlock")
+    @JsonManagedReference
     private List<SmallBlock> smallBlocks;
+
+
+//    // 세터 대체 메서드 -> DB에 넣고 쓰는데 굳이 필요할까요.
+//    public void setCategoryData(String categoryCode, String categoryName) {
+//        this.categoryCode = categoryCode;
+//        this.categoryName = categoryName;
+//    }
+
+
+
 }
