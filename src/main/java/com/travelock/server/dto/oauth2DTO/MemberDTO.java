@@ -12,5 +12,5 @@ public class MemberDTO {
     private String username;
     private String email;
 
-    private Number memberId;
+    private Long memberId;
 }

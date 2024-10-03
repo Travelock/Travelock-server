@@ -33,8 +33,8 @@ public class JWTUtil {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("role", String.class);
     }
 
-    public Number getMemberId(String token) {
-        return  Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("memberId", Number.class);
+    public Long getMemberId(String token) {
+        return  Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("memberId", Long.class);
     }
 
     public Boolean isExpired(String token) {
@@ -42,7 +42,7 @@ public class JWTUtil {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getExpiration().before(new Date());
     }
 
-    public String createJwt(String username, String role, Long expiredMs, Number memberId) {
+    public String createJwt(String username, String role, Long expiredMs, Long memberId) {
 
         Claims claims = Jwts.claims();
         claims.put("username", username);
@@ -57,7 +57,7 @@ public class JWTUtil {
                 .compact();
     }
 
-    public String createRefreshToken(String username, Long expiredMs, Number memberId) {
+    public String createRefreshToken(String username, Long expiredMs, Long memberId) {
 
         Claims claims = Jwts.claims();
         claims.put("username", username);
