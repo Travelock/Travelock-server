@@ -11,6 +11,7 @@ import com.travelock.server.domain.SmallBlock;
 import com.travelock.server.dto.SearchResponseDTO;
 import com.travelock.server.dto.SmallBlockRequestDTO;
 import com.travelock.server.dto.SmallBlockResponseDTO;
+import com.travelock.server.exception.base_exceptions.ResourceNotFoundException;
 import com.travelock.server.repository.MiddleBlockRepository;
 import com.travelock.server.repository.SmallBlockRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.travelock.server.domain.QSmallBlock.smallBlock;
 
 @Service
 @RequiredArgsConstructor
@@ -108,6 +111,7 @@ public class SmallBlockService {
 
         log.info("SmallBlock 저장 완료: {}", smallBlock.getSmallBlockId());
     }
+
 
     // 전체 스몰블록 조회
     public List<SmallBlockResponseDTO> getAllSmallBlocks() {
