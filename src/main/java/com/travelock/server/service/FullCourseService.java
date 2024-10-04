@@ -141,7 +141,7 @@ public class FullCourseService {
     }
 
     /**전체일정 수정*/
-    public FullCourse modifyFullCourse(){
+    public FullCourse modifyFullCourse(FullCourseRequestDTO requestDTO){
 
 
 

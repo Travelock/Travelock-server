@@ -6,6 +6,7 @@ import com.travelock.server.dto.DailyCourseRequestDTO;
 import com.travelock.server.dto.DailyCourseResponseDTO;
 import com.travelock.server.dto.course.daily_create.DailyCourseCreateDto;
 import com.travelock.server.service.DailyCourseService;
+import com.travelock.server.service.cache.CourseRecommendService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -26,7 +27,7 @@ import java.util.List;
 @Slf4j
 public class DailyCourseController {
    private final DailyCourseService dailyCourseService;
-//   private final CourseRecommendService courseRecommendService;
+   private final CourseRecommendService courseRecommendService;
 
     @Operation(summary = "일일일정 조회",
             tags = {"일일일정 API - V1"},
@@ -88,32 +89,32 @@ public class DailyCourseController {
                 , DailyCourseResponseDTO::fromDomainToResponseDTO);
         return ResponseEntity.status(HttpStatus.OK).body("수정됨");
     }
-
-
+//
+//
 //    //일일일정 조회
 //   조회 public ResponseEntity<?> getDailyCourse(){getDailyCourse
 //        dailyCourseService
 //    }
-
+//
 //    //내 모든 일일일정 조회
 //    public ResponseEntity<?> getMyDailyCourses(){}
+//
 
 
 
-
-//    @Operation(summary = "추천 일일일정",
-//            tags = {"일일일정 API - V1"},
-//            description = "캐시된 추천 일일일정 조회",
-//            responses = {
-//                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json")),
-//                    @ApiResponse(responseCode = "404", description = "조회 실패", content = @Content(mediaType = "application/json")),
-//                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
-//            })
-//    @GetMapping("/recommend")
-//    public ResponseEntity<?> getRecommendedDailyCourses(){
-//        List<DailyCourse> topDailyCoursesFromCache = courseRecommendService.getTopDailyCoursesFromCache();
-//        return ResponseEntity.status(HttpStatus.OK).body(topDailyCoursesFromCache);
-//    }
+    @Operation(summary = "추천 일일일정",
+            tags = {"일일일정 API - V1"},
+            description = "캐시된 추천 일일일정 조회",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "404", description = "조회 실패", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
+            })
+    @GetMapping("/recommend")
+    public ResponseEntity<?> getRecommendedDailyCourses(){
+        List<DailyCourse> topDailyCoursesFromCache = courseRecommendService.getTopDailyCoursesFromCache();
+        return ResponseEntity.status(HttpStatus.OK).body(topDailyCoursesFromCache);
+    }
 
 
    @Operation(summary = "일일일정 좋아요",

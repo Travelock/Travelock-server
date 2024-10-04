@@ -77,8 +77,11 @@ public class FullCourseController {
 
 
     //일정 교체
-    public ResponseEntity<?> changeDailyCourse(@RequestBody DailyCourseRequestDTO requestDTO){
-        fullCourseService.changeDailyCourse(requestDTO);
+    public ResponseEntity<?> changeFullCourse(@RequestBody FullCourseRequestDTO requestDTO){
+        fullCourseService.modifyFullCourse(requestDTO);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body("");
+
     }
 
 
