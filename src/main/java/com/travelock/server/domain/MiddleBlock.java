@@ -29,12 +29,5 @@ public class MiddleBlock extends BaseTime {
     private List<SmallBlock> smallBlocks;
 
 
-//    // 세터 대체 메서드 -> DB에 넣고 쓰는데 굳이 필요할까요.
-//    public void setCategoryData(String categoryCode, String categoryName) {
-//        this.categoryCode = categoryCode;
-//        this.categoryName = categoryName;
-//    }
-
-
 
 }

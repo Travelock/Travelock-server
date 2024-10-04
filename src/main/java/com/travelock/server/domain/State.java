@@ -40,7 +40,7 @@ public class State {
         bigBlock.setState(this); // state와 양방향 관계
     }
 
-    // BigBlock 제거하는 메서드
+    // BigBlock 제거하는 메서드 구현만
     public void removeBigBlock(BigBlock bigBlock) {
         bigBlockList.remove(bigBlock);
         bigBlock.setState(null); // 양방향 관계도 해제

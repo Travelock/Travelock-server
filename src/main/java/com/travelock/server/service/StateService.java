@@ -64,16 +64,5 @@ public class StateService {
         ));
     }
 
-//    // 특정 시/도의 시,구 목록 조회
-//    public List<BigBlock> getCitiesByState(String stateCode) {
-//        log.info("getCitiesByState 호출, stateCode: {}", stateCode);
-//        State state = stateRepository.findByStateCode(stateCode);
-//        if (state != null) {
-//            return bigBlockRepository.findByState(state);
-//        }
-//        log.warn("State not found for stateCode: {}", stateCode);
-//        return new ArrayList<>();
-//
-//    }
 }
 
