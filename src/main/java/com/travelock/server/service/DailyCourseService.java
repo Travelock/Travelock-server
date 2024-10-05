@@ -102,7 +102,6 @@ public class DailyCourseService {
             smaillBlockPlaceIdList.add(dto.getSmallBlockDto().getPlaceId());
         }
 
-        // @TODO SmallBlock이 새로 생성되는 경우엔 아래 쿼리로 조회 불가 | 테스트는 small Block 값 저장하고 수행 -> 쿼리수정
         // BigBlock과 MiddleBlock, SmallBlock, FullCourse를 조회 --------------------------------------------- DB SELECT(한방쿼리로 필요한 데이터 모두 가져오기)
         List<Tuple> list = query.select(qBigBlock, qMiddleBlock, qSmallBlock)
                 .from(qBigBlock)
@@ -189,26 +188,16 @@ public class DailyCourseService {
             fullBlocksToBatchSave.add(fullBlock);
         }
 
-
-        //=====================이 아래로 확인 필요...
-
-        //연결객체 생성
-        // @TODO daily_course_id null > INSERT 수행 순서 : daily도 저장한 후 id가져와야됨 > 확인 해주세요 (아래도 있습니다)
-        //FullAndDailyCourseConnect connect = new FullAndDailyCourseConnect();
-        //connect.createNewConnect(member, fullCourse, createDto.getDayNum());
-
-        // DailyCourse 설정 및 저장
+        // DailyCourse 설정
         dailyCourse.addDailyCourse(
             member
         );
 
-        // @TODO Full block - Daily Connect에 저장이 안됩니다
         //FullBlock Batch 저장 ----------------------------------------------------------------------- DB INSERT ( 1 )
         fullBlockRepository.saveAll(fullBlocksToBatchSave);
         // Daily Course 저장 ------------------------------------------------------------------------- DB INSERT ( 1 )
         DailyCourse savedDailyCourse = dailyCourseRepository.save(dailyCourse);
         //연결객체 저장 -------------------------------------------------------------------------------- DB INSERT ( 1 )
-        // @TODO daily_course_id null > INSERT 수행 순서 변경 필요해서 수정해두었습니다. 확인부탁드려요 -> 확인
         FullAndDailyCourseConnect connect = new FullAndDailyCourseConnect();
         connect.createNewConnect(member, fullCourse, savedDailyCourse, createDto.getDayNum());
         // Daily Course 저장 ------------------------------------------------------------------------- DB INSERT ( 1 )
@@ -220,6 +209,12 @@ public class DailyCourseService {
 
     /** 일일일정 수정*/
     public DailyCourse modifyDailyCourse(DailyCourseCreateDto request) {
+
+        //생성과 똑같이 데이터 받아옴
+        //1 -> 데이터의 생성자 ID가 같은경우 수정으로 진행 -> dailyblockconnect에서 순서를 비교하고 같은 순서인데 데이터가 다른경우 새로 생성 후 교체 -> 최종 일정저장
+        //2 -> 데이터의 생성자 ID가 다른경우 신규 생성으로 진행
+
+
 
         return null;
     }

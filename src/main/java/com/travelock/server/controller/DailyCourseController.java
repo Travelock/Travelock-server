@@ -6,6 +6,7 @@ import com.travelock.server.dto.DailyCourseRequestDTO;
 import com.travelock.server.dto.DailyCourseResponseDTO;
 import com.travelock.server.dto.course.daily_create.DailyCourseCreateDto;
 import com.travelock.server.service.DailyCourseService;
+import com.travelock.server.service.cache.CourseRecommendService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;

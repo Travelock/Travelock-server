@@ -13,11 +13,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -136,5 +138,21 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("등록된 소셜 로그인 제공자가 없습니다.");
         }
+    }
+
+    @GetMapping("/nickName")
+    public ResponseEntity<?> checkNickName(){
+
+        Member member = memberRepository.findById(1L).orElseThrow(() -> new UsernameNotFoundException("Member not Found"));
+        return ResponseEntity.status(HttpStatus.OK).body(member);
+    }
+
+    @PutMapping("/member/{nickName}")
+    public ResponseEntity<?> putNickName(@PathVariable String nickName){
+        if(nickName == null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("닉네임 누락");
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body("닉네임 저장 완료");
     }
 }

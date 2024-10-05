@@ -2,12 +2,8 @@ package com.travelock.server.controller;
 
 import com.travelock.server.converter.DTOConverter;
 import com.travelock.server.domain.FullCourse;
-import com.travelock.server.dto.DailyCourseRequestDTO;
 import com.travelock.server.dto.FullCourseRequestDTO;
 import com.travelock.server.dto.FullCourseResponseDTO;
-import com.travelock.server.dto.SmallBlockReviewDto;
-import com.travelock.server.dto.course.daily_create.DailyCourseCreateDto;
-import com.travelock.server.dto.course.full_create.FullCourseCreateDto;
 import com.travelock.server.service.FullCourseService;
 import com.travelock.server.service.cache.CourseRecommendService;
 import io.swagger.v3.oas.annotations.Operation;

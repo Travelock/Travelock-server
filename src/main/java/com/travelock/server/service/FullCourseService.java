@@ -3,11 +3,7 @@ package com.travelock.server.service;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.travelock.server.domain.*;
-import com.travelock.server.dto.DailyCourseRequestDTO;
 import com.travelock.server.dto.FullCourseRequestDTO;
-import com.travelock.server.dto.course.full_create.DailyCourseDto;
-import com.travelock.server.dto.course.full_create.FullCourseCreateDto;
-import com.travelock.server.exception.GlobalExceptionHandler;
 import com.travelock.server.exception.base_exceptions.DataAccessFailException;
 import com.travelock.server.exception.base_exceptions.ResourceNotFoundException;
 import com.travelock.server.exception.course.AddFullCourseFavoriteException;
@@ -19,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -123,6 +118,7 @@ public class FullCourseService {
 
     /**전체일정 수정*/
     public FullCourse modifyFullCourse(){
+
 
 
 
