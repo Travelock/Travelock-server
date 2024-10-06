@@ -3,6 +3,7 @@ package com.travelock.server.repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.travelock.server.domain.QSmallBlock;
 import com.travelock.server.domain.SmallBlock;
+import com.travelock.server.exception.base_exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -29,10 +30,10 @@ public class SmallBlockRepositoryImpl implements SmallBlockCustomRepository {
         QSmallBlock qSmallBlock = QSmallBlock.smallBlock;
 
         SmallBlock smallblock = queryFactory
-                .selectFrom(smallBlock)
+                .selectFrom(qSmallBlock)
                 .where(qSmallBlock.placeId.eq(placeId))
                 .fetchOne();
-        if(smallBlock == null){
+        if(qSmallBlock == null){
             throw new ResourceNotFoundException("SmallBlock not found.");
         }
             

@@ -6,6 +6,7 @@ import com.travelock.server.dto.DailyCourseRequestDTO;
 import com.travelock.server.dto.DailyCourseResponseDTO;
 import com.travelock.server.dto.course.daily_create.DailyCourseCreateDto;
 import com.travelock.server.service.DailyCourseService;
+import com.travelock.server.service.cache.CourseRecommendService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -129,8 +130,8 @@ public class DailyCourseController {
                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
            })
    @PostMapping("/favorite/{dailyCourseId}")
-   public ResponseEntity<?> setDailyCourseFavorite(@PathVariable Long dailyCourseId, @RequestParam Long memberId){
-       dailyCourseService.setFavorite(dailyCourseId, memberId);
+   public ResponseEntity<?> setDailyCourseFavorite(@PathVariable Long dailyCourseId){
+       dailyCourseService.setFavorite(dailyCourseId);
        return ResponseEntity.status(HttpStatus.CREATED).body("좋아요 성공");
    }
 
@@ -147,8 +148,8 @@ public class DailyCourseController {
                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
            })
    @PostMapping("/scrap/{dailyCourseId}")
-   public ResponseEntity<?> setDailyCourseScrap(@PathVariable Long dailyCourseId, @RequestParam Long memberId){
-       dailyCourseService.setScrap(dailyCourseId, memberId);
+   public ResponseEntity<?> setDailyCourseScrap(@PathVariable Long dailyCourseId){
+       dailyCourseService.setScrap(dailyCourseId);
        return ResponseEntity.status(HttpStatus.CREATED).body("스크랩 성공");
    }
 

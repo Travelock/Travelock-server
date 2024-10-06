@@ -21,10 +21,6 @@ public class TokenController {
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshToken(@CookieValue("RefreshToken") String refreshToken) {
 
-
-        //임시
-        Long memberId = 1L;
-
         if (jwtUtil.isExpired(refreshToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Refresh token expired");
         }
