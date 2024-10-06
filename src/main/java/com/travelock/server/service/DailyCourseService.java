@@ -25,6 +25,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class DailyCourseService {
     private final JPAQueryFactory query;
     private final DailyCourseRepository dailyCourseRepository;
@@ -214,6 +215,11 @@ public class DailyCourseService {
         //1 -> 데이터의 생성자 ID가 같은경우 수정으로 진행 -> dailyblockconnect에서 순서를 비교하고 같은 순서인데 데이터가 다른경우 새로 생성 후 교체 -> 최종 일정저장
         //2 -> 데이터의 생성자 ID가 다른경우 신규 생성으로 진행
 
+        // 수정할 DailyCourse객체 조회
+        QDailyCourse qDailyCourse = QDailyCourse.dailyCourse;
+        DailyCourse dailyCourse = query.selectFrom(qDailyCourse).where(qDailyCourse.dailyCourseId.eq(request.getDailyCourseId())).fetchOne();
+
+        //수정요청된 FullBlock과 비교
 
 
         return null;
@@ -224,19 +230,26 @@ public class DailyCourseService {
 
 
     /**좋아요 설정*/
-    public void setFavorite(Long dailyCourseId, Long memberId) {
-
+    public void setFavorite(Long dailyCourseId) {
+        Long memberId = 1L;
         QMember qMember = QMember.member;
         QDailyCourse qDailyCourse = QDailyCourse.dailyCourse;
+        QDailyCourseFavorite qDailyCourseFavorite = QDailyCourseFavorite.dailyCourseFavorite;
 
-        Tuple tuple = query.select(qMember, qDailyCourse)
+        Tuple tuple = query.select(qMember, qDailyCourse, qDailyCourseFavorite)
                 .from(qMember)
                 .join(qDailyCourse).on(qDailyCourse.dailyCourseId.eq(dailyCourseId))
+                .leftJoin(qDailyCourseFavorite).on(qDailyCourseFavorite.dailyCourse.dailyCourseId.eq(dailyCourseId)
+                        .and(qDailyCourseFavorite.member.memberId.eq(memberId)))
                 .where(qMember.memberId.eq(memberId))
                 .fetchOne();
 
         if (tuple == null || tuple.get(qMember) == null || tuple.get(qDailyCourse) == null) {
-            throw new AddReviewException("Member or DailyCourse not found");
+            throw new BadRequestException("Member or DailyCourse not found");
+        }
+
+        if(tuple.get(qDailyCourseFavorite) != null){
+            throw new BadRequestException("Already added to favorite");
         }
 
         DailyCourseFavorite dailyCourseFavorite = new DailyCourseFavorite();
@@ -257,19 +270,27 @@ public class DailyCourseService {
     }
 
     /**스크랩 설정*/
-    public void setScrap(Long dailyCourseId, Long memberId) {
+    public void setScrap(Long dailyCourseId) {
 
+        Long memberId = 1L;
         QMember qMember = QMember.member;
         QDailyCourse qDailyCourse = QDailyCourse.dailyCourse;
+        QDailyCourseScrap qDailyCourseScrap = QDailyCourseScrap.dailyCourseScrap;
 
-        Tuple tuple = query.select(qMember, qDailyCourse)
+        Tuple tuple = query.select(qMember, qDailyCourse, qDailyCourseScrap)
                 .from(qMember)
                 .join(qDailyCourse).on(qDailyCourse.dailyCourseId.eq(dailyCourseId))
+                .leftJoin(qDailyCourseScrap).on(qDailyCourseScrap.dailyCourse.dailyCourseId.eq(dailyCourseId)
+                        .and(qDailyCourseScrap.member.memberId.eq(memberId)))
                 .where(qMember.memberId.eq(memberId))
                 .fetchOne();
 
         if (tuple == null || tuple.get(qMember) == null || tuple.get(qDailyCourse) == null) {
-            throw new AddReviewException("Member or DailyCourse not found");
+            throw new BadRequestException("Member or DailyCourse not found");
+        }
+
+        if(tuple.get(qDailyCourseScrap) != null){
+            throw new BadRequestException("Already scraped");
         }
 
         DailyCourseScrap dailyCourseScrap = new DailyCourseScrap();

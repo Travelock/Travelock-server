@@ -2,15 +2,6 @@ package com.travelock.server.controller;
 
 import com.travelock.server.domain.Member;
 import com.travelock.server.repository.MemberRepository;
-import com.travelock.server.service.AuthService;
-import com.travelock.server.service.MemberService;
-import com.travelock.server.service.cache.ProviderCacheService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,14 +10,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
 //@RequiredArgsConstructor
 public class AuthController {
-//    private final ProviderCacheService providerCacheService;
 //    private final MemberService memberService;
 //    private final AuthService authService;
 //
@@ -83,28 +72,6 @@ public class AuthController {
 //    }
 //
 //
-//    @Operation(summary = "Provider 조회",
-//            tags = {"인증 API - V1"},
-//            description = "캐시된 추천 소셜로그인 Provider 조회",
-//            parameters = {
-//                    @Parameter(name = "email", description = "Provider를 조회할 Email", required = true, in = ParameterIn.PATH),
-//            },
-//            responses = {
-//                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json")),
-//                    @ApiResponse(responseCode = "404", description = "조회 실패", content = @Content(mediaType = "application/json")),
-//                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
-//            })
-//    @GetMapping("/provider/{email}")
-//    public ResponseEntity<?> getProvider(@PathVariable String email){
-//        /*캐시에서 조회 */
-//        String provider =  providerCacheService.getProvider(email);
-//        /*캐시에 없으면 DB에서 조회*/
-//        if(provider == null){
-//            provider = memberService.getProvider(email);
-//        }
-//        return ResponseEntity.status(HttpStatus.OK).body(provider);
-//    }
-
 //-------------------------------------------------------------------------------------------------------------------
     private final MemberRepository memberRepository;
 
@@ -142,7 +109,6 @@ public class AuthController {
 
     @GetMapping("/nickName")
     public ResponseEntity<?> checkNickName(){
-
         Member member = memberRepository.findById(1L).orElseThrow(() -> new UsernameNotFoundException("Member not Found"));
         return ResponseEntity.status(HttpStatus.OK).body(member);
     }
