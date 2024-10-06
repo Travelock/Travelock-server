@@ -51,6 +51,7 @@ public class SmallBlock {
         this.placeName = placeName;
         this.mapX = mapX;
         this.mapY = mapY;
+        this.linkURL = url;
         this.referenceCount = 1;
     }
 

@@ -1,5 +1,6 @@
 package com.travelock.server.service;
 
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.travelock.server.converter.DTOConverter;
 import com.travelock.server.domain.BigBlock;
@@ -21,31 +22,58 @@ public class BigBlockService {
     private final BigBlockRepository bigBlockRepository;
     private final StateRepository stateRepository;
 
-    // QueryDSL로 BigBlock 조회 후 DTOConverter를 사용하여 DTO로 변환
-    public BigBlockResponseDTO getBigBlock(String stateCode, String cityCode) {
-        QBigBlock bigBlock = QBigBlock.bigBlock;
-        QState state = QState.state;
 
-        // QueryDSL로 BigBlock 엔티티를 조회
-        BigBlock entity = queryFactory
-                .selectFrom(bigBlock)
-                .join(bigBlock.state, state)
+    public BigBlockResponseDTO getBigBlock(String stateCode, String cityCode) {
+        QBigBlock qBigBlock = QBigBlock.bigBlock;
+        QState qState = QState.state;
+
+        BigBlockResponseDTO bigBlock = queryFactory
+                .select(Projections.constructor(BigBlockResponseDTO.class,
+                        qBigBlock.bigBlockId,
+                        qBigBlock.cityCode,
+                        qBigBlock.cityName,
+                        qBigBlock.state.stateName))
+                .from(qBigBlock)
+                .join(qBigBlock.state, qState)
                 .where(
-                        bigBlock.cityCode.eq(cityCode),
-                        state.stateCode.eq(stateCode)
+                        qBigBlock.cityCode.eq(cityCode),
+                        qState.stateCode.eq(stateCode)
                 )
                 .fetchOne();
 
-        if (entity == null) {
+        if (bigBlock == null) {
             throw new ResourceNotFoundException("BigBlock not found for stateCode: " + stateCode + " and cityCode: " + cityCode);
         }
 
-        // DTOConverter를 사용하여 BigBlock 엔티티를 BigBlockResponseDTO로 변환
-        return DTOConverter.toDto(entity, block -> new BigBlockResponseDTO(
-                block.getBigBlockId(),
-                block.getCityCode(),
-                block.getCityName(),
-                block.getState().getStateName()
-        ));
+        return bigBlock;
     }
+
+    //    // QueryDSL로 BigBlock 조회 후 DTOConverter를 사용하여 DTO로 변환
+//    public BigBlockResponseDTO getBigBlock(String stateCode, String cityCode) {
+//        QBigBlock bigBlock = QBigBlock.bigBlock;
+//        QState state = QState.state;
+//
+//        // QueryDSL로 BigBlock 엔티티를 조회
+//        BigBlock entity = queryFactory
+//                .selectFrom(bigBlock)
+//                .join(bigBlock.state, state)
+//                .where(
+//                        bigBlock.cityCode.eq(cityCode),
+//                        state.stateCode.eq(stateCode)
+//                )
+//                .fetchOne();
+//
+//        if (entity == null) {
+//            throw new ResourceNotFoundException("BigBlock not found for stateCode: " + stateCode + " and cityCode: " + cityCode);
+//        }
+//
+//        // DTOConverter를 사용하여 BigBlock 엔티티를 BigBlockResponseDTO로 변환
+//        return DTOConverter.toDto(entity, block -> new BigBlockResponseDTO(
+//                block.getBigBlockId(),
+//                block.getCityCode(),
+//                block.getCityName(),
+//                block.getState().getStateName()
+//        ));
+//    }
+
 }

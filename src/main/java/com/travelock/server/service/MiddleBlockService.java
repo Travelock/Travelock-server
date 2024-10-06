@@ -5,6 +5,7 @@ import com.travelock.server.converter.DTOConverter;
 import com.travelock.server.domain.MiddleBlock;
 import com.travelock.server.domain.QMiddleBlock;
 import com.travelock.server.dto.MiddleBlockDTO;
+import com.travelock.server.exception.base_exceptions.ResourceNotFoundException;
 import com.travelock.server.repository.MiddleBlockRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,18 @@ public class MiddleBlockService {
         ));
     }
 
+    //public List<MiddleBlockDTO> getAllCategories() {
+    //    log.info("모든 카테고리 조회");
+    //    QMiddleBlock qMiddleBlock = QMiddleBlock.middleBlock;
+    //
+    //    return queryFactory.select(Projections.constructor(MiddleBlockDTO.class,
+    //                    qMiddleBlock.middleBlockId,
+    //                    qMiddleBlock.categoryCode,
+    //                    qMiddleBlock.categoryName))
+    //            .from(qMiddleBlock)
+    //            .fetch();
+    //}
+
     // 특정 카테고리 코드로 카테고리 조회
     public MiddleBlockDTO getCategoryByCode(String categoryCode) {
         log.info("카테고리 조회, categoryCode = {}", categoryCode);
@@ -50,7 +63,7 @@ public class MiddleBlockService {
                 .fetchOne();
 
         if (category == null) {
-            throw new RuntimeException("해당 카테고리가 존재하지 않습니다.");
+            throw new ResourceNotFoundException("해당 카테고리가 존재하지 않습니다." + categoryCode);
         }
 
         // DTOConverter를 사용해 엔티티를 DTO로 변환
@@ -61,5 +74,25 @@ public class MiddleBlockService {
         ));
     }
 
+    // public MiddleBlockDTO getCategoryByCode(String categoryCode) {
+    //    log.info("카테고리 조회, categoryCode = {}", categoryCode);
+    //
+    //    QMiddleBlock qMiddleBlock = QMiddleBlock.middleBlock;
+    //
+    //    MiddleBlockDTO category = queryFactory
+    //            .select(Projections.constructor(MiddleBlockDTO.class,
+    //                    qMiddleBlock.middleBlockId,
+    //                    qMiddleBlock.categoryCode,
+    //                    qMiddleBlock.categoryName))
+    //            .from(qMiddleBlock)
+    //            .where(qMiddleBlock.categoryCode.eq(categoryCode))
+    //            .fetchOne();
+    //
+    //    if (category == null) {
+    //        throw new RuntimeException("해당 카테고리가 존재하지 않습니다.");
+    //    }
+    //
+    //    return category;
+    //}
 
 }

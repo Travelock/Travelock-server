@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface MiddleBlockRepository extends JpaRepository<MiddleBlock, Long> {
-//    Optional<MiddleBlock> findByCategoryCode(String categoryCode);
+    Optional<MiddleBlock> findByCategoryCodeAndCategoryName(String categoryCode, String categoryName);
 
 }

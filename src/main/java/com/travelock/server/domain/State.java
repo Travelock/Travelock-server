@@ -34,15 +34,15 @@ public class State {
     @JsonIgnore
     private List<BigBlock> bigBlockList = new ArrayList<>();  // BigBlock 리스트 초기화
 
-    // 추후에 bigBlock 추가하는 메서드 (state 안에 city가 있으니까)
-    public void addBigBlock(BigBlock bigBlock) {
-        bigBlockList.add(bigBlock);
-        bigBlock.setState(this); // state와 양방향 관계
-    }
-
-    // BigBlock 제거하는 메서드 구현만
-    public void removeBigBlock(BigBlock bigBlock) {
-        bigBlockList.remove(bigBlock);
-        bigBlock.setState(null); // 양방향 관계도 해제
-    }
+//    // 추후에 bigBlock 추가하는 메서드 (state 안에 city가 있으니까)
+//    public void addBigBlock(BigBlock bigBlock) {
+//        bigBlockList.add(bigBlock);
+//        bigBlock.setState(this); // state와 양방향 관계
+//    }
+//
+//    // BigBlock 제거하는 메서드 구현만
+//    public void removeBigBlock(BigBlock bigBlock) {
+//        bigBlockList.remove(bigBlock);
+//        bigBlock.setState(null); // 양방향 관계도 해제
+//    }
 }

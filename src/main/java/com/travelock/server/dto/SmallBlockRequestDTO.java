@@ -14,4 +14,6 @@ public class SmallBlockRequestDTO {
     private String mapX;      // 지도 X 좌표
     private String mapY;      // 지도 Y 좌표
     private String url;       // 장소 URL
+    private String categoryCode;   // 카테고리 코드 (미들블록과 비교하기 위해 추가)
+    private String categoryName;   // 카테고리 이름 (미들블록과 비교하기 위해 추가)
 }
