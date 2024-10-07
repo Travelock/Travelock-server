@@ -76,13 +76,6 @@ public class FullCourseController {
     }
 
 
-    //일정 교체
-    public ResponseEntity<?> changeFullCourse(@RequestBody FullCourseRequestDTO requestDTO){
-        fullCourseService.modifyFullCourse(requestDTO);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body("");
-
-    }
 
 
     @Operation(summary = "추천 전체일정",
