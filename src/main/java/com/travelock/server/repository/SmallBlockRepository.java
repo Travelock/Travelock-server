@@ -7,6 +7,5 @@ import java.util.Optional;
 
 
 public interface SmallBlockRepository extends JpaRepository<SmallBlock, Long> {
-    Optional<SmallBlock> findByPlaceId(String placeId);
 
 }
