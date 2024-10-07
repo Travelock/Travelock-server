@@ -1,11 +1,16 @@
 package com.travelock.server.service;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.travelock.server.domain.Member;
 import com.travelock.server.domain.QMember;
+import com.travelock.server.dto.oauth2DTO.MemberDTO;
 import com.travelock.server.exception.base_exceptions.ResourceNotFoundException;
+import com.travelock.server.filter.JWTUtil;
+import com.travelock.server.repository.MemberRepository;
 import com.travelock.server.util.GenerateRandomData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,6 +19,10 @@ import org.springframework.stereotype.Service;
 public class MemberService {
     private final JPAQueryFactory query;
     private final GenerateRandomData generateRandomData;
+
+    private final MemberRepository memberRepository;
+    private final JWTUtil jwtUtil;
+
 
     public void leave(Long memberId){
         try {
@@ -43,5 +52,29 @@ public class MemberService {
             throw new ResourceNotFoundException("Provider not found in DB by email");
         }
         return provider;
+    }
+
+
+    // 닉네임 체크 로직
+    public MemberDTO checkNickName(String token) {
+        Long memberId = jwtUtil.getMemberId(token);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new UsernameNotFoundException("Member not found"));
+
+        // Member -> MemberDTO로 변환
+        MemberDTO memberDTO = new MemberDTO();
+        memberDTO.setNickName(member.getNickName());
+        return memberDTO;
+    }
+
+    // 닉네임 저장 로직
+    public void saveNickName(String token, String nickName) {
+        Long memberId = jwtUtil.getMemberId(token);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new UsernameNotFoundException("Member not found"));
+
+        // 닉네임 저장
+        member.setNickName(nickName);
+        memberRepository.save(member);
     }
 }
