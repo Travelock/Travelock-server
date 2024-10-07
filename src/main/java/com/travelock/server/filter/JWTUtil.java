@@ -48,7 +48,7 @@ public class JWTUtil {
         Claims claims = Jwts.claims();
         claims.put("username", username);
         claims.put("role", role);
-        claims.put("memberId", memberId); // memberId 추가햇는데... 왜안되지..??????
+        claims.put("memberId", memberId);
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -80,4 +80,6 @@ public class JWTUtil {
             return false;
         }
     } // 리프레쉬 토큰 검증
+
+
 }
