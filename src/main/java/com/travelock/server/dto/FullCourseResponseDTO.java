@@ -21,7 +21,7 @@ public class FullCourseResponseDTO {
     private Integer favoriteCount; // 좋아요 수
     private Integer scarpCount; // 스크랩 수
     private List<DailyCourseResponseDTO> dailyCourses;
-    private List<Long> fullAndDailyConnectIds;
+    private List<Long> fullAndDailyConnectIds; // -> 수정시 사용
 
     public static FullCourseResponseDTO fromDomainToResponseDTO(FullCourse fullCourse) {
         // DailyCourse List 생성
@@ -32,9 +32,12 @@ public class FullCourseResponseDTO {
                     .map(fullAndDailyCourseConnect -> DailyCourseResponseDTO // DailyCourseResponseDTO로 변환
                             .fromDomainToResponseDTO(fullAndDailyCourseConnect.getDailyCourse()))
                     .collect(Collectors.toList());
+
+        }
+        if(fullCourse.getFullAndDailyCourseConnects() != null) {
             //전체일정 조회시 Dto에 연결객체 Id목록 추가
             fullAndDailyConnectIds = fullCourse.getFullAndDailyCourseConnects().stream()
-                    .map(fullAndDailyCourseConnect ->fullAndDailyCourseConnect.getDailyCourse().getDailyCourseId())
+                    .map(fullAndDailyCourseConnect -> fullAndDailyCourseConnect.getDailyCourse().getDailyCourseId())
                     .collect(Collectors.toList());
         }
 
