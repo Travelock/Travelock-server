@@ -23,7 +23,7 @@ public class State {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long stateId;  // 고유 ID
 
-    @Column(columnDefinition = "VARCHAR(2) COMMENT '도/광역시/특별시 코드(2자리)'")
+    @Column(columnDefinition = "VARCHAR(5) COMMENT '도/광역시/특별시 코드(2자리)'")
     private String stateCode;  // 시/도 코드 (2자리)
 
     @Column(columnDefinition = "VARCHAR(50) COMMENT '도/광역시/특별시 이름'")

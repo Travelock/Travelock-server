@@ -1,14 +1,17 @@
 package com.travelock.server.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import net.minidev.json.annotate.JsonIgnore;
 
 @Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "full_and_daily_course_connect")
 public class FullAndDailyCourseConnect {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long fullDailyCourseConnectId;
@@ -36,5 +39,13 @@ public class FullAndDailyCourseConnect {
         // @TODO Full - Daily 연결시, full이랑 daily랑 둘 다 필수값
         this.dailyCourse = dailyCourse;
         this.dailyNum = dailyNum;
+    }
+
+    public void setDayNum(Integer dailyNum) {
+        this.dailyNum = dailyNum;
+    }
+
+    public void setDailyCourse(DailyCourse dailyCourse) {
+        this.dailyCourse = dailyCourse;
     }
 }

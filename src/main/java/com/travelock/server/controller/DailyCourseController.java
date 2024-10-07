@@ -36,7 +36,7 @@ public class DailyCourseController {
                     @Parameter(name = "dailyCourseId", description = "일일일정 ID", required = true, in = ParameterIn.PATH),
             },
             responses = {
-                    @ApiResponse(responseCode = "201", description = "조회 성공", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json")),
                     @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content(mediaType = "application/json")),
                     @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
             })
@@ -77,8 +77,8 @@ public class DailyCourseController {
                     content = @Content(schema = @Schema(implementation = DailyCourseCreateDto.class))
             ),
             responses = {
-                    @ApiResponse(responseCode = "201", description = "일일일정 저장 성공", content = @Content(mediaType = "application/json")),
-                    @ApiResponse(responseCode = "400", description = "일일일정 저장 실패", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "201", description = "일일일정 수정 성공", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "400", description = "일일일정 수정 실패", content = @Content(mediaType = "application/json")),
                     @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
             })
     @PutMapping
@@ -130,8 +130,8 @@ public class DailyCourseController {
                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
            })
    @PostMapping("/favorite/{dailyCourseId}")
-   public ResponseEntity<?> setDailyCourseFavorite(@PathVariable Long dailyCourseId, @RequestParam Long memberId){
-       dailyCourseService.setFavorite(dailyCourseId, memberId);
+   public ResponseEntity<?> setDailyCourseFavorite(@PathVariable Long dailyCourseId){
+       dailyCourseService.setFavorite(dailyCourseId);
        return ResponseEntity.status(HttpStatus.CREATED).body("좋아요 성공");
    }
 
@@ -148,8 +148,8 @@ public class DailyCourseController {
                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
            })
    @PostMapping("/scrap/{dailyCourseId}")
-   public ResponseEntity<?> setDailyCourseScrap(@PathVariable Long dailyCourseId, @RequestParam Long memberId){
-       dailyCourseService.setScrap(dailyCourseId, memberId);
+   public ResponseEntity<?> setDailyCourseScrap(@PathVariable Long dailyCourseId){
+       dailyCourseService.setScrap(dailyCourseId);
        return ResponseEntity.status(HttpStatus.CREATED).body("스크랩 성공");
    }
 

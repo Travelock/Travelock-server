@@ -32,13 +32,18 @@ public class SmallBlock {
     private Integer referenceCount;
 
     // Small Block : Middle Block = N : 1
+    // 이 말은 즉, 여러개의 스몰블록이 하나의 미들블록을 참조할 수 있다는 것.
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "middle_block_id")
     @JsonBackReference
     private MiddleBlock middleBlock;
 
+
     @Column(columnDefinition = "VARCHAR(29) COMMENT '장소 이름'")
     private String placeName;
+
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '장소 URL'")
+    private String url;
 
 
 
@@ -51,12 +56,19 @@ public class SmallBlock {
         this.placeName = placeName;
         this.mapX = mapX;
         this.mapY = mapY;
-        this.linkURL = url;
+        this.url = url;
         this.referenceCount = 1;
     }
 
     // 레퍼 카운트 1씩 증가
     public void incrementReferenceCount() {
         this.referenceCount++;
+    }
+
+    public void createNewSmallBlock(String mapX, String mapY, String placeId, MiddleBlock middleBlock) {
+        this.mapX = mapX;
+        this.mapY = mapY;
+        this.placeId = placeId;
+        this.middleBlock = middleBlock;
     }
 }

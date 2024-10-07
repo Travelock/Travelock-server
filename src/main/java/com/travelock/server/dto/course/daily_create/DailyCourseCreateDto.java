@@ -13,5 +13,6 @@ public class DailyCourseCreateDto {
     private Integer dayNum;
     private Long memberId;
     private Long fullCourseId;
+    private Long dailyCourseId; // -> 수정시 사용, 생성시 null처리
     private List<FullBlockDto> fullBlockDtoList;
 }

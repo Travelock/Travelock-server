@@ -26,7 +26,7 @@ public class BigBlock extends BaseTime {
 
     // BigBlock이 하나의 State를 참조 (N:1)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "city_info_id", nullable = false)
+    @JoinColumn(name = "state_id", nullable = false)
     @JsonBackReference
     private State state;  // State 테이블 참조
 
