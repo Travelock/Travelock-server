@@ -5,9 +5,7 @@ import com.travelock.server.domain.FullCourse;
 import com.travelock.server.dto.DailyCourseRequestDTO;
 import com.travelock.server.dto.FullCourseRequestDTO;
 import com.travelock.server.dto.FullCourseResponseDTO;
-import com.travelock.server.dto.SmallBlockReviewDto;
-import com.travelock.server.dto.course.daily_create.DailyCourseCreateDto;
-import com.travelock.server.dto.course.full_create.FullCourseCreateDto;
+import com.travelock.server.dto.course.full_modify.FullCourseModifyDto;
 import com.travelock.server.service.FullCourseService;
 import com.travelock.server.service.cache.CourseRecommendService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -63,7 +61,9 @@ public class FullCourseController {
                     content = @Content(schema = @Schema(implementation = FullCourseRequestDTO.class))
             ),
             responses = {
-                    @ApiResponse(responseCode = "201", description = "전체일정 저장 성공", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "201", description = "전체일정 저장 성공", content = @Content(
+                            schema = @Schema(implementation = FullCourseResponseDTO.class),
+                            mediaType = "application/json")),
                     @ApiResponse(responseCode = "400", description = "전체일정 저장 실패", content = @Content(mediaType = "application/json")),
                     @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
             })
@@ -73,13 +73,73 @@ public class FullCourseController {
         FullCourseResponseDTO response = DTOConverter.toDto(fullCourseService.saveFullCourse(request)
                 , FullCourseResponseDTO::fromDomainToResponseDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
+        /*for test
+        * {
+            "fullCourseId": null,
+            "memberId": null,
+            "title": "일본여행",
+            "favoriteCount": null,
+            "scrapCount": null
+            }
+        * */
     }
 
 
-//    //일정 교체
-//    public ResponseEntity<?> changeDailyCourse(@RequestBody DailyCourseRequestDTO requestDTO){
-//        fullCourseService.changeDailyCourse(requestDTO);
-//    }
+    @Operation(summary = "전체일정 제목 수정",
+            tags = {"전체일정 API - V1"},
+            description = "전체일정 제목 수정",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "전체일정 요청 Dto",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = FullCourseRequestDTO.class))
+            ),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "전체일정 제목 수정 성공", content = @Content(
+                            schema = @Schema(implementation = FullCourseResponseDTO.class),
+                            mediaType = "application/json")),
+                    @ApiResponse(responseCode = "400", description = "전체일정 제목 수정 실패", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
+            })
+    @PutMapping("/title")
+    public ResponseEntity<?> changeTitle(@RequestBody FullCourseRequestDTO request){
+        FullCourseResponseDTO response = DTOConverter.toDto(fullCourseService.modifyTitle(request),
+                FullCourseResponseDTO::fromDomainToResponseDTO);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+        /*for test
+        * {
+            "fullCourseId": 3,
+            "memberId": 1,
+            "title": "미국여행",
+            "favoriteCount": null,
+            "scrapCount": null
+        }
+        * */
+    }
+
+
+    @Operation(summary = "전체일정 수정",
+            tags = {"전체일정 API - V1"},
+            description = "전체일정 수정",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "전체일정 수정 Dto",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = FullCourseModifyDto.class))
+            ),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "전체일정 수정 성공", content = @Content(
+                            schema = @Schema(implementation = FullCourseResponseDTO.class),
+                            mediaType = "application/json")),
+                    @ApiResponse(responseCode = "400", description = "전체일정 수정 실패", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
+            })
+    @PutMapping
+    public ResponseEntity<?> modifyFullCourse(@RequestBody List<FullCourseModifyDto> request){
+        FullCourseResponseDTO response = DTOConverter.toDto(fullCourseService.modifyFullCourse(request),
+                FullCourseResponseDTO::fromDomainToResponseDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 
 
     @Operation(summary = "추천 전체일정",
@@ -111,8 +171,8 @@ public class FullCourseController {
                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
            })
    @PostMapping("/favorite/{fullCourseId}")
-   public ResponseEntity<?> setFullCourseFavorite(@PathVariable Long fullCourseId, @RequestParam Long memberId){
-       fullCourseService.setFavorite(fullCourseId, memberId);
+   public ResponseEntity<?> setFullCourseFavorite(@PathVariable Long fullCourseId){
+       fullCourseService.setFavorite(fullCourseId);
        return ResponseEntity.status(HttpStatus.CREATED).body("좋아요 성공");
    }
 
@@ -130,8 +190,8 @@ public class FullCourseController {
                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
            })
    @PostMapping("/scrap/{fullCourseId}")
-   public ResponseEntity<?> setFullCourseScrap(@PathVariable Long fullCourseId, @RequestParam Long memberId){
-       fullCourseService.setScrap(fullCourseId, memberId);
+   public ResponseEntity<?> setFullCourseScrap(@PathVariable Long fullCourseId){
+       fullCourseService.setScrap(fullCourseId);
        return ResponseEntity.status(HttpStatus.CREATED).body("스크랩 성공");
 
    }

@@ -18,7 +18,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 //사용자가 소셜 인증 성공 시, 처리되는 메서드
-
 @Component
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
@@ -31,15 +30,13 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
-        //임시
-        Long memberId= 1L;
 
 
         // 로그인한 사용자 정보 가져오기
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal(); // CustomOAuth2User에서 사용자 정보를 가져오기
 
         String username = customUserDetails.getUsername();
-        Long memberId =customUserDetails.getMemberId();
+        Long memberId = customUserDetails.getMemberId();
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();

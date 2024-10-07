@@ -28,8 +28,8 @@ public class SmallBlockService {
     private final ObjectMapper objectMapper;
     private final MiddleBlockRepository middleBlockRepository;
 
-    @Value("${kakao.api.key}")
-    private String kakaoApiKey;
+//    @Value("${kakao.api.key}")
+    private String kakaoApiKey = "920ㅕ39ㄹ0ㅕㅂ093ㄹ";
 
     @Transactional
     public void searchAndCreateSmallBlock(String keyword, Long middleBlockId) throws Exception {

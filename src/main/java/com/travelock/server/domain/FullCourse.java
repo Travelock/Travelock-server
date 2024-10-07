@@ -1,10 +1,12 @@
 package com.travelock.server.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.minidev.json.annotate.JsonIgnore;
 
 import java.io.Serializable;
 import java.util.List;
@@ -63,5 +65,9 @@ public class FullCourse implements Serializable {
 
         // Member, DailyCourses
         this.member = member;
+    }
+
+    public void changeTitle(String title){
+        this.title = title;
     }
 }
