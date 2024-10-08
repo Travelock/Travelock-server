@@ -211,6 +211,8 @@ public class DailyCourseService {
                     throw new ResourceNotFoundException("MiddleBlock not found");
                 }
 
+
+
                 // SmallBlock 엔티티 설정
                 smallBlock.createNewSmallBlock(
                         smallBlockRequestDTO.getMapX(),
@@ -218,6 +220,7 @@ public class DailyCourseService {
                         smallBlockRequestDTO.getPlaceId(),
                         middleBlock
                 );
+
 
                 existingSmallBlockMap.put(smallBlock.getPlaceId(), smallBlock);
             }

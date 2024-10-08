@@ -2,9 +2,12 @@ package com.travelock.server.controller;
 
 import com.travelock.server.domain.BigBlock;
 import com.travelock.server.domain.State;
+import com.travelock.server.dto.BigBlockResponseDTO;
+import com.travelock.server.dto.StateResponseDTO;
 import com.travelock.server.service.StateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,17 +28,18 @@ public class StateController {
     // -> 그 시/도에 맞는 도시 리스트 노출 (getCitiesByStates)
 
 
-    // 시/도 목록 조회하는 메서드
+    // 전체 시/도 목록 조회
     @GetMapping("/list")
-    public List<State> getAllStates() {
-        log.info("모든 시/도 목록 조회 호출 - ");
-        return stateService.getAllStates();
+    public ResponseEntity<List<StateResponseDTO>> getAllStates() {
+        List<StateResponseDTO> states = stateService.getAllStates();
+        return ResponseEntity.ok(states);
     }
 
-    // 특정 시/도의 시/군/구 조회하는 메서드
+    // 특정 시/도의 시/군/구(BigBlock) 목록 조회
     @GetMapping("/{stateCode}/cities")
-    public List<BigBlock> getCitiesByState(@PathVariable String stateCode) {
-        return stateService.getCitiesByState(stateCode);
+    public ResponseEntity<List<BigBlockResponseDTO>> getCitiesByState(@PathVariable String stateCode) {
+        List<BigBlockResponseDTO> cities = stateService.getCitiesByState(stateCode);
+        return ResponseEntity.ok(cities);
     }
 
 }

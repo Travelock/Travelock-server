@@ -1,86 +1,104 @@
 package com.travelock.server.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.travelock.server.client.SmallBlockSearchClient;
 import com.travelock.server.domain.MiddleBlock;
+import com.travelock.server.domain.QSmallBlock;
 import com.travelock.server.domain.SmallBlock;
+import com.travelock.server.dto.MiddleBlockDTO;
+import com.travelock.server.dto.SearchResponseDTO;
+import com.travelock.server.dto.SmallBlockRequestDTO;
+import com.travelock.server.exception.base_exceptions.ResourceNotFoundException;
 import com.travelock.server.repository.MiddleBlockRepository;
 import com.travelock.server.repository.SmallBlockRepository;
+import com.travelock.server.service.MiddleBlockService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SmallBlockService {
 
+    private final JPAQueryFactory queryFactory;
     private final SmallBlockRepository smallBlockRepository;
-    // JSON 파싱
-    private final ObjectMapper objectMapper;
     private final MiddleBlockRepository middleBlockRepository;
+    private final SmallBlockSearchClient smallBlockSearchClient;
+    private final MiddleBlockService middleBlockService;
 
-//    @Value("${kakao.api.key}")
-    private String kakaoApiKey = "920ㅕ39ㄹ0ㅕㅂ093ㄹ";
-
-    @Transactional
-    public void searchAndCreateSmallBlock(String keyword, Long middleBlockId) throws Exception {
-        RestTemplate restTemplate = new RestTemplate();
-        String url = "https://dapi.kakao.com/v2/local/search/keyword.json?query=" + keyword;
-        var headers = new HttpHeaders();
-        headers.set("Authorization", "KakaoAK " + kakaoApiKey);
-        var entity = new HttpEntity<>(headers);
-
-        // API 호출
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-        System.out.println("API 호출 응답: " + response.getBody());
-        // 응답 처리
-        JsonNode jsonNode = objectMapper.readTree(response.getBody());
-//        List<JsonNode> documents = jsonNode.get("documents").findValues("documents");
-        JsonNode documents = jsonNode.get("documents");
-
-        // 미들블록 id를 통해 middleblock을 가져옴
-        MiddleBlock middleBlock = middleBlockRepository.findById(middleBlockId)
-                .orElseThrow(() -> new Exception("MiddleBlock not found"));
-
-        for (JsonNode document : documents) {
-            String placeId = document.get("id").asText();
-            String placeName = document.get("place_name").asText();
-            String mapX = document.get("x").asText();
-            String mapY = document.get("y").asText();
-            String placeUrl = document.get("place_url").asText();
-
-            // 스몰블록 생성 또는 업데이트
-            SmallBlock smallBlock = smallBlockRepository.findByPlaceId(placeId)
-                    .orElseGet(() -> {
-                        SmallBlock newSmallBlock = new SmallBlock();
-                        newSmallBlock.setSmallBlockData(middleBlock, placeId, placeName, mapX, mapY, placeUrl);
-                        return smallBlockRepository.save(newSmallBlock);
-                    });
-
-            // 이미 존재하는 스몰블록일 경우 레퍼 카운트 증가
-            smallBlock.incrementReferenceCount();
-            smallBlockRepository.save(smallBlock);
-        }
-
+    // 키워드 없을 경우 예외처리 추가하기  // API 키워드 조회
+    public List<SearchResponseDTO> searchSmallBlockByKeyword(String keyword) {
+        return smallBlockSearchClient.searchSmallBlockByKeyword(keyword);
     }
+
+
+//    // 사용자가 선택한 장소를 DB에 저장 (코스 확정 시 호출)
+//    @Transactional
+//    public SmallBlock confirmAndCreateSmallBlock(SmallBlockRequestDTO requestDTO) {
+//        log.info("SmallBlock 확정 및 저장 로직 호출");
+//
+//        // 미들블록 조회
+//        MiddleBlockDTO middleBlockDTO = middleBlockService.findMiddleBlockByCategoryCodeAndName(
+//                requestDTO.getCategoryCode(), requestDTO.getCategoryName());
+//
+//        // MiddleBlockDTO에서 MiddleBlock 엔티티로 변환 (필요하다면 MiddleBlockRepository로 조회)
+//        MiddleBlock middleBlock = middleBlockRepository.findById(middleBlockDTO.getMiddleBlockId())
+//                .orElseThrow(() -> new ResourceNotFoundException("MiddleBlock not found with id: " + middleBlockDTO.getMiddleBlockId()));
+//
+//        // QueryDSL로 스몰블록 조회
+//        QSmallBlock qSmallBlock = QSmallBlock.smallBlock;
+//        SmallBlock smallBlock = queryFactory
+//                .selectFrom(qSmallBlock)
+//                .where(qSmallBlock.placeId.eq(requestDTO.getPlaceId()))
+//                .fetchOne();
+//
+//        // 스몰블록이 없으면 새로 생성
+//        if (smallBlock == null) {
+//            smallBlock = new SmallBlock();
+//            smallBlock.setSmallBlockData(middleBlock,
+//                    requestDTO.getPlaceId(),
+//                    requestDTO.getPlaceName(),
+//                    requestDTO.getMapX(),
+//                    requestDTO.getMapY());
+//                    smallBlock = smallBlockRepository.save(smallBlock);
+//        } else {
+//            // 스몰블록이 있으면 레퍼 카운트 증가
+//            smallBlock.incrementReferenceCount();
+//            smallBlockRepository.save(smallBlock);
+//        }
+//
+//        log.info("SmallBlock 저장 완료: {}", smallBlock.getSmallBlockId());
+//        return smallBlock;
+//    }
 
     // 전체 스몰블록 조회
     public List<SmallBlock> getAllSmallBlocks() {
-        return smallBlockRepository.findAll();
+        log.info("모든 SmallBlocks 호출");
+
+        QSmallBlock qSmallBlock = QSmallBlock.smallBlock;
+        return queryFactory
+                .selectFrom(qSmallBlock)
+                .fetch();
     }
 
     // 특정 스몰블록 조회 (id로)
     public SmallBlock getSmallBlockById(Long id) {
-        Optional<SmallBlock> smallBlock = smallBlockRepository.findById(id);
-        return smallBlock.orElseThrow(() -> new RuntimeException("스몰 블록을 찾을 수 없음."));
+        log.info("특정 SmallBlock 호출, id = {}", id);
+
+        QSmallBlock qSmallBlock = QSmallBlock.smallBlock;
+        SmallBlock smallBlock = queryFactory
+                .selectFrom(qSmallBlock)
+                .where(qSmallBlock.smallBlockId.eq(id))
+                .fetchOne();
+
+        if (smallBlock == null) {
+            throw new ResourceNotFoundException("SmallBlock not found with id: " + id);
+        }
+
+        return smallBlock;
     }
 }

@@ -1,6 +1,4 @@
 spring:
-#  profiles:
-#    include: API-KEY
   main:
     allow-bean-definition-overriding: true
   application:
@@ -54,50 +52,45 @@ spring:
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
 
-
-
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:3306/travelock_db?useSSL=false&useServerPrepStmts=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul
     username: root
     password: 1234
-
-#  sql:
-#    init:
-#      mode: always
-#      data-locations: classpath:data.sql
+    initialization-mode: always  # 애플리케이션 시작 시 data.sql 실행 보장
 
   jpa:
-    hibernate:
-      ddl-auto: create
-    #  show-sql: true
-
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
-    # SpringDataJpa의 batch처리를위한 설정
+    defer-datasource-initialization: true
+    show-sql: true  # 콘솔에 SQL 쿼리 출력
     properties:
       hibernate:
+        format_sql: true  # SQL을 보기 좋게 포맷팅
         dialect: org.hibernate.dialect.MariaDBDialect
         jdbc:
           batch_size: 50  # 한 번에 처리할 엔티티 수
         order_inserts: true
         order_updates: true
         jdbc.batch_versioned_data: true
+    hibernate:
+      ddl-auto: create-drop
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
 
+  sql:
+    init:
+      mode: always  # 데이터 소스 초기화 모드 설정
+      continue-on-error: false  # 오류 발생 시 초기화 중단 여부
 
-    defer-datasource-initialization: true
-    #Swagger 3.0
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+
   data:
     redis:
-#      host: redis
       host: localhost
       port: 6379
 
-#Swagger 3.0
-#http://localhost:8080/swagger-ui/index.html
+# Swagger 3.0 설정
 springdoc:
   swagger-ui:
     path: /api-docs
@@ -110,8 +103,15 @@ application:
     jwt:
       secret-key: awefawefawefawef123412341234a23ta23ta23ta23ta23ta23t
 
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG  # SQL 쿼리 실행 로그를 출력
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE  # 파라미터 바인딩 정보 출력
 
 server:
   port: 8080
-
-

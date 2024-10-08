@@ -88,16 +88,16 @@ public class DailyCourseController {
                 , DailyCourseResponseDTO::fromDomainToResponseDTO);
         return ResponseEntity.status(HttpStatus.OK).body("수정됨");
     }
-
-
+//
+//
 //    //일일일정 조회
 //   조회 public ResponseEntity<?> getDailyCourse(){getDailyCourse
 //        dailyCourseService
 //    }
-
+//
 //    //내 모든 일일일정 조회
 //    public ResponseEntity<?> getMyDailyCourses(){}
-
+//
 
 
 
