@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface BigBlockRepository extends JpaRepository<BigBlock, Long>, BigBlockCustomRepository {
+public interface BigBlockRepository extends JpaRepository<BigBlock, Long> {
 
 //    // 빅블럭은 단일ID
 //    BigBlock findByStateAndCityCode(State state, String cityCode);

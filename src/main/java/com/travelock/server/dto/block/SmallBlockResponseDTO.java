@@ -1,4 +1,4 @@
-package com.travelock.server.dto;
+package com.travelock.server.dto.block;
 
 import com.travelock.server.domain.SmallBlock;
 import lombok.AllArgsConstructor;
@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 public class SmallBlockResponseDTO {
     private Long smallBlockId;
     private String placeId;
+    private String placeName;
     private String mapX;
     private String mapY;
     private Integer referenceCount;
@@ -23,6 +24,7 @@ public class SmallBlockResponseDTO {
         return new SmallBlockResponseDTO(
                 smallBlock.getSmallBlockId(),
                 smallBlock.getPlaceId(),
+                smallBlock.getPlaceName(),
                 smallBlock.getMapX(),
                 smallBlock.getMapY(),
                 smallBlock.getReferenceCount()

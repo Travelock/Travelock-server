@@ -2,9 +2,8 @@ package com.travelock.server.controller;
 
 import com.travelock.server.converter.DTOConverter;
 import com.travelock.server.domain.FullCourse;
-import com.travelock.server.dto.DailyCourseRequestDTO;
-import com.travelock.server.dto.FullCourseRequestDTO;
-import com.travelock.server.dto.FullCourseResponseDTO;
+import com.travelock.server.dto.course.full.FullCourseRequestDTO;
+import com.travelock.server.dto.course.full.FullCourseResponseDTO;
 import com.travelock.server.dto.course.full_modify.FullCourseModifyDto;
 import com.travelock.server.service.FullCourseService;
 import com.travelock.server.service.cache.CourseRecommendService;

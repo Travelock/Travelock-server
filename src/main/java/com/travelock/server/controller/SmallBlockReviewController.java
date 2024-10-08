@@ -1,6 +1,6 @@
 package com.travelock.server.controller;
 
-import com.travelock.server.dto.SmallBlockReviewDto;
+import com.travelock.server.dto.block.SmallBlockReviewDto;
 import com.travelock.server.service.SmallBlockReviewService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

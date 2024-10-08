@@ -1,7 +1,6 @@
 package com.travelock.server.client;
 
-import com.travelock.server.dto.DirectionsRequestDTO;
-import com.travelock.server.dto.DirectionsResponseDTO;
+import com.travelock.server.dto.directions.DirectionsRequestDTO;
 import com.travelock.server.dto.tmap.TmapResponseDTO;
 import com.travelock.server.exception.base_exceptions.BadRequestException;
 import lombok.extern.slf4j.Slf4j;

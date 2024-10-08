@@ -1,9 +1,9 @@
 package com.travelock.server.service;
 
 import com.travelock.server.client.DirectionsSearchClient;
-import com.travelock.server.dto.DirectionsRequestDTO;
-import com.travelock.server.dto.DirectionsResponseDTO;
-import com.travelock.server.dto.PathDTO;
+import com.travelock.server.dto.directions.DirectionsRequestDTO;
+import com.travelock.server.dto.directions.DirectionsResponseDTO;
+import com.travelock.server.dto.directions.PathDTO;
 import com.travelock.server.dto.tmap.LegDTO;
 import com.travelock.server.dto.tmap.StationDTO;
 import com.travelock.server.dto.tmap.StepDTO;

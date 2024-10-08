@@ -1,6 +1,7 @@
-package com.travelock.server.dto;
+package com.travelock.server.dto.course.full;
 
 import com.travelock.server.domain.FullCourse;
+import com.travelock.server.dto.course.daily.DailyCourseResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,7 @@ public class FullCourseResponseDTO {
         List<DailyCourseResponseDTO> dailyCourseList = new ArrayList<>();
         List<Long> fullAndDailyConnectIds = new ArrayList<>();
         if (fullCourse.getFullAndDailyCourseConnects() != null) {
+            // 일자별 일정 리스트
             dailyCourseList = fullCourse.getFullAndDailyCourseConnects().stream()
                     .map(fullAndDailyCourseConnect -> DailyCourseResponseDTO // DailyCourseResponseDTO로 변환
                             .fromDomainToResponseDTO(fullAndDailyCourseConnect.getDailyCourse()))
