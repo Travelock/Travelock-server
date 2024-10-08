@@ -29,4 +29,10 @@ public class DailyBlockConnect {
     @ManyToOne
     @JoinColumn(name = "full_block_id", nullable = false)
     private FullBlock fullBlock;
+
+    public void newConnect(Integer blockNum, DailyCourse dailyCourse, FullBlock fullBlock){
+        this.blockNum = blockNum;
+        this.dailyCourse = dailyCourse;
+        this.fullBlock = fullBlock;
+    }
 }
