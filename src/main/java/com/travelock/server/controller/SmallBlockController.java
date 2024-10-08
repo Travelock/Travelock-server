@@ -32,17 +32,17 @@ public class SmallBlockController {
         }
     }
 
-    // 사용자가 선택한 장소를 DB에 저장 (코스 확정 시 호출)
-    @PostMapping("/confirm")
-    public ResponseEntity<?> confirmSmallBlock(@RequestBody SmallBlockRequestDTO requestDTO) {
-        try {
-            SmallBlock smallBlock = smallBlockService.confirmAndCreateSmallBlock(requestDTO);
-            return new ResponseEntity<>("SmallBlock saved successfully", HttpStatus.CREATED); // 201 !!
-        } catch (Exception e) {
-            log.error("Error confirming SmallBlock", e);  // 에러 메시지는 로그에 기록
-            return new ResponseEntity<>("Error saving SmallBlock", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    // 사용자가 선택한 장소를 DB에 저장 (코스 확정 시 호출)
+//    @PostMapping("/confirm")
+//    public ResponseEntity<?> confirmSmallBlock(@RequestBody SmallBlockRequestDTO requestDTO) {
+//        try {
+//            SmallBlock smallBlock = smallBlockService.confirmAndCreateSmallBlock(requestDTO);
+//            return new ResponseEntity<>("SmallBlock saved successfully", HttpStatus.CREATED); // 201 !!
+//        } catch (Exception e) {
+//            log.error("Error confirming SmallBlock", e);  // 에러 메시지는 로그에 기록
+//            return new ResponseEntity<>("Error saving SmallBlock", HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
     // 전체 스몰블록 조회
     @GetMapping("/list")
