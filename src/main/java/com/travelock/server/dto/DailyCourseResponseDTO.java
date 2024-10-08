@@ -1,4 +1,5 @@
 package com.travelock.server.dto;
+
 import com.travelock.server.domain.DailyBlockConnect;
 import com.travelock.server.domain.DailyCourse;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
