@@ -10,7 +10,6 @@ import com.travelock.server.exception.base_exceptions.BadRequestException;
 import com.travelock.server.exception.base_exceptions.ResourceNotFoundException;
 import com.travelock.server.exception.course.AddDailyCourseFavoriteException;
 import com.travelock.server.exception.course.AddDailyCourseScrapException;
-import com.travelock.server.exception.review.AddReviewException;
 import com.travelock.server.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +20,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -248,8 +246,6 @@ public class DailyCourseService {
         );
 
 
-
-
         //SmallBlock Batch 저장 ---------------------------------------------------------------------- DB INSERT ( 1 )
         smallBlockRepository.saveAll(smallBlocksToBatchSave);
 
@@ -259,23 +255,37 @@ public class DailyCourseService {
         // Daily Course 저장 ------------------------------------------------------------------------- DB INSERT ( 1 )
         DailyCourse savedDailyCourse = dailyCourseRepository.save(dailyCourse);
 
-        //FullAndDaily연결객체 저장 ------------------------------------------------------------------- DB INSERT ( 1 )
+        //FullAndDaily연결객체 저장 --------------------------------------------------------------------- DB INSERT ( 1 )
         FullAndDailyCourseConnect connect = new FullAndDailyCourseConnect();
         connect.createNewConnect(member, fullCourse, savedDailyCourse, createDto.getDayNum());
         fullAndDailyCourseConnectRepository.save(connect);
 
-        //DailyBlockConnect 목록 생성
-        for(FullBlockDto fbt : fullBlockDtoList){
+
+        //DailyBlockConnect 목록 생성 ->> 구현필요
+        for (FullBlockDto fbt : fullBlockDtoList) {
             DailyBlockConnect tmp = new DailyBlockConnect();
-            tmp.newConnect(
-                    fbt.getBlockNum(),
-                    savedDailyCourse,
-                    fullBlocks.get(0) //-> 저장된 객체와 fullBlockDto를 비교해서 blockNum에 맞는 데이터를 선택 필요
-            );
+
+            //저장된 FullBlock 객체들에서 선택
+            for (FullBlock fb : fullBlocks) {
+
+                //요청된 dto의 fullBlock데이터와 저장된 fullBlock의 데이터가 모두 같으면 dailyBlock연결객체에 추가.
+                if (
+                        fb.getBigBlock().getBigBlockId() == fbt.getBigBlockId() &&
+                                fb.getMiddleBlock().getMiddleBlockId() == fbt.getMiddleBlockId() &&
+                                fb.getSmallBlock().getPlaceId().equals(fbt.getSmallBlockDto().getPlaceId())
+                ) {
+                    tmp.newConnect(
+                            fbt.getBlockNum(),
+                            savedDailyCourse,
+                            fb
+                    );
+
+                    dailyBlockConnects.add(tmp);
+                }
+            }
         }
 
-
-        //DailyBlock연결객체 저장 --------------------------------------------------------------------- DB INSERT ( 1 )
+        //DailyBlock연결객체 저장 ---------------------------------------------------------------------- DB INSERT ( 1 )
         dailyBlockConnectRepository.saveAll(dailyBlockConnects);
 
         return savedDailyCourse;
