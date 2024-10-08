@@ -2,9 +2,8 @@ package com.travelock.server.controller;
 
 import com.travelock.server.converter.DTOConverter;
 import com.travelock.server.domain.DailyCourse;
-import com.travelock.server.dto.DailyCourseRequestDTO;
-import com.travelock.server.dto.DailyCourseResponseDTO;
-import com.travelock.server.dto.course.daily_create.DailyCourseCreateDto;
+import com.travelock.server.dto.course.daily.DailyCourseResponseDTO;
+import com.travelock.server.dto.course.daily.DailyCourseRequestDTO;
 import com.travelock.server.service.DailyCourseService;
 import com.travelock.server.service.cache.CourseRecommendService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -52,7 +51,7 @@ public class DailyCourseController {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "일일일정 생성 Dto",
                     required = true,
-                    content = @Content(schema = @Schema(implementation = DailyCourseCreateDto.class))
+                    content = @Content(schema = @Schema(implementation = DailyCourseRequestDTO.class))
             ),
             responses = {
                     @ApiResponse(responseCode = "201", description = "일일일정 저장 성공", content = @Content(mediaType = "application/json")),
@@ -60,7 +59,7 @@ public class DailyCourseController {
                     @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
             })
     @PostMapping
-    public ResponseEntity<?> createDailyCourse(@RequestBody DailyCourseCreateDto request) {
+    public ResponseEntity<?> createDailyCourse(@RequestBody DailyCourseRequestDTO request) {
         // Response DTO로 변환해서 반환
         DailyCourseResponseDTO response = DTOConverter.toDto(dailyCourseService.saveDailyCourse(request),
                 DailyCourseResponseDTO::fromDomainToResponseDTO);
@@ -74,7 +73,7 @@ public class DailyCourseController {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "일일일정 생성 Dto",
                     required = true,
-                    content = @Content(schema = @Schema(implementation = DailyCourseCreateDto.class))
+                    content = @Content(schema = @Schema(implementation = DailyCourseRequestDTO.class))
             ),
             responses = {
                     @ApiResponse(responseCode = "201", description = "일일일정 수정 성공", content = @Content(mediaType = "application/json")),
@@ -82,7 +81,7 @@ public class DailyCourseController {
                     @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
             })
     @PutMapping
-    public ResponseEntity<?> modifyDailyCourse(@RequestBody DailyCourseCreateDto request){
+    public ResponseEntity<?> modifyDailyCourse(@RequestBody DailyCourseRequestDTO request){
 
         // Response DTO로 변환해서 반환
         DailyCourseResponseDTO response = DTOConverter.toDto(dailyCourseService.modifyDailyCourse(request)

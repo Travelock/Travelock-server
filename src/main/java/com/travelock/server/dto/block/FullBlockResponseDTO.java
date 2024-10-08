@@ -1,4 +1,4 @@
-package com.travelock.server.dto;
+package com.travelock.server.dto.block;
 
 import com.travelock.server.domain.FullBlock;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class FullBlockDTO {
+public class FullBlockResponseDTO {
     private Long fullBlockId;
     private Integer blockNum;
     private String stateCode;  // 시/도 코드 (2자리)
@@ -17,11 +17,11 @@ public class FullBlockDTO {
     private String categoryName;
     private SmallBlockResponseDTO smallBlock;
 
-    public static FullBlockDTO fromDomainToResponseDTO(FullBlock fullBlock, Integer blockNum) {
+    public static FullBlockResponseDTO fromDomainToResponseDTO(FullBlock fullBlock, Integer blockNum) {
         // SmallBlock을 SmallBlockResponseDTO로 변환
         SmallBlockResponseDTO smallBlockDTO = SmallBlockResponseDTO.fromDomainToResponseDTO(fullBlock.getSmallBlock());
 
-        return new FullBlockDTO(
+        return new FullBlockResponseDTO(
                 fullBlock.getFullBlockId(),
                 blockNum,
                 fullBlock.getBigBlock().getState().getStateCode(),

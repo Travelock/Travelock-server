@@ -3,7 +3,7 @@ package com.travelock.server.controller;
 
 import com.travelock.server.domain.DailyCourseScrap;
 import com.travelock.server.domain.FullCourseScrap;
-import com.travelock.server.dto.SmallBlockReviewDto;
+import com.travelock.server.dto.block.SmallBlockReviewDto;
 import com.travelock.server.dto.oauth2DTO.MemberDTO;
 import com.travelock.server.service.DailyCourseService;
 import com.travelock.server.service.FullCourseService;
