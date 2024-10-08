@@ -6,8 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
-
 public class SmallBlockResponseDTO {
     private Long smallBlockId;
     private String placeId;
