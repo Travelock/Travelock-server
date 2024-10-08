@@ -60,62 +60,6 @@ public class DailyCourseService {
     @Transactional
     public DailyCourse saveDailyCourse(DailyCourseCreateDto createDto) {
 
-
-//        json 데이터 입력 예
-//        {
-//            "dayNum": 1,
-//                "memberId": 2,
-//                "fullCourseId": 2,
-//                "dailyCourseId": null,
-//                "fullBlockDtoList": [
-//            {
-//                "blockNum": 1,
-//                    "bigBlockId": 1,
-//                    "middleBlockId": 1,
-//                    "smallBlockDto": {
-//                "placeId": "453875",
-//                        "mapX": "4524837837",
-//                        "mapY": "4837832783",
-//                        "referenceCount": 0
-//            }
-//            },
-//            {
-//                "blockNum": 2,
-//                    "bigBlockId": 3,
-//                    "middleBlockId": 3,
-//                    "smallBlockDto": {
-//                "placeId": "2234523520",
-//                        "mapX": "127.2412456",
-//                        "mapY": "37.3528765",
-//                        "referenceCount": 3
-//            }
-//            },
-//            {
-//                "blockNum": 3,
-//                    "bigBlockId": 2,
-//                    "middleBlockId": 2,
-//                    "smallBlockDto": {
-//                "placeId": "1234555550",
-//                        "mapX": "127.1231253",
-//                        "mapY": "37.2888765",
-//                        "referenceCount": 2
-//            }
-//            },
-//            {
-//                "blockNum": 4,
-//                    "bigBlockId": 4,
-//                    "middleBlockId": 4,
-//                    "smallBlockDto": {
-//                "placeId": "2144567890",
-//                        "mapX": "237.523456",
-//                        "mapY": "374.598765",
-//                        "referenceCount": 1
-//            }
-//            }
-//          ],
-//            "dailyBlockConnectIds": null
-//        }
-
         if (createDto == null) {
             throw new BadRequestException("createDto is null");
         }
@@ -126,6 +70,7 @@ public class DailyCourseService {
         QMiddleBlock qMiddleBlock = QMiddleBlock.middleBlock;
         QSmallBlock qSmallBlock = QSmallBlock.smallBlock;
         QFullCourse qFullCourse = QFullCourse.fullCourse;
+        QDailyBlockConnect qDailyBlockConnect = QDailyBlockConnect.dailyBlockConnect;
 
         //Map으로 중복순회 방지
         Map<Long, BigBlock> bigBlockMap = new HashMap<>();
@@ -288,6 +233,7 @@ public class DailyCourseService {
         //DailyBlock연결객체 저장 ---------------------------------------------------------------------- DB INSERT ( 1 )
         dailyBlockConnectRepository.saveAll(dailyBlockConnects);
 
+
         return savedDailyCourse;
     }
 
@@ -297,6 +243,11 @@ public class DailyCourseService {
      */
     public DailyCourse modifyDailyCourse(DailyCourseCreateDto request) {
 
+        /*스몰블럭은 재사용
+        *
+        * 풀블럭 정화
+        * 연결객체 정화
+        * */
 
         //수정 필요
         Long memberId = 1L;
@@ -308,13 +259,13 @@ public class DailyCourseService {
         QDailyBlockConnect qDailyBlockConnect = QDailyBlockConnect.dailyBlockConnect;
 
         List<DailyBlockConnect> connects = new ArrayList<>();
-        List<FullBlock> fullBlocks = new ArrayList<>();
+        List<FullBlock> fullBlocks = new ArrayList<>(); //기존 저장된 풀블록 객체
         List<DailyCourseModifyTemp> batchData = new ArrayList<>();
         List<Long> savedFullBlockIds = new ArrayList<>();
 
         //연결객체 조회
         connects = query.selectFrom(qDailyBlockConnect).where(
-                qDailyBlockConnect.dailyBlockConnectId.in(request.getDailyBlockConnectIds())
+                qDailyBlockConnect.dailyCourse.dailyCourseId.eq(request.getDailyCourseId())
         ).fetch();
 
         //조회한 연결객체정보를 저장용 임시객체에 등록(일단 루프마다 조회하게끔)
@@ -466,5 +417,4 @@ class DailyCourseModifyTemp {
     boolean delete;
     FullBlock fullBlock;
     SmallBlock smallBlock;
-
 }
