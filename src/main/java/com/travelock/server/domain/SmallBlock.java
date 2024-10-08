@@ -24,8 +24,8 @@ public class SmallBlock {
     private String mapX;
     @Column(columnDefinition = "VARCHAR(100) COMMENT '위도값'")
     private String mapY;
-    @Column(columnDefinition = "VARCHAR(255) COMMENT '카카오 Place 링크 주소'")
-    private String linkURL;
+//    @Column(columnDefinition = "VARCHAR(255) COMMENT '카카오 Place 링크 주소'")
+//    private String linkURL;
 
     @Column(columnDefinition = "INT COMMENT '일정에 추가된(참조된) 수'")
     private Integer referenceCount;
@@ -40,22 +40,21 @@ public class SmallBlock {
 
     @Column(columnDefinition = "VARCHAR(29) COMMENT '장소 이름'")
     private String placeName;
-
-    @Column(columnDefinition = "VARCHAR(255) COMMENT '장소 URL'")
-    private String url;
+//
+//    @Column(columnDefinition = "VARCHAR(255) COMMENT '장소 URL'")
+//    private String url;
 
 
 
     @OneToMany(mappedBy = "smallBlock", fetch = FetchType.LAZY)
     private List<SmallBlockReview> smallBlockReviews;
 
-    public void setSmallBlockData(MiddleBlock middleBlock, String placeId, String placeName, String mapX, String mapY, String url) {
+    public void setSmallBlockData(MiddleBlock middleBlock, String placeId, String placeName, String mapX, String mapY) {
         this.middleBlock = middleBlock;
         this.placeId = placeId;
         this.placeName = placeName;
         this.mapX = mapX;
         this.mapY = mapY;
-        this.url = url;
         this.referenceCount = 1;
     }
 
