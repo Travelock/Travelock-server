@@ -1,7 +1,8 @@
-package com.travelock.server.dto;
+package com.travelock.server.dto.course.daily;
 
 import com.travelock.server.domain.DailyBlockConnect;
 import com.travelock.server.domain.DailyCourse;
+import com.travelock.server.dto.block.FullBlockResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,15 +22,15 @@ public class DailyCourseResponseDTO {
     private String memberNickName;  // 생성한 멤버 닉네임 - JK
     private Integer favoriteCount;  // 좋아요 수
     private Integer scarpCount;     // 스크랩 수
-    private List<FullBlockDTO> fullBlockList;
+    private List<FullBlockResponseDTO> fullBlockList;
     private List<Long> dailyBlockConnectIds; //수정용 연결객체 Id 목록
 
     public static DailyCourseResponseDTO fromDomainToResponseDTO(DailyCourse dailyCourse) {
         // FullBlock 리스트 생성 (DailyBlockConnect를 통해 FullBlock을 가져옴)
-        List<FullBlockDTO> fullBlockList = new ArrayList<>();
+        List<FullBlockResponseDTO> fullBlockList = new ArrayList<>();
         if (dailyCourse.getDailyBlockConnects() != null) {
             fullBlockList = dailyCourse.getDailyBlockConnects().stream()
-                    .map(dailyBlockConnect -> FullBlockDTO // FullBlockDTO로 변환
+                    .map(dailyBlockConnect -> FullBlockResponseDTO // FullBlockDTO로 변환
                             .fromDomainToResponseDTO(dailyBlockConnect.getFullBlock(), dailyBlockConnect.getBlockNum()))
                     .collect(Collectors.toList());
         }

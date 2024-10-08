@@ -7,7 +7,7 @@ import com.travelock.server.domain.QMember;
 import com.travelock.server.domain.QSmallBlock;
 import com.travelock.server.domain.QSmallBlockReview;
 import com.travelock.server.domain.SmallBlockReview;
-import com.travelock.server.dto.SmallBlockReviewDto;
+import com.travelock.server.dto.block.SmallBlockReviewDto;
 import com.travelock.server.exception.review.AddReviewException;
 import com.travelock.server.exception.base_exceptions.ResourceNotFoundException;
 import com.travelock.server.exception.review.ReviewModificationException;

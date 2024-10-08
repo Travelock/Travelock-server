@@ -1,6 +1,6 @@
 package com.travelock.server.controller;
 
-import com.travelock.server.dto.DirectionsRequestDTO;
+import com.travelock.server.dto.directions.DirectionsRequestDTO;
 import com.travelock.server.service.DirectionsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
