@@ -2,6 +2,7 @@ package com.travelock.server.client;
 
 import com.travelock.server.dto.DirectionsRequestDTO;
 import com.travelock.server.dto.DirectionsResponseDTO;
+import com.travelock.server.dto.tmap.TmapResponseDTO;
 import com.travelock.server.exception.base_exceptions.BadRequestException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,9 +18,9 @@ import reactor.core.publisher.Mono;
 public class DirectionsSearchClient {
     private final String TMAP_DIRECTIONS_URL = "https://apis.openapi.sk.com/transit/routes";
 
-//    @Value("${TMAP_API_KEY}")
-    private String TMAP_API_KEY = "매쟈ㅓㄷㄹ9머392럼093ㄹ";
-    public DirectionsResponseDTO requestSearchDirections(DirectionsRequestDTO requestDTO) {
+    @Value("${TMAP_API_KEY}")
+    private String TMAP_API_KEY;
+    public TmapResponseDTO requestSearchDirections(DirectionsRequestDTO requestDTO) {
         log.info("DirectionsSearchClient::requestSearchDirections START");
 
         HttpHeaders headers = new HttpHeaders();
@@ -34,7 +35,7 @@ public class DirectionsSearchClient {
 
         // Request API
         // CompletableFuture<DirectionsResponseDTO> future = new CompletableFuture<>();
-        DirectionsResponseDTO responseDTO = webClient.post()
+        TmapResponseDTO responseDTO = webClient.post()
                 .bodyValue(requestDTO) // 요청 데이터
                 .retrieve()
                 .onStatus(status -> status.is4xxClientError(), clientResponse -> // 400대 에러 발생
@@ -43,11 +44,12 @@ public class DirectionsSearchClient {
                 .onStatus(status -> status.is5xxServerError(), clientResponse -> // 500대 에러 발생
                         clientResponse.bodyToMono(String.class)
                                 .flatMap(error -> Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, error))))
-                .bodyToMono(DirectionsResponseDTO.class)
+                .bodyToMono(TmapResponseDTO.class)
                 //.doOnSuccess(response -> {
                     // future.complete(response); // 성공 응답 데이터 세팅
                 //})
                 .block();
+        // log.info("response | " + responseDTO);
 
         log.info("DirectionsSearchClient::requestSearchDirections END");
          return responseDTO;

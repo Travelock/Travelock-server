@@ -27,16 +27,14 @@ public class JWTFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        //토큰인증없이 넘어갈 경로
-        if (request.getServletPath().contains("/api")
-        ) {
+        // 특정 경로(/api 등)는 인증 없이도 접근 가능하도록 예외 처리
+        if (request.getServletPath().contains("/api")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-//        cookie들을 불러온 뒤 Authorization Key에 담긴 쿠키를 찾음
+        // 쿠키에서 Authorization 토큰 추출
         Cookie[] cookies = request.getCookies();
-        // 쿠키가 없을 경우 필터 체인을 그대로 진행
         if (cookies == null) {
             System.out.println("No cookies found");
             filterChain.doFilter(request, response);
@@ -45,60 +43,49 @@ public class JWTFilter extends OncePerRequestFilter {
 
         String authorization = null;
         for (Cookie cookie : cookies) {
-
-            System.out.println(cookie.getName());
-            if (cookie.getName().equals("Authorization")) {
-
+            if ("Authorization".equals(cookie.getName())) {
                 authorization = cookie.getValue();
                 break;
             }
         }
 
-
-
-        //Authorization 헤더 검증
+        // Authorization 쿠키가 없으면 필터 체인 진행
         if (authorization == null) {
-
-            System.out.println("token null");
+            System.out.println("Token not found in cookies");
             filterChain.doFilter(request, response);
-
-            //조건이 해당되면 메소드 종료 (필수)
             return;
         }
 
-        //토큰
         String token = authorization;
 
-        //토큰 소멸 시간 검증
+        // 토큰 만료 여부 검증
         if (jwtUtil.isExpired(token)) {
-
-            System.out.println("token expired");
+            System.out.println("Token expired");
             filterChain.doFilter(request, response);
-
-            //조건이 해당되면 메소드 종료 (필수)
             return;
         }
 
-        //토큰에서 username과 role 획득
+        // 토큰이 유효한 경우, 토큰에서 필요한 정보 추출
         String username = jwtUtil.getUsername(token);
         String role = jwtUtil.getRole(token);
         Long memberId = jwtUtil.getMemberId(token);
 
-
-        //userDTO를 생성하여 값 set
+        // 회원 정보를 담은 DTO 생성
         MemberDTO memberDTO = new MemberDTO();
         memberDTO.setUsername(username);
         memberDTO.setRole(role);
         memberDTO.setMemberId(memberId);
 
-        //UserDetails에 회원 정보 객체 담기
+        // CustomOAuth2User에 회원 정보 세팅
         CustomOAuth2User customOAuth2User = new CustomOAuth2User(memberDTO);
 
-        //스프링 시큐리티 인증 토큰 생성
+        // Spring Security 인증 토큰 생성
         Authentication authToken = new UsernamePasswordAuthenticationToken(customOAuth2User, null, customOAuth2User.getAuthorities());
-        //세션에 사용자 등록
+
+        // SecurityContextHolder에 인증 정보 설정
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
+        // 필터 체인 계속 진행
         filterChain.doFilter(request, response);
     }
 }

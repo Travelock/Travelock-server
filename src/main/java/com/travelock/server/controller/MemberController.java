@@ -4,6 +4,7 @@ package com.travelock.server.controller;
 import com.travelock.server.domain.DailyCourseScrap;
 import com.travelock.server.domain.FullCourseScrap;
 import com.travelock.server.dto.SmallBlockReviewDto;
+import com.travelock.server.dto.oauth2DTO.MemberDTO;
 import com.travelock.server.service.DailyCourseService;
 import com.travelock.server.service.FullCourseService;
 import com.travelock.server.service.MemberService;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -121,5 +123,37 @@ public class MemberController {
     public ResponseEntity<?> getMySmallBlockReviews(@PathVariable Long memberId){
         List<SmallBlockReviewDto> reviews = smallBlockReviewService.getMyReviews(memberId);
         return ResponseEntity.status(HttpStatus.OK).body(reviews);
+    }
+
+    // 토큰을 통해 사용자 조회 및 닉네임 확인
+    @GetMapping("/nickname")
+    public ResponseEntity<?> checkNickName(@RequestHeader("Authorization") String token) {
+        try {
+            // 서비스에서 닉네임 체크
+            MemberDTO memberDTO = memberService.checkNickName(token);
+            if (memberDTO.getNickName() == null || memberDTO.getNickName().isEmpty()) {
+                // 닉네임이 없는 경우 닉네임 입력 요청
+                return ResponseEntity.status(HttpStatus.OK).body("닉네임 입력 필요");
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(memberDTO);
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    // 닉네임 저장
+    @PutMapping("/nickname")
+    public ResponseEntity<?> putNickName(@RequestHeader("Authorization") String token, @RequestBody String nickName) {
+        if (nickName == null || nickName.trim().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("닉네임 누락");
+        }
+
+        try {
+            // 닉네임 저장 서비스 호출
+            memberService.saveNickName(token, nickName);
+            return ResponseEntity.status(HttpStatus.OK).body("닉네임 저장 완료");
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 }
