@@ -2,6 +2,7 @@ package com.travelock.server.controller;
 
 import com.travelock.server.converter.DTOConverter;
 import com.travelock.server.domain.DailyCourse;
+import com.travelock.server.dto.course.cache.DailyCourseCacheDto;
 import com.travelock.server.dto.course.daily.DailyCourseResponseDTO;
 import com.travelock.server.dto.course.daily.DailyCourseRequestDTO;
 import com.travelock.server.service.DailyCourseService;
@@ -88,17 +89,6 @@ public class DailyCourseController {
                 , DailyCourseResponseDTO::fromDomainToResponseDTO);
         return ResponseEntity.status(HttpStatus.OK).body("수정됨");
     }
-//
-//
-//    //일일일정 조회
-//   조회 public ResponseEntity<?> getDailyCourse(){getDailyCourse
-//        dailyCourseService
-//    }
-//
-//    //내 모든 일일일정 조회
-//    public ResponseEntity<?> getMyDailyCourses(){}
-//
-
 
 
     @Operation(summary = "추천 일일일정",
@@ -111,7 +101,7 @@ public class DailyCourseController {
             })
     @GetMapping("/recommend")
     public ResponseEntity<?> getRecommendedDailyCourses(){
-        List<DailyCourse> topDailyCoursesFromCache = courseRecommendService.getTopDailyCoursesFromCache();
+        List<DailyCourseCacheDto> topDailyCoursesFromCache = courseRecommendService.getTopDailyCoursesFromCache();
         return ResponseEntity.status(HttpStatus.OK).body(topDailyCoursesFromCache);
     }
 

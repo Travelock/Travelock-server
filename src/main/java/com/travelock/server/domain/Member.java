@@ -42,15 +42,15 @@ public class Member extends BaseTime{
     private List<SmallBlockReview> smallBlockReviews;
 
     // Member : 일일 일정 리스트 = 1 : N
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<DailyCourse> dailyCourses;
 
     // Member : 전체 일정 리스트 = 1 : N
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<FullCourse> fullCourses;
 
     // Member : 일정 연결 객체 = 1 : N
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<FullAndDailyCourseConnect> fullAndDailyCourseConnects;
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)

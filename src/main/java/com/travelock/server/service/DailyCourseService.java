@@ -60,62 +60,6 @@ public class DailyCourseService {
     @Transactional
     public DailyCourse saveDailyCourse(DailyCourseRequestDTO createDto){
 
-
-//        json 데이터 입력 예
-//        {
-//            "dayNum": 1,
-//                "memberId": 2,
-//                "fullCourseId": 2,
-//                "dailyCourseId": null,
-//                "fullBlockDtoList": [
-//            {
-//                "blockNum": 1,
-//                    "bigBlockId": 1,
-//                    "middleBlockId": 1,
-//                    "smallBlockDto": {
-//                "placeId": "453875",
-//                        "mapX": "4524837837",
-//                        "mapY": "4837832783",
-//                        "referenceCount": 0
-//            }
-//            },
-//            {
-//                "blockNum": 2,
-//                    "bigBlockId": 3,
-//                    "middleBlockId": 3,
-//                    "smallBlockDto": {
-//                "placeId": "2234523520",
-//                        "mapX": "127.2412456",
-//                        "mapY": "37.3528765",
-//                        "referenceCount": 3
-//            }
-//            },
-//            {
-//                "blockNum": 3,
-//                    "bigBlockId": 2,
-//                    "middleBlockId": 2,
-//                    "smallBlockDto": {
-//                "placeId": "1234555550",
-//                        "mapX": "127.1231253",
-//                        "mapY": "37.2888765",
-//                        "referenceCount": 2
-//            }
-//            },
-//            {
-//                "blockNum": 4,
-//                    "bigBlockId": 4,
-//                    "middleBlockId": 4,
-//                    "smallBlockDto": {
-//                "placeId": "2144567890",
-//                        "mapX": "237.523456",
-//                        "mapY": "374.598765",
-//                        "referenceCount": 1
-//            }
-//            }
-//          ],
-//            "dailyBlockConnectIds": null
-//        }
-
         if (createDto == null) {
             throw new BadRequestException("createDto is null");
         }
@@ -126,6 +70,7 @@ public class DailyCourseService {
         QMiddleBlock qMiddleBlock = QMiddleBlock.middleBlock;
         QSmallBlock qSmallBlock = QSmallBlock.smallBlock;
         QFullCourse qFullCourse = QFullCourse.fullCourse;
+        QDailyBlockConnect qDailyBlockConnect = QDailyBlockConnect.dailyBlockConnect;
 
         //Map으로 중복순회 방지
         Map<Long, BigBlock> bigBlockMap = new HashMap<>();
@@ -289,6 +234,7 @@ public class DailyCourseService {
         //DailyBlock연결객체 저장 ---------------------------------------------------------------------- DB INSERT ( 1 )
         dailyBlockConnectRepository.saveAll(dailyBlockConnects);
 
+
         return savedDailyCourse;
     }
 
@@ -298,6 +244,11 @@ public class DailyCourseService {
      */
     public DailyCourse modifyDailyCourse(DailyCourseRequestDTO request) {
 
+        /*스몰블럭은 재사용
+        *
+        * 풀블럭 정화
+        * 연결객체 정화
+        * */
 
         //수정 필요
         Long memberId = 1L;
@@ -306,33 +257,145 @@ public class DailyCourseService {
         QDailyCourse qDailyCourse = QDailyCourse.dailyCourse;
         QFullBlock qFullBlock = QFullBlock.fullBlock;
         QSmallBlock qSmallBlock = QSmallBlock.smallBlock;
+        QBigBlock qBigBlock = QBigBlock.bigBlock;
+        QMiddleBlock qMiddleBlock = QMiddleBlock.middleBlock;
         QDailyBlockConnect qDailyBlockConnect = QDailyBlockConnect.dailyBlockConnect;
 
-        List<DailyBlockConnect> connects = new ArrayList<>();
+
+
+        //Map으로 중복순회 방지
+        Map<Long, BigBlock> bigBlockMap = new HashMap<>();
+        Map<Long, MiddleBlock> middleBlockMap = new HashMap<>();
+        Map<Long, FullBlock> fullBlockMap = new HashMap<>();
+        Map<String, SmallBlock> existingSmallBlockMap = new HashMap<>();
+
+        List<FullBlock> fullBlocksToBatchSave = new ArrayList<>();
+        List<FullBlockRequestDTO> fullBlockDtoList = request.getFullBlockDtoList();
+        List<BigBlock> bigBlocks = new ArrayList<>();
+        List<MiddleBlock> middleBlocks = new ArrayList<>();
+        List<SmallBlock> smallBlocks = new ArrayList<>();
         List<FullBlock> fullBlocks = new ArrayList<>();
-        List<DailyCourseModifyTemp> batchData = new ArrayList<>();
-        List<Long> savedFullBlockIds = new ArrayList<>();
+        List<DailyBlockConnect> dailyBlockConnects = new ArrayList<>();
 
-        //연결객체 조회
-        connects = query.selectFrom(qDailyBlockConnect).where(
-                qDailyBlockConnect.dailyBlockConnectId.in(request.getDailyBlockConnectIds())
-        ).fetch();
 
-        //조회한 연결객체정보를 저장용 임시객체에 등록(일단 루프마다 조회하게끔)
-        for (DailyBlockConnect dailyBlockConnect : connects) {
-            DailyCourseModifyTemp tmp = new DailyCourseModifyTemp();
-            tmp.connectId = dailyBlockConnect.getDailyBlockConnectId();
-            tmp.blockNum = dailyBlockConnect.getBlockNum();
-            tmp.delete = false;
-            tmp.fullBlock = query.selectFrom(qFullBlock).where(qFullBlock.fullBlockId.eq(dailyBlockConnect.getFullBlock().getFullBlockId())).fetchOne();
-            tmp.smallBlock = query.selectFrom(qSmallBlock).where(qSmallBlock.smallBlockId.eq(dailyBlockConnect.getFullBlock().getSmallBlock().getSmallBlockId())).fetchOne();
+        List<FullBlock> fullBlocksToDelete = new ArrayList<>();
+        List<DailyBlockConnect> connectsToDelete = new ArrayList<>();
+
+
+        //dto에서 추출해야함
+        List<Long> bigBlockIds = new ArrayList<>();
+        List<Long> middleBlockIds = new ArrayList<>();
+        List<String> smallBlockPlaceIds = new ArrayList<>();
+
+        for (FullBlockRequestDTO dto : request.getFullBlockDtoList()) {
+            bigBlockIds.add(dto.getBigBlockId());
+            middleBlockIds.add(dto.getMiddleBlockId());
+            smallBlockPlaceIds.add(dto.getSmallBlockDto().getPlaceId());
         }
 
 
-        //저장된 연결객체와 dto의 정보를 비교해서 정보가 다른 데이터 추출
-        for (DailyCourseModifyTemp tmp : batchData) {
+        // 1. 요청된 정보로 스몰블록 조회. -> 없는경우 새로 생성 -> 전체 스몰블록 목록 생성
+        // 2. 요청된 정보로 빅블록, 미들블럭 조회 -> 전체 빅, 미들블록 목록 생성
+        // 3. 현재 저장된 일일일정의 블록연결객체와 연결객체에 등록된 풀블록과 풀블록dto의 빅블록, 미들블록, 스몰블록의 placeId를 비교, 일치여부를 확인.
+        // 4. 일치한다면 그대로 유지, 불일치하면 삭제목록에 풀블록, 연결객체 추가.
+        // 5. 이후 생성과 동일하게 데이터 입력 진행.
+        // 6. 삭제목록 데이터 전부 삭제처리.
 
+        // 조회 - 스몰블록, 빅블록, 미들블록, 연결객체 -> 풀블록, 사용자, 일일일정(현재 저장된 모든 데이터)
+        List<Tuple> tuples = query.select(qMember, qSmallBlock, qBigBlock, qMiddleBlock, qDailyBlockConnect, qFullBlock, qDailyCourse)
+                .from(qMember)
+                .join(qDailyCourse).on(qDailyCourse.dailyCourseId.eq(request.getDailyCourseId()))
+                .join(qDailyBlockConnect).on(qDailyBlockConnect.dailyCourse.dailyCourseId.eq(qDailyCourse.dailyCourseId))
+                .join(qFullBlock).on(qFullBlock.fullBlockId.in(qDailyBlockConnect.fullBlock.fullBlockId))
+                .join(qBigBlock).on(qBigBlock.bigBlockId.in(bigBlockIds))
+                .join(qMiddleBlock).on(qMiddleBlock.middleBlockId.in(middleBlockIds))
+                .leftJoin(qSmallBlock).on(qSmallBlock.placeId.in(smallBlockPlaceIds))
+                .join(qSmallBlock)
+                .where(qMember.memberId.eq(memberId)).fetch();
+
+
+        Tuple firstTuple = tuples.get(0);
+        Member member = firstTuple.get(qMember);
+        DailyCourse dailyCourse = firstTuple.get(qDailyCourse);
+
+        if (member == null) {
+            throw new ResourceNotFoundException("Member not found.");
         }
+
+        if (dailyCourse == null) {
+            throw new ResourceNotFoundException("DailyCourse not found.");
+        }
+
+
+        for(Tuple tuple : tuples){
+            DailyBlockConnect dailyBlockConnect = new DailyBlockConnect();
+            FullBlock fullBlock = new FullBlock();
+            BigBlock bigBlock = new BigBlock();
+            MiddleBlock middleBlock = new MiddleBlock();
+            SmallBlock smallBlock = new SmallBlock();
+
+            dailyBlockConnects.add(dailyBlockConnect);
+
+
+            fullBlockMap.put(fullBlock.getFullBlockId(), fullBlock);
+            bigBlockMap.put(bigBlock.getBigBlockId(), bigBlock);
+            middleBlockMap.put(middleBlock.getMiddleBlockId(), middleBlock);
+
+            if (smallBlock != null) {
+                // SmallBlock이 있을때만 처리
+                existingSmallBlockMap.put(smallBlock.getPlaceId(), smallBlock);
+            }
+        }
+
+        //비교 조회 데이터와 dto데이터를 비교.
+        for (FullBlockRequestDTO fullBlockRequestDto : fullBlockDtoList) {
+            // FullBlock과 관련된 엔티티 생성 및 연관 설정
+            FullBlock fullBlock = new FullBlock();
+            SmallBlockRequestDTO smallBlockRequestDTO = fullBlockRequestDto.getSmallBlockDto();
+
+            SmallBlock smallBlock = existingSmallBlockMap.get(smallBlockRequestDTO.getPlaceId());
+
+            // 존재하지 않으면 새로운 SmallBlock 생성
+            if (smallBlock == null) {
+                smallBlock = new SmallBlock();
+
+                MiddleBlock middleBlock = middleBlockMap.get(fullBlockRequestDto.getMiddleBlockId());
+
+                if (middleBlock == null) {
+                    throw new ResourceNotFoundException("MiddleBlock not found");
+                }
+
+
+
+                // SmallBlock 엔티티 설정
+                smallBlock.createNewSmallBlock(
+                        smallBlockRequestDTO.getMapX(),
+                        smallBlockRequestDTO.getMapY(),
+                        smallBlockRequestDTO.getPlaceId(),
+                        middleBlock
+                );
+
+
+                existingSmallBlockMap.put(smallBlock.getPlaceId(), smallBlock);
+            }
+
+            BigBlock bigBlock = bigBlockMap.get(fullBlockRequestDto.getBigBlockId());
+
+            if (bigBlock == null) {
+                throw new ResourceNotFoundException("BigBlock not found");
+            }
+
+            fullBlock.newFullBlock(
+                    bigBlock,
+                    smallBlock.getMiddleBlock(),
+                    smallBlock
+            );
+
+            fullBlocksToBatchSave.add(fullBlock);
+        }
+
+
+
 
 
         return null;
@@ -461,11 +524,3 @@ public class DailyCourseService {
 }
 
 
-class DailyCourseModifyTemp {
-    Long connectId;
-    Integer blockNum;
-    boolean delete;
-    FullBlock fullBlock;
-    SmallBlock smallBlock;
-
-}

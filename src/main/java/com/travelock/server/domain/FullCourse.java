@@ -36,10 +36,12 @@ public class FullCourse implements Serializable {
     // Full Course : Connect entity = N : 1
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
+    @JsonIgnore
     private Member member;
 
     // Full Course : Connect entity = 1 : N
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "fullCourse", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<FullAndDailyCourseConnect> fullAndDailyCourseConnects;
 
     @OneToMany(mappedBy = "fullCourse", fetch = FetchType.LAZY)
