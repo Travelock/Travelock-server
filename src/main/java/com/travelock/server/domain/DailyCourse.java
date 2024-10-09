@@ -27,17 +27,14 @@ public class DailyCourse implements Serializable {
     // Daily Course : Member = N : 1
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    @JsonIgnore
     private Member member;
 
     // Daily Course : Connect entity = 1 : N
     @OneToMany(mappedBy = "dailyCourse", fetch = FetchType.LAZY)
-    @JsonIgnore
     private List<FullAndDailyCourseConnect> fullAndDailyCourseConnects;
 
     // Daily Course : Daily Block Connect = 1 : N
     @OneToMany(mappedBy = "dailyCourse", fetch = FetchType.LAZY)
-    @JsonIgnore
     private List<DailyBlockConnect> dailyBlockConnects;
 
     @OneToMany(mappedBy = "dailyCourse", fetch = FetchType.LAZY)
