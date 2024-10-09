@@ -32,7 +32,23 @@ public class SmallBlockService {
 
     // 키워드 없을 경우 예외처리 추가하기  // API 키워드 조회
     public List<SearchResponseDTO> searchSmallBlockByKeyword(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            throw new ResourceNotFoundException("키워드가 없거나 입력되지 않았습니다.");
+        }
         return smallBlockSearchClient.searchSmallBlockByKeyword(keyword);
+    }
+
+    // ReferenceCOunt가 높은 순으로 스몰블록 조회 (추천 기능)
+
+    public List<SmallBlock> getPopularSmallBlocks(int limit) {
+        log.info("referenceCount가 높은 순으로 스몰블록 조회");
+
+        QSmallBlock qSmallBlock = QSmallBlock.smallBlock;
+        return  queryFactory
+                .selectFrom(qSmallBlock)
+                .orderBy(qSmallBlock.referenceCount.desc())
+                .limit(limit)
+                .fetch();
     }
 
 
