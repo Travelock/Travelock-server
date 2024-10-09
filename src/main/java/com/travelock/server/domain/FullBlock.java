@@ -18,17 +18,17 @@ public class FullBlock extends BaseTime{
 
     // B,M,S Block은 Full Block 사용시 항상 사용됨 - FetchType.EAGER(default)
     // FullBlock : BigBlock = N:1
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "big_block_id", nullable = false)
     private BigBlock bigBlock;
 
     // FullBlock : MiddleBlock = N:1
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "middle_block_id", nullable = false)
     private MiddleBlock middleBlock;
 
     // FullBlock : SmallBlock = N:1
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "small_block_id", nullable = false)
     private SmallBlock smallBlock;
 

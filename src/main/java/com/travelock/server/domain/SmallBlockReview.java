@@ -15,11 +15,11 @@ public class SmallBlockReview extends BaseTime{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long smallBlockReviewId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "small_block_id")
     private SmallBlock smallBlock;
 

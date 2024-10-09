@@ -87,7 +87,8 @@ public class DailyCourseController {
         // Response DTO로 변환해서 반환
         DailyCourseResponseDTO response = DTOConverter.toDto(dailyCourseService.modifyDailyCourse(request)
                 , DailyCourseResponseDTO::fromDomainToResponseDTO);
-        return ResponseEntity.status(HttpStatus.OK).body("수정됨");
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 

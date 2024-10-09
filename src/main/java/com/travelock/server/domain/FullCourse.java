@@ -34,14 +34,13 @@ public class FullCourse implements Serializable {
     private String activeStatus;
 
     // Full Course : Connect entity = N : 1
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
     @JsonIgnore
     private Member member;
 
     // Full Course : Connect entity = 1 : N
     @OneToMany(mappedBy = "fullCourse", fetch = FetchType.LAZY)
-    @JsonIgnore
     private List<FullAndDailyCourseConnect> fullAndDailyCourseConnects;
 
     @OneToMany(mappedBy = "fullCourse", fetch = FetchType.LAZY)

@@ -21,12 +21,12 @@ public class DailyBlockConnect {
     // Daily Course 여러개와 Full Block 여러개가 존재
     // Daily Course, Full Block은 DailyBlockConnect 엔티티 조회시 즉시 사용 - FetchType.EAGER(default)
     // Daily Block Connect : Daily Course = N : 1
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "daily_course_id", nullable = false)
     private DailyCourse dailyCourse;
 
     // Daily Block Connect : Full Block = N : 1
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "full_block_id", nullable = false)
     private FullBlock fullBlock;
 

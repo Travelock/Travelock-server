@@ -14,11 +14,11 @@ public class FullCourseFavorite extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long fullCourseFavoriteId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "full_course_id")
     private FullCourse fullCourse;
 
