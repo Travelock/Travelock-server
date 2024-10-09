@@ -25,7 +25,7 @@ public class DailyCourse implements Serializable {
     private Integer scarpCount;
 
     // Daily Course : Member = N : 1
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 

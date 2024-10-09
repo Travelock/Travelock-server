@@ -24,15 +24,13 @@ public class SmallBlock {
     private String mapX;
     @Column(columnDefinition = "VARCHAR(100) COMMENT '위도값'")
     private String mapY;
-//    @Column(columnDefinition = "VARCHAR(255) COMMENT '카카오 Place 링크 주소'")
-//    private String linkURL;
 
     @Column(columnDefinition = "INT COMMENT '일정에 추가된(참조된) 수'")
     private Integer referenceCount;
 
     // Small Block : Middle Block = N : 1
     // 이 말은 즉, 여러개의 스몰블록이 하나의 미들블록을 참조할 수 있다는 것.
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "middle_block_id")
     @JsonBackReference
     private MiddleBlock middleBlock;
@@ -40,33 +38,21 @@ public class SmallBlock {
 
     @Column(columnDefinition = "VARCHAR(29) COMMENT '장소 이름'")
     private String placeName;
-//
-//    @Column(columnDefinition = "VARCHAR(255) COMMENT '장소 URL'")
-//    private String url;
-
-
 
     @OneToMany(mappedBy = "smallBlock", fetch = FetchType.LAZY)
     private List<SmallBlockReview> smallBlockReviews;
-
-    public void setSmallBlockData(MiddleBlock middleBlock, String placeId, String placeName, String mapX, String mapY) {
-        this.middleBlock = middleBlock;
-        this.placeId = placeId;
-        this.placeName = placeName;
-        this.mapX = mapX;
-        this.mapY = mapY;
-        this.referenceCount = 1;
-    }
 
     // 레퍼 카운트 1씩 증가
     public void incrementReferenceCount() {
         this.referenceCount++;
     }
 
-    public void createNewSmallBlock(String mapX, String mapY, String placeId, MiddleBlock middleBlock) {
+    public void createNewSmallBlock(String mapX, String mapY, String placeId, String placeName, MiddleBlock middleBlock) {
         this.mapX = mapX;
         this.mapY = mapY;
         this.placeId = placeId;
+        this.placeName = placeName;
         this.middleBlock = middleBlock;
+        this.referenceCount = 0;
     }
 }
