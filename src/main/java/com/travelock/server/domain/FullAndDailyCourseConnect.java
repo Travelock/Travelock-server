@@ -18,17 +18,17 @@ public class FullAndDailyCourseConnect {
     private Integer dailyNum;
 
     // Full Course Connect : Full Block = N : 1
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     // Full Course Connect : Full Block = N : 1
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "full_course_id", nullable = false)
     private FullCourse fullCourse;
 
     // Daily Course Connect : Full Block = N : 1
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "daily_course_id", nullable = false)
     private DailyCourse dailyCourse;
 

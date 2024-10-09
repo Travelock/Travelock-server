@@ -16,5 +16,4 @@ public class DailyCourseRequestDTO {
     private Integer dayNum;         // 일자 정보(N일차)
     private Long dailyCourseId;     // -> 수정시 사용, 생성시 null처리
     private List<FullBlockRequestDTO> fullBlockDtoList;
-    private List<Long> dailyBlockConnectIds; // -> 수정시 사용
 }

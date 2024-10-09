@@ -2,6 +2,7 @@ package com.travelock.server.controller;
 
 import com.travelock.server.converter.DTOConverter;
 import com.travelock.server.domain.FullCourse;
+import com.travelock.server.dto.course.cache.FullCourseCacheDto;
 import com.travelock.server.dto.course.full.FullCourseRequestDTO;
 import com.travelock.server.dto.course.full.FullCourseResponseDTO;
 import com.travelock.server.dto.course.full_modify.FullCourseModifyDto;
@@ -151,7 +152,7 @@ public class FullCourseController {
             })
     @GetMapping("/recommend")
     public ResponseEntity<?> getRecommendedFullCourses(){
-        List<FullCourse> topFullCoursesFromCache = courseRecommendService.getTopFullCoursesFromCache();
+        List<FullCourseCacheDto> topFullCoursesFromCache = courseRecommendService.getTopFullCoursesFromCache();
         return ResponseEntity.status(HttpStatus.OK).body(topFullCoursesFromCache);
     }
 

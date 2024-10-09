@@ -30,7 +30,7 @@ public class State {
     private String stateName;  // 시/도 이름
 
     // State가 여러 BigBlock을 참조하는 관계 (1:N)
-    @OneToMany(mappedBy = "state")
+    @OneToMany(mappedBy = "state", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<BigBlock> bigBlockList = new ArrayList<>();  // BigBlock 리스트 초기화
 

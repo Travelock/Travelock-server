@@ -24,7 +24,7 @@ public class MiddleBlock extends BaseTime {
     private String categoryName;
 
     // 미들 1 스몰 N
-    @OneToMany(mappedBy = "middleBlock")
+    @OneToMany(mappedBy = "middleBlock", fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<SmallBlock> smallBlocks;
 
