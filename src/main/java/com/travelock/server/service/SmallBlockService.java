@@ -36,45 +36,6 @@ public class SmallBlockService {
     }
 
 
-//    // 사용자가 선택한 장소를 DB에 저장 (코스 확정 시 호출)
-//    @Transactional
-//    public SmallBlock confirmAndCreateSmallBlock(SmallBlockRequestDTO requestDTO) {
-//        log.info("SmallBlock 확정 및 저장 로직 호출");
-//
-//        // 미들블록 조회
-//        MiddleBlockDTO middleBlockDTO = middleBlockService.findMiddleBlockByCategoryCodeAndName(
-//                requestDTO.getCategoryCode(), requestDTO.getCategoryName());
-//
-//        // MiddleBlockDTO에서 MiddleBlock 엔티티로 변환 (필요하다면 MiddleBlockRepository로 조회)
-//        MiddleBlock middleBlock = middleBlockRepository.findById(middleBlockDTO.getMiddleBlockId())
-//                .orElseThrow(() -> new ResourceNotFoundException("MiddleBlock not found with id: " + middleBlockDTO.getMiddleBlockId()));
-//
-//        // QueryDSL로 스몰블록 조회
-//        QSmallBlock qSmallBlock = QSmallBlock.smallBlock;
-//        SmallBlock smallBlock = queryFactory
-//                .selectFrom(qSmallBlock)
-//                .where(qSmallBlock.placeId.eq(requestDTO.getPlaceId()))
-//                .fetchOne();
-//
-//        // 스몰블록이 없으면 새로 생성
-//        if (smallBlock == null) {
-//            smallBlock = new SmallBlock();
-//            smallBlock.setSmallBlockData(middleBlock,
-//                    requestDTO.getPlaceId(),
-//                    requestDTO.getPlaceName(),
-//                    requestDTO.getMapX(),
-//                    requestDTO.getMapY());
-//                    smallBlock = smallBlockRepository.save(smallBlock);
-//        } else {
-//            // 스몰블록이 있으면 레퍼 카운트 증가
-//            smallBlock.incrementReferenceCount();
-//            smallBlockRepository.save(smallBlock);
-//        }
-//
-//        log.info("SmallBlock 저장 완료: {}", smallBlock.getSmallBlockId());
-//        return smallBlock;
-//    }
-
     // 전체 스몰블록 조회
     public List<SmallBlock> getAllSmallBlocks() {
         log.info("모든 SmallBlocks 호출");

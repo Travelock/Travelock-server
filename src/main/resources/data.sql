@@ -306,6 +306,7 @@ INSERT INTO middle_block (category_code, category_name) VALUES ('FD6', '음식�
 INSERT INTO middle_block (category_code, category_name) VALUES ('CE7', '카페');
 INSERT INTO middle_block (category_code, category_name) VALUES ('HP8', '병원');
 INSERT INTO middle_block (category_code, category_name) VALUES ('PM9', '약국');
+INSERT INTO middle_block (category_code, category_name) VALUES ('', 'ETC');
 
 INSERT INTO travelock_db.member (active_status, member_id, nick_name, role, username, email, created_date, last_modified_date) VALUES ('y', 1, 'Tester1', 'ROLE_USER', 'google 09awjef0923f', 'test@test', null, null);
 INSERT INTO travelock_db.member (active_status, member_id, nick_name, role, username, email, created_date, last_modified_date) VALUES ('y', 2, 'Tester2', 'ROLE_USER', 'never afwoiejfa23', 't@t', null, null);
