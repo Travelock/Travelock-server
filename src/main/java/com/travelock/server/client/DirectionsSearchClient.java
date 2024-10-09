@@ -17,8 +17,8 @@ import reactor.core.publisher.Mono;
 public class DirectionsSearchClient {
     private final String TMAP_DIRECTIONS_URL = "https://apis.openapi.sk.com/transit/routes";
 
-//    @Value("${TMAP_API_KEY}")
-    private String TMAP_API_KEY =" aefawefawefawe";
+    @Value("${TMAP_API_KEY}")
+    private String TMAP_API_KEY;
     public TmapResponseDTO requestSearchDirections(DirectionsRequestDTO requestDTO) {
         log.info("DirectionsSearchClient::requestSearchDirections START");
 
