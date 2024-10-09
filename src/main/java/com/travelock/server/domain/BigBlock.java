@@ -30,12 +30,4 @@ public class BigBlock extends BaseTime {
     @JsonBackReference
     private State state;  // State 테이블 참조
 
-//    // 추후에 새로운 State가 생길 경우를 대비한 메서드, (빅블럭은 state에 소속되어야 하므로 bigblock 도메인에 위치)
-//    public void setState(State state) {
-//        this.state = state;
-//        if (!state.getBigBlockList().contains(this)) {
-//            state.addBigBlock(this);
-//        }
-//    }
-
 }

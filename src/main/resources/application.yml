@@ -72,7 +72,7 @@ spring:
         order_updates: true
         jdbc.batch_versioned_data: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
       naming:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
 
