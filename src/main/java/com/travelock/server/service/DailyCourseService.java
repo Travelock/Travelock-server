@@ -13,7 +13,6 @@ import com.travelock.server.exception.course.AddDailyCourseScrapException;
 import com.travelock.server.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -243,18 +242,8 @@ public class DailyCourseService {
      */
     public DailyCourse modifyDailyCourse(DailyCourseRequestDTO request) {
 
-        // 1. 요청된 정보로 스몰블록 조회. -> 없는경우 새로 생성 -> 전체 스몰블록 목록 생성
-        // 2. 요청된 정보로 빅블록, 미들블럭 조회 -> 전체 빅, 미들블록 목록 생성
-        // 3. 현재 저장된 일일일정의 블록연결객체와 연결객체에 등록된 풀블록과 풀블록dto의 빅블록, 미들블록, 스몰블록의 placeId를 비교, 일치여부를 확인.
-        // 4. 일치한다면 그대로 유지, 불일치하면 삭제목록에 풀블록, 연결객체 추가.
-        // 5. 이후 생성과 동일하게 데이터 입력 진행.
-        // 6. 삭제목록 데이터 전부 삭제처리.
-
-        // 조회 - 스몰블록, 빅블록, 미들블록, 연결객체 -> 풀블록, 사용자, 일일일정(현재 저장된 모든 데이터)
-
 
         DailyCourse dailyCourse = new DailyCourse();
-        QMember qMember = QMember.member;
         QBigBlock qBigBlock = QBigBlock.bigBlock;
         QFullBlock qFullBlock = QFullBlock.fullBlock;
         QMiddleBlock qMiddleBlock = QMiddleBlock.middleBlock;
@@ -265,41 +254,79 @@ public class DailyCourseService {
         //Map으로 중복순회 방지
         Map<Long, BigBlock> bigBlockMap = new HashMap<>();
         Map<Long, MiddleBlock> middleBlockMap = new HashMap<>();
-        Map<String, SmallBlock> existingSmallBlockMap = new HashMap<>();
+        Map<String, SmallBlock> smallBlockMap = new HashMap<>();
+        Set<String> smaillBlockPlaceIdSet = new HashSet<>();
 
-        List<FullBlockRequestDTO> fullBlockDtoList = request.getFullBlockDtoList();
         List<Long> bigBlockIdList = new ArrayList<>();
         List<Long> fullBlockIdList = new ArrayList<>();
         List<Long> middleBlockIdList = new ArrayList<>();
-        Set<String> smaillBlockPlaceIdSet = new HashSet<>();
+        List<String> smallBlockPlaceIdList = new ArrayList<>();
         List<FullBlock> savedFullBlocks = new ArrayList<>();
-        List<SmallBlock> smallBlocksToBatchSave = new ArrayList<>();
         List<DailyBlockConnect> dailyBlockConnects = new ArrayList<>();
-
-        Member member = new Member();
+        List<FullBlockRequestDTO> reqFullBlockDtos = request.getFullBlockDtoList();
 
         List<DailyCourseModifyTemp> modifyTemps = new ArrayList<>();
-
-        dailyCourse = query.selectFrom(qDailyCourse).where(qDailyCourse.dailyCourseId.eq(request.getDailyCourseId())).fetchOne();
-
         List<Long> befConnectIds = new ArrayList<>();
-        dailyBlockConnects = query.selectFrom(qDailyBlockConnect).where(qDailyBlockConnect.dailyCourse.dailyCourseId.eq(request.getDailyCourseId())).fetch();
-        for(DailyBlockConnect d : dailyBlockConnects){
-            fullBlockIdList.add(d.getFullBlock().getFullBlockId());
-            befConnectIds.add(d.getDailyBlockConnectId());
-        }
-        savedFullBlocks = query.selectFrom(qFullBlock).where(qFullBlock.fullBlockId.in(fullBlockIdList)).fetch();
 
-        for(FullBlock f : savedFullBlocks){
-            smaillBlockPlaceIdSet.add(f.getSmallBlock().getPlaceId());
+
+
+        for(FullBlockRequestDTO dto : reqFullBlockDtos){
+            bigBlockIdList.add(dto.getBigBlockId());
+            middleBlockIdList.add(dto.getMiddleBlockId());
+            smallBlockPlaceIdList.add(dto.getSmallBlockDto().getPlaceId());
+        }
+        //--------------------------------------------------------SELECT(1)
+        List<Tuple> tuples = query.select(qDailyCourse, qDailyBlockConnect, qFullBlock, qBigBlock, qMiddleBlock, qSmallBlock)
+                .from(qDailyBlockConnect)
+                .join(qDailyCourse).on(qDailyCourse.dailyCourseId.eq(request.getDailyCourseId()))
+                .join(qFullBlock).on(qFullBlock.fullBlockId.eq(qDailyBlockConnect.fullBlock.fullBlockId))
+                .join(qBigBlock).on(qBigBlock.bigBlockId.in(bigBlockIdList))
+                .join(qMiddleBlock).on(qMiddleBlock.middleBlockId.in(middleBlockIdList))
+                .leftJoin(qSmallBlock).on(qSmallBlock.placeId.in(smallBlockPlaceIdList))
+                .where(qDailyBlockConnect.dailyCourse.dailyCourseId.eq(request.getDailyCourseId()))
+                .fetch();
+
+        if(tuples == null){
+            throw new ResourceNotFoundException("No match data");
         }
 
-        fullBlockDtoList = request.getFullBlockDtoList();
+        Tuple firstTuple = tuples.get(0);
+        dailyCourse = firstTuple.get(qDailyCourse);
+
+        if(dailyCourse == null){
+            throw new ResourceNotFoundException("DailyCourse not found");
+        }
+
+        for(Tuple tuple : tuples){
+            //map으로 저장 필요
+            DailyBlockConnect dailyBlockConnect = tuple.get(qDailyBlockConnect);
+            FullBlock fullBlock = tuple.get(qFullBlock);
+            BigBlock bigBlock = tuple.get(qBigBlock);
+            MiddleBlock middleBlock = tuple.get(qMiddleBlock);
+            SmallBlock smallBlock = fullBlock.getSmallBlock();
+
+            System.out.println(smallBlock.getPlaceId());
+
+
+            dailyBlockConnects.add(dailyBlockConnect);
+            savedFullBlocks.add(fullBlock);
+
+            fullBlockIdList.add(tuple.get(qDailyBlockConnect).getFullBlock().getFullBlockId());
+            befConnectIds.add(dailyBlockConnect.getDailyBlockConnectId());
+
+
+            bigBlockMap.put(bigBlock.getBigBlockId(), bigBlock);
+            middleBlockMap.put(middleBlock.getMiddleBlockId(), middleBlock);
+            smallBlockMap.put(smallBlock.getPlaceId(), smallBlock);
+        }
+
+        reqFullBlockDtos = request.getFullBlockDtoList();
+
         List<String> reqSmallIds = new ArrayList<>();
         List<SmallBlock> reqSmallBlocks = new ArrayList<>();
-        for(FullBlockRequestDTO req : fullBlockDtoList){
-            reqSmallIds.add(req.getSmallBlockDto().getPlaceId());
 
+        for(FullBlockRequestDTO req : reqFullBlockDtos){
+            reqSmallIds.add(req.getSmallBlockDto().getPlaceId());
         }
 
         reqSmallIds = reqSmallIds.stream()
@@ -310,7 +337,7 @@ public class DailyCourseService {
         List<FullBlock> batchFullBlocks = new ArrayList<>();
 
 
-        for (FullBlockRequestDTO req : fullBlockDtoList) {
+        for (FullBlockRequestDTO req : reqFullBlockDtos) {
             // SmallBlock 생성 (필요한 경우에만)
             SmallBlock smallBlock;
             if (reqSmallIds.contains(req.getSmallBlockDto().getPlaceId())) {
@@ -321,23 +348,25 @@ public class DailyCourseService {
                         req.getSmallBlockDto().getMapY(),
                         req.getSmallBlockDto().getPlaceId(),
                         req.getSmallBlockDto().getPlaceName(),
-                        query.selectFrom(qMiddleBlock).where(qMiddleBlock.middleBlockId.eq(req.getMiddleBlockId())).fetchOne()
+                        // req의 middleBlockId로 map 검색
+                        middleBlockMap.get(req.getMiddleBlockId())
                 );
                 reqSmallBlocks.add(smallBlock);
             } else {
-                // 기존 SmallBlock 조회
-                smallBlock = query.selectFrom(qSmallBlock)
-                        .where(qSmallBlock.placeId.eq(req.getSmallBlockDto().getPlaceId()))
-                        .fetchOne();
+                // 기존 SmallBlock 에서 map 조회
+                smallBlock = smallBlockMap.get(req.getSmallBlockDto().getPlaceId());
             }
 
             // FullBlock 생성
             FullBlock fullBlock = new FullBlock();
             fullBlock.newFullBlock(
-                    query.selectFrom(qBigBlock).where(qBigBlock.bigBlockId.eq(req.getBigBlockId())).fetchOne(),
-                    query.selectFrom(qMiddleBlock).where(qMiddleBlock.middleBlockId.eq(req.getMiddleBlockId())).fetchOne(),
+                    //map에서 조회
+                    bigBlockMap.get(req.getBigBlockId()),
+                    middleBlockMap.get(req.getMiddleBlockId()),
                     smallBlock // 위에서 생성되거나 조회된 SmallBlock 사용
             );
+            System.out.println(req.getBigBlockId());
+            System.out.println(bigBlockMap.get(req.getBigBlockId()));
 
             // FullBlock 리스트에 추가
             batchFullBlocks.add(fullBlock);
@@ -351,7 +380,9 @@ public class DailyCourseService {
             modifyTemps.add(dtmp);
         }
 
+        // ----------------------------------------------------------INSERT(1)
         List<SmallBlock> newSmallBlocks = smallBlockRepository.saveAll(reqSmallBlocks);
+        // ----------------------------------------------------------INSERT(1)
         List<FullBlock> newFullBlocks = fullBlockRepository.saveAll(batchFullBlocks);
 
         //풀블럭 일단.. 해결
@@ -370,19 +401,18 @@ public class DailyCourseService {
             batchConnect.add(dbc);
         }
 
+        // ----------------------------------------------------------INSERT(1)
         List<DailyBlockConnect> newConnects = dailyBlockConnectRepository.saveAll(batchConnect);
         List<Long> befIds = new ArrayList<>();
 
+
+        // ----------------------------------------------------------DELETE(1)
         long executed = query.delete(qDailyBlockConnect)
                 .where(
                         qDailyBlockConnect.dailyBlockConnectId.in(befConnectIds)
                 ).execute();
 
-        System.out.println(executed);
-
-
-        //위에서 삭제대상의 id에 등록되어있던 풀블럭 삭제
-
+        // ----------------------------------------------------------DELETE(1)
         long execute = query.delete(qFullBlock)
                 .where(
                         qFullBlock.fullBlockId.in(fullBlockIdList)
@@ -391,7 +421,7 @@ public class DailyCourseService {
 
 
 
-
+        // ----------------------------------------------------------SELECT(1)
         return query.selectFrom(qDailyCourse).where(qDailyCourse.dailyCourseId.eq(request.getDailyCourseId())).fetchOne();
     }
 
