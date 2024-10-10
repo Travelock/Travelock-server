@@ -383,9 +383,6 @@ public class DailyCourseService {
             modifyTemps.add(dtmp);
         }
 
-        for(SmallBlock s : reqSmallBlocks){
-            System.out.println(s.getPlaceId());
-        }
         // ----------------------------------------------------------INSERT(1)
         List<SmallBlock> newSmallBlocks = smallBlockRepository.saveAll(reqSmallBlocks);
         // ----------------------------------------------------------INSERT(1)
