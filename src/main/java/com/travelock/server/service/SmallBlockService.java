@@ -32,48 +32,25 @@ public class SmallBlockService {
 
     // 키워드 없을 경우 예외처리 추가하기  // API 키워드 조회
     public List<SearchResponseDTO> searchSmallBlockByKeyword(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            throw new ResourceNotFoundException("키워드가 없거나 입력되지 않았습니다.");
+        }
         return smallBlockSearchClient.searchSmallBlockByKeyword(keyword);
     }
 
+    // ReferenceCOunt가 높은 순으로 스몰블록 조회 (추천 기능)
 
-//    // 사용자가 선택한 장소를 DB에 저장 (코스 확정 시 호출)
-//    @Transactional
-//    public SmallBlock confirmAndCreateSmallBlock(SmallBlockRequestDTO requestDTO) {
-//        log.info("SmallBlock 확정 및 저장 로직 호출");
-//
-//        // 미들블록 조회
-//        MiddleBlockDTO middleBlockDTO = middleBlockService.findMiddleBlockByCategoryCodeAndName(
-//                requestDTO.getCategoryCode(), requestDTO.getCategoryName());
-//
-//        // MiddleBlockDTO에서 MiddleBlock 엔티티로 변환 (필요하다면 MiddleBlockRepository로 조회)
-//        MiddleBlock middleBlock = middleBlockRepository.findById(middleBlockDTO.getMiddleBlockId())
-//                .orElseThrow(() -> new ResourceNotFoundException("MiddleBlock not found with id: " + middleBlockDTO.getMiddleBlockId()));
-//
-//        // QueryDSL로 스몰블록 조회
-//        QSmallBlock qSmallBlock = QSmallBlock.smallBlock;
-//        SmallBlock smallBlock = queryFactory
-//                .selectFrom(qSmallBlock)
-//                .where(qSmallBlock.placeId.eq(requestDTO.getPlaceId()))
-//                .fetchOne();
-//
-//        // 스몰블록이 없으면 새로 생성
-//        if (smallBlock == null) {
-//            smallBlock = new SmallBlock();
-//            smallBlock.setSmallBlockData(middleBlock,
-//                    requestDTO.getPlaceId(),
-//                    requestDTO.getPlaceName(),
-//                    requestDTO.getMapX(),
-//                    requestDTO.getMapY());
-//                    smallBlock = smallBlockRepository.save(smallBlock);
-//        } else {
-//            // 스몰블록이 있으면 레퍼 카운트 증가
-//            smallBlock.incrementReferenceCount();
-//            smallBlockRepository.save(smallBlock);
-//        }
-//
-//        log.info("SmallBlock 저장 완료: {}", smallBlock.getSmallBlockId());
-//        return smallBlock;
-//    }
+    public List<SmallBlock> getPopularSmallBlocks(int limit) {
+        log.info("referenceCount가 높은 순으로 스몰블록 조회");
+
+        QSmallBlock qSmallBlock = QSmallBlock.smallBlock;
+        return  queryFactory
+                .selectFrom(qSmallBlock)
+                .orderBy(qSmallBlock.referenceCount.desc())
+                .limit(limit)
+                .fetch();
+    }
+
 
     // 전체 스몰블록 조회
     public List<SmallBlock> getAllSmallBlocks() {
