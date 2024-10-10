@@ -278,10 +278,10 @@ public class DailyCourseService {
         //--------------------------------------------------------SELECT(1)
         List<Tuple> tuples = query.select(qDailyCourse, qDailyBlockConnect, qFullBlock, qBigBlock, qMiddleBlock, qSmallBlock)
                 .from(qDailyBlockConnect)
-                .join(qDailyCourse).on(qDailyCourse.dailyCourseId.eq(request.getDailyCourseId()))
+                .join(qDailyCourse).on(qDailyCourse.dailyCourseId.eq(request.getDailyCourseId()).and(qDailyBlockConnect.dailyCourse.dailyCourseId.eq(qDailyCourse.dailyCourseId)))
                 .join(qFullBlock).on(qFullBlock.fullBlockId.eq(qDailyBlockConnect.fullBlock.fullBlockId))
-                .join(qBigBlock).on(qBigBlock.bigBlockId.in(bigBlockIdList))
-                .join(qMiddleBlock).on(qMiddleBlock.middleBlockId.in(middleBlockIdList))
+                .join(qBigBlock).on(qBigBlock.bigBlockId.in(bigBlockIdList).and(qBigBlock.bigBlockId.eq(qFullBlock.bigBlock.bigBlockId)))
+                .join(qMiddleBlock).on(qMiddleBlock.middleBlockId.in(middleBlockIdList).and(qMiddleBlock.middleBlockId.eq(qFullBlock.middleBlock.middleBlockId)))
                 .leftJoin(qSmallBlock).on(qSmallBlock.placeId.in(smallBlockPlaceIdList))
                 .where(qDailyBlockConnect.dailyCourse.dailyCourseId.eq(request.getDailyCourseId()))
                 .fetch();
@@ -305,7 +305,6 @@ public class DailyCourseService {
             MiddleBlock middleBlock = tuple.get(qMiddleBlock);
             SmallBlock smallBlock = fullBlock.getSmallBlock();
 
-            System.out.println(smallBlock.getPlaceId());
 
 
             dailyBlockConnects.add(dailyBlockConnect);
@@ -318,6 +317,12 @@ public class DailyCourseService {
             bigBlockMap.put(bigBlock.getBigBlockId(), bigBlock);
             middleBlockMap.put(middleBlock.getMiddleBlockId(), middleBlock);
             smallBlockMap.put(smallBlock.getPlaceId(), smallBlock);
+        }
+
+
+        //저장된 FullBlock에서 저장된 SmallBlock 조회
+        for(FullBlock f : savedFullBlocks){
+            smaillBlockPlaceIdSet.add(f.getSmallBlock().getPlaceId());
         }
 
         reqFullBlockDtos = request.getFullBlockDtoList();
@@ -365,8 +370,6 @@ public class DailyCourseService {
                     middleBlockMap.get(req.getMiddleBlockId()),
                     smallBlock // 위에서 생성되거나 조회된 SmallBlock 사용
             );
-            System.out.println(req.getBigBlockId());
-            System.out.println(bigBlockMap.get(req.getBigBlockId()));
 
             // FullBlock 리스트에 추가
             batchFullBlocks.add(fullBlock);
