@@ -1,8 +1,7 @@
 package com.travelock.server.controller;
 
 import com.travelock.server.domain.SmallBlock;
-import com.travelock.server.dto.SearchResponseDTO;
-import com.travelock.server.dto.SmallBlockRequestDTO;
+import com.travelock.server.dto.block.SearchResponseDTO;
 import com.travelock.server.service.SmallBlockService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

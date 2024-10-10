@@ -2,17 +2,12 @@ package com.travelock.server.service;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.travelock.server.client.SmallBlockSearchClient;
-import com.travelock.server.domain.MiddleBlock;
 import com.travelock.server.domain.QSmallBlock;
 import com.travelock.server.domain.SmallBlock;
-import com.travelock.server.dto.MiddleBlockDTO;
-import com.travelock.server.dto.SearchResponseDTO;
-import com.travelock.server.dto.SmallBlockRequestDTO;
+import com.travelock.server.dto.block.SearchResponseDTO;
 import com.travelock.server.exception.base_exceptions.ResourceNotFoundException;
 import com.travelock.server.repository.MiddleBlockRepository;
 import com.travelock.server.repository.SmallBlockRepository;
-import com.travelock.server.service.MiddleBlockService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

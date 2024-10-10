@@ -1,4 +1,4 @@
-package com.travelock.server.dto;
+package com.travelock.server.dto.block;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

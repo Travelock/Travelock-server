@@ -1,7 +1,7 @@
 package com.travelock.server.client;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.travelock.server.dto.SearchResponseDTO;
+import com.travelock.server.dto.block.SearchResponseDTO;
 import com.travelock.server.exception.base_exceptions.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
