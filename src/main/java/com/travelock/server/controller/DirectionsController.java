@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/directions")
 @Slf4j
@@ -18,7 +20,7 @@ public class DirectionsController {
     private final DirectionsService directionsService;
 
     @PostMapping
-    public ResponseEntity<?> searchDirections(@RequestBody DirectionsRequestDTO requestDTO) {
+    public ResponseEntity<?> searchDirections(@RequestBody List<DirectionsRequestDTO> requestDTO) {
         return ResponseEntity.ok(directionsService.searchDirections(requestDTO));
                 //.thenApply(directionsResponseDTO -> ResponseEntity.ok(directionsResponseDTO))
                 //.exceptionally(error -> {
