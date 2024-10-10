@@ -1,6 +1,6 @@
 package com.travelock.server.client;
 
-import com.travelock.server.dto.directions.DirectionsRequestDTO;
+import com.travelock.server.dto.tmap.TmapRequestDTO;
 import com.travelock.server.dto.tmap.TmapResponseDTO;
 import com.travelock.server.exception.base_exceptions.BadRequestException;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ public class DirectionsSearchClient {
 
     @Value("${TMAP_API_KEY}")
     private String TMAP_API_KEY;
-    public TmapResponseDTO requestSearchDirections(DirectionsRequestDTO requestDTO) {
+    public TmapResponseDTO requestSearchDirections(TmapRequestDTO requestDTO) {
         log.info("DirectionsSearchClient::requestSearchDirections START");
 
         HttpHeaders headers = new HttpHeaders();
