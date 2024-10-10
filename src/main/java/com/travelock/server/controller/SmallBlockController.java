@@ -2,6 +2,7 @@ package com.travelock.server.controller;
 
 import com.travelock.server.domain.SmallBlock;
 import com.travelock.server.dto.block.SearchResponseDTO;
+import com.travelock.server.dto.block.SmallBlockResponseDTO;
 import com.travelock.server.service.SmallBlockService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -56,9 +57,9 @@ public class SmallBlockController {
                     @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json"))
             })
     @GetMapping("/popular")
-    public ResponseEntity<List<SmallBlock>> getPopularSmallBlocks(@RequestParam int limit) {
+    public ResponseEntity<List<SmallBlockResponseDTO>> getPopularSmallBlocks(@RequestParam int limit) {
         try {
-            List<SmallBlock> popularSmallBlocks = smallBlockService.getPopularSmallBlocks(limit);
+            List<SmallBlockResponseDTO> popularSmallBlocks = smallBlockService.getPopularSmallBlocks(limit);
             return ResponseEntity.ok(popularSmallBlocks);
         } catch (Exception e) {
             log.error("Error fetching popular SmallBlocks", e);

@@ -5,6 +5,7 @@ import com.travelock.server.client.SmallBlockSearchClient;
 import com.travelock.server.domain.QSmallBlock;
 import com.travelock.server.domain.SmallBlock;
 import com.travelock.server.dto.block.SearchResponseDTO;
+import com.travelock.server.dto.block.SmallBlockResponseDTO;
 import com.travelock.server.exception.base_exceptions.ResourceNotFoundException;
 import com.travelock.server.repository.MiddleBlockRepository;
 import com.travelock.server.repository.SmallBlockRepository;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,15 +37,19 @@ public class SmallBlockService {
 
     // ReferenceCOunt가 높은 순으로 스몰블록 조회 (추천 기능)
 
-    public List<SmallBlock> getPopularSmallBlocks(int limit) {
+    public List<SmallBlockResponseDTO> getPopularSmallBlocks(int limit) {
         log.info("referenceCount가 높은 순으로 스몰블록 조회");
 
         QSmallBlock qSmallBlock = QSmallBlock.smallBlock;
-        return  queryFactory
+        List<SmallBlock> smallBlocks = queryFactory
                 .selectFrom(qSmallBlock)
                 .orderBy(qSmallBlock.referenceCount.desc())
                 .limit(limit)
                 .fetch();
+
+        return smallBlocks.stream()
+                .map(SmallBlockResponseDTO::fromDomainToResponseDTO)
+                .collect(Collectors.toList());
     }
 
 

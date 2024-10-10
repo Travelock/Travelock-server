@@ -23,7 +23,7 @@ public class SmallBlockSearchClient {
 
     private final String KAKAO_SEARCH_URL = "https://dapi.kakao.com/v2/local/search/keyword.json";
 
-    @Value("${kakao.api.key}")
+    @Value("${KAKAO_API_KEY}")
     private String kakaoApiKey;
 
     private final WebClient webClient = WebClient.builder()
