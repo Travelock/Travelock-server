@@ -1,7 +1,6 @@
 package com.travelock.server.controller;
 
-import com.travelock.server.domain.MiddleBlock;
-import com.travelock.server.dto.MiddleBlockDTO;
+import com.travelock.server.dto.block.MiddleBlockDTO;
 import com.travelock.server.service.MiddleBlockService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

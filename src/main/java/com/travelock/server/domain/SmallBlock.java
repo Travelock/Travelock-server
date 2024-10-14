@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.mariadb.jdbc.message.server.ColumnDefinitionPacket;
 
 import java.util.List;
 
@@ -27,6 +28,9 @@ public class SmallBlock {
 
     @Column(columnDefinition = "INT COMMENT '일정에 추가된(참조된) 수'")
     private Integer referenceCount;
+
+    @Column(columnDefinition = "BIGINT COMMENT '참조되는 bigBlock의 ID'")
+    private Long bigBlockId;
 
     // Small Block : Middle Block = N : 1
     // 이 말은 즉, 여러개의 스몰블록이 하나의 미들블록을 참조할 수 있다는 것.
@@ -61,5 +65,6 @@ public class SmallBlock {
         this.middleBlock = middleBlock;
         this.bigBlock = bigBlock;
         this.referenceCount = 0;
+        this.bigBlockId = bigBlockId;
     }
 }

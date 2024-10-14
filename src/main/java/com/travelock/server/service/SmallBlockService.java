@@ -4,23 +4,20 @@ import com.querydsl.core.Tuple;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.travelock.server.client.SmallBlockSearchClient;
-import com.travelock.server.domain.MiddleBlock;
-import com.travelock.server.domain.QBigBlock;
 import com.travelock.server.domain.QSmallBlock;
 import com.travelock.server.domain.SmallBlock;
-import com.travelock.server.dto.MiddleBlockDTO;
-import com.travelock.server.dto.SearchResponseDTO;
-import com.travelock.server.dto.SmallBlockRequestDTO;
+import com.travelock.server.dto.block.SearchResponseDTO;
+import com.travelock.server.dto.block.SmallBlockRequestDTO;
+import com.travelock.server.dto.block.SmallBlockResponseDTO;
 import com.travelock.server.exception.base_exceptions.ResourceNotFoundException;
 import com.travelock.server.repository.MiddleBlockRepository;
 import com.travelock.server.repository.SmallBlockRepository;
-import com.travelock.server.service.MiddleBlockService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +38,22 @@ public class SmallBlockService {
         return smallBlockSearchClient.searchSmallBlockByKeyword(keyword);
     }
 
-    // ReferenceCOunt가 높은 순으로 스몰블록 조회 (추천 기능)
+//    // ReferenceCOunt가 높은 순으로 스몰블록 조회 (추천 기능)
+//
+//    public List<SmallBlockResponseDTO> getPopularSmallBlocks(int limit) {
+//        log.info("referenceCount가 높은 순으로 스몰블록 조회");
+//
+//        QSmallBlock qSmallBlock = QSmallBlock.smallBlock;
+//        List<SmallBlock> smallBlocks = queryFactory
+//                .selectFrom(qSmallBlock)
+//                .orderBy(qSmallBlock.referenceCount.desc())
+//                .limit(limit)
+//                .fetch();
+//
+//        return smallBlocks.stream()
+//                .map(SmallBlockResponseDTO::fromDomainToResponseDTO)
+//                .collect(Collectors.toList());
+//    }
 
     public List<SmallBlock> getPopularSmallBlocks() {
         log.info("referenceCount가 높은 순으로 스몰블록 조회");
@@ -62,15 +74,18 @@ public class SmallBlockService {
         return smallBlocks;
     }
 
-
     // 전체 스몰블록 조회
-    public List<SmallBlock> getAllSmallBlocks() {
+    public List<SmallBlockResponseDTO> getAllSmallBlocks() {
         log.info("모든 SmallBlocks 호출");
 
         QSmallBlock qSmallBlock = QSmallBlock.smallBlock;
-        return queryFactory
+        List<SmallBlock> smallBlocks = queryFactory
                 .selectFrom(qSmallBlock)
                 .fetch();
+
+        return smallBlocks.stream()
+                .map(SmallBlockResponseDTO::fromDomainToResponseDTO)
+                .collect(Collectors.toList());
     }
 
     // 특정 스몰블록 조회 (id로)

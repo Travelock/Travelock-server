@@ -17,7 +17,6 @@ public class SmallBlockResponseDTO {
     private String mapY;
     private Integer referenceCount;
     private String categoryName;
-
     private Long bigBlockId;
 
     public static SmallBlockResponseDTO fromDomainToResponseDTO(SmallBlock smallBlock) {
@@ -36,4 +35,5 @@ public class SmallBlockResponseDTO {
                 smallBlock.getBigBlock().getBigBlockId()
         );
     }
+
 }

@@ -4,7 +4,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.travelock.server.converter.DTOConverter;
 import com.travelock.server.domain.MiddleBlock;
 import com.travelock.server.domain.QMiddleBlock;
-import com.travelock.server.dto.MiddleBlockDTO;
+import com.travelock.server.dto.block.MiddleBlockDTO;
 import com.travelock.server.exception.base_exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
