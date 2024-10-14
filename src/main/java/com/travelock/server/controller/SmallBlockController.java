@@ -1,8 +1,9 @@
 package com.travelock.server.controller;
 
 import com.travelock.server.domain.SmallBlock;
-import com.travelock.server.dto.SearchResponseDTO;
-import com.travelock.server.dto.SmallBlockRequestDTO;
+import com.travelock.server.dto.block.SearchResponseDTO;
+import com.travelock.server.dto.block.SmallBlockRequestDTO;
+import com.travelock.server.dto.block.SmallBlockResponseDTO;
 import com.travelock.server.service.SmallBlockService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -45,24 +46,48 @@ public class SmallBlockController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+//
+//    @Operation(summary = "추천 스몰블록 조회",
+//            tags = {"스몰블록 API - V1"},
+//            description = "referenceCount가 높은 순으로 스몰블록을 조회.",
+//            parameters = {
+//                    @Parameter(name = "limit", description = "조회할 개수", required = true, in = ParameterIn.QUERY)
+//            },
+//            responses = {
+//                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json")),
+//                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json"))
+//            })
+//    @GetMapping("/popular")
+//    public ResponseEntity<List<SmallBlockResponseDTO>> getPopularSmallBlocks(@RequestParam int limit) {
+//        try {
+//            List<SmallBlockResponseDTO> popularSmallBlocks = smallBlockService.getPopularSmallBlocks(limit);
+//            return ResponseEntity.ok(popularSmallBlocks);
+//        } catch (Exception e) {
+//            log.error("Error fetching popular SmallBlocks", e);
+//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
-    @Operation(summary = "추천 스몰블록 조회",
+    @Operation(summary = "시군구별 추천 스몰블록 조회",
             tags = {"스몰블록 API - V1"},
-            description = "referenceCount가 높은 순으로 스몰블록을 조회.",
+            description = "특정 시군구(BigBlock ID)에서 referenceCount가 높은 순으로 스몰블록을 조회.",
             parameters = {
+                    @Parameter(name = "bigBlockId", description = "BigBlock ID (시군구 ID)", required = true, in = ParameterIn.QUERY),
                     @Parameter(name = "limit", description = "조회할 개수", required = true, in = ParameterIn.QUERY)
             },
             responses = {
                     @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json")),
                     @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json"))
             })
-    @GetMapping("/popular")
-    public ResponseEntity<List<SmallBlock>> getPopularSmallBlocks(@RequestParam int limit) {
+    @GetMapping("/popular-by-region")
+    public ResponseEntity<List<SmallBlockResponseDTO>> getPopularSmallBlocksByRegion(
+            @RequestParam Long bigBlockId,
+            @RequestParam int limit) {
         try {
-            List<SmallBlock> popularSmallBlocks = smallBlockService.getPopularSmallBlocks(limit);
+            List<SmallBlockResponseDTO> popularSmallBlocks = smallBlockService.getPopularSmallBlocksByRegion(bigBlockId, limit);
             return ResponseEntity.ok(popularSmallBlocks);
         } catch (Exception e) {
-            log.error("Error fetching popular SmallBlocks", e);
+            log.error("Error fetching popular SmallBlocks by region", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -75,8 +100,8 @@ public class SmallBlockController {
                     @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json"))
             })
     @GetMapping("/list")
-    public ResponseEntity<List<SmallBlock>> getAllSmallBlocks() {
-        List<SmallBlock> smallBlocks = smallBlockService.getAllSmallBlocks();
+    public ResponseEntity<List<SmallBlockResponseDTO>> getAllSmallBlocks() {
+        List<SmallBlockResponseDTO> smallBlocks = smallBlockService.getAllSmallBlocks();
         return ResponseEntity.ok(smallBlocks);
     }
 

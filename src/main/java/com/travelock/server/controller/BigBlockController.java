@@ -1,15 +1,12 @@
 package com.travelock.server.controller;
 
-import com.travelock.server.domain.BigBlock;
-import com.travelock.server.dto.BigBlockResponseDTO;
-import com.travelock.server.dto.StateResponseDTO;
-import com.travelock.server.dto.course.daily.DailyCourseRequestDTO;
+import com.travelock.server.dto.block.BigBlockResponseDTO;
+import com.travelock.server.dto.block.StateResponseDTO;
 import com.travelock.server.service.BigBlockService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

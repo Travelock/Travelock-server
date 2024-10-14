@@ -1,11 +1,9 @@
-package com.travelock.server.dto;
+package com.travelock.server.dto.block;
 
 
-import com.travelock.server.domain.SmallBlock;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.core.annotation.MergedAnnotations;
 
 @Data
 @AllArgsConstructor
