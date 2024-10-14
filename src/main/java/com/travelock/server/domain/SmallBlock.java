@@ -39,20 +39,27 @@ public class SmallBlock {
     @Column(columnDefinition = "VARCHAR(29) COMMENT '장소 이름'")
     private String placeName;
 
-    @OneToMany(mappedBy = "smallBlock", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "smallBlock")
     private List<SmallBlockReview> smallBlockReviews;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "big_block_id")
+    @JsonBackReference
+    private BigBlock bigBlock;  // State 테이블 참조
+
 
     // 레퍼 카운트 1씩 증가
     public void incrementReferenceCount() {
         this.referenceCount++;
     }
 
-    public void createNewSmallBlock(String mapX, String mapY, String placeId, String placeName, MiddleBlock middleBlock) {
+    public void createNewSmallBlock(String mapX, String mapY, String placeId, String placeName, MiddleBlock middleBlock, BigBlock bigBlock) {
         this.mapX = mapX;
         this.mapY = mapY;
         this.placeId = placeId;
         this.placeName = placeName;
         this.middleBlock = middleBlock;
+        this.bigBlock = bigBlock;
         this.referenceCount = 0;
     }
 }

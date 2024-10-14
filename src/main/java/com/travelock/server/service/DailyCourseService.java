@@ -142,6 +142,12 @@ public class DailyCourseService {
 
             SmallBlock smallBlock = existingSmallBlockMap.get(smallBlockRequestDTO.getPlaceId());
 
+            BigBlock bigBlock = bigBlockMap.get(fullBlockRequestDto.getBigBlockId());
+
+            if (bigBlock == null) {
+                throw new ResourceNotFoundException("BigBlock not found");
+            }
+
             // 존재하지 않으면 새로운 SmallBlock 생성
             if (smallBlock == null) {
                 smallBlock = new SmallBlock();
@@ -159,7 +165,8 @@ public class DailyCourseService {
                         smallBlockRequestDTO.getMapY(),
                         smallBlockRequestDTO.getPlaceId(),
                         smallBlockRequestDTO.getPlaceName(),
-                        middleBlock
+                        middleBlock,
+                        bigBlock
                 );
 
                 //새로 생성된 SmallBlock객체는 저장목록에 추가
@@ -168,11 +175,7 @@ public class DailyCourseService {
                 existingSmallBlockMap.put(smallBlock.getPlaceId(), smallBlock);
             }
 
-            BigBlock bigBlock = bigBlockMap.get(fullBlockRequestDto.getBigBlockId());
 
-            if (bigBlock == null) {
-                throw new ResourceNotFoundException("BigBlock not found");
-            }
 
             fullBlock.newFullBlock(
                     bigBlock,
@@ -354,7 +357,8 @@ public class DailyCourseService {
                         req.getSmallBlockDto().getPlaceId(),
                         req.getSmallBlockDto().getPlaceName(),
                         // req의 middleBlockId로 map 검색
-                        middleBlockMap.get(req.getMiddleBlockId())
+                        middleBlockMap.get(req.getMiddleBlockId()),
+                        bigBlockMap.get(req.getBigBlockId())
                 );
                 reqSmallBlocks.add(smallBlock);
             } else {

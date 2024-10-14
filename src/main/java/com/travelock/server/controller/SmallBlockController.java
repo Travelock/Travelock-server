@@ -1,20 +1,27 @@
 package com.travelock.server.controller;
 
+import com.travelock.server.converter.DTOConverter;
 import com.travelock.server.domain.SmallBlock;
 import com.travelock.server.dto.SearchResponseDTO;
 import com.travelock.server.dto.SmallBlockRequestDTO;
+import com.travelock.server.dto.StateResponseDTO;
+import com.travelock.server.dto.block.SmallBlockResponseDTO;
+import com.travelock.server.dto.block.SmallBlockReviewDto;
 import com.travelock.server.service.SmallBlockService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.hibernate.query.sqm.tree.SqmNode.log;
 
@@ -53,14 +60,37 @@ public class SmallBlockController {
                     @Parameter(name = "limit", description = "조회할 개수", required = true, in = ParameterIn.QUERY)
             },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(
+                            schema = @Schema(implementation = SmallBlockResponseDTO.class),
+                            mediaType = "application/json")),
                     @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json"))
             })
     @GetMapping("/popular")
-    public ResponseEntity<List<SmallBlock>> getPopularSmallBlocks(@RequestParam int limit) {
+    public ResponseEntity<Map<Long, SmallBlockResponseDTO>> getPopularSmallBlocks() {
+
+
+        /*각 도시별 추천 스몰블럭 하나씩만 가져오게 수정*/
         try {
-            List<SmallBlock> popularSmallBlocks = smallBlockService.getPopularSmallBlocks(limit);
-            return ResponseEntity.ok(popularSmallBlocks);
+            List<SmallBlock> popularSmallBlocks = smallBlockService.getPopularSmallBlocks();
+
+            List<SmallBlockResponseDTO> dtos = DTOConverter.toDtoList(popularSmallBlocks, popular -> new SmallBlockResponseDTO(
+                    popular.getSmallBlockId(),
+                    popular.getPlaceId(),
+                    popular.getPlaceName(),
+                    popular.getMapX(),
+                    popular.getMapY(),
+                    popular.getReferenceCount(),
+                    popular.getMiddleBlock().getCategoryName(),
+                    popular.getBigBlock().getBigBlockId()
+            ));
+
+            Map<Long, SmallBlockResponseDTO> response = new HashMap<>();
+
+            for (SmallBlockResponseDTO dto : dtos) {
+                response.put(dto.getBigBlockId(), dto); // key: bigBlockId, value: dto
+            }
+
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             log.error("Error fetching popular SmallBlocks", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

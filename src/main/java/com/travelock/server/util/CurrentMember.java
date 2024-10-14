@@ -10,7 +10,9 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CurrentMember {
     private final MemberRepository memberRepository;
-    public Member getMember(Long memberId){
+    public Member getMember(){
+        //임시
+        Long memberId = 1L;
         return memberRepository.findById(memberId).orElseThrow(()-> new UsernameNotFoundException("Member not found"));
     }
 }

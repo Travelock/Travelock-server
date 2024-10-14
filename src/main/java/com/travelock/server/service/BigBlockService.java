@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -57,6 +58,7 @@ public class BigBlockService {
 
         return DTOConverter.toDtoList(cities, city -> new BigBlockResponseDTO(
                 city.getBigBlockId(),
+                city.getState().getStateId(),
                 city.getCityCode(),
                 city.getCityName(),
                 city.getState().getStateName()
@@ -72,6 +74,7 @@ public class BigBlockService {
         BigBlockResponseDTO bigBlock = queryFactory
                 .select(Projections.constructor(BigBlockResponseDTO.class,
                         qBigBlock.bigBlockId,
+                        qBigBlock.state.stateId,
                         qBigBlock.cityCode,
                         qBigBlock.cityName,
                         qBigBlock.state.stateName))
@@ -90,4 +93,22 @@ public class BigBlockService {
         return bigBlock;
     }
 
+    public List<BigBlockResponseDTO> getAllCities() {
+        QBigBlock qBigBlock = QBigBlock.bigBlock;
+        List<BigBlock> bigBlocks = queryFactory.selectFrom(qBigBlock).fetch();
+
+        List<BigBlockResponseDTO> response = new ArrayList<>();
+
+        for(BigBlock b : bigBlocks){
+            BigBlockResponseDTO tmp = new BigBlockResponseDTO();
+            tmp.setBigBlockId(b.getBigBlockId());
+            tmp.setCityName(b.getCityName());
+            tmp.setCityCode(b.getCityCode());
+            tmp.setStateId(b.getState().getStateId());
+            tmp.setStateName(b.getState().getStateName());
+            response.add(tmp);
+        }
+        return response;
+
+    }
 }

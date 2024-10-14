@@ -3,15 +3,13 @@ package com.travelock.server.service;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.travelock.server.domain.QMember;
-import com.travelock.server.domain.QSmallBlock;
-import com.travelock.server.domain.QSmallBlockReview;
-import com.travelock.server.domain.SmallBlockReview;
+import com.travelock.server.domain.*;
 import com.travelock.server.dto.block.SmallBlockReviewDto;
 import com.travelock.server.exception.review.AddReviewException;
 import com.travelock.server.exception.base_exceptions.ResourceNotFoundException;
 import com.travelock.server.exception.review.ReviewModificationException;
 import com.travelock.server.repository.SmallBlockReviewRepository;
+import com.travelock.server.util.CurrentMember;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,6 +21,7 @@ import java.util.List;
 @Slf4j
 public class SmallBlockReviewService {
     private final JPAQueryFactory query;
+    private final CurrentMember currentMember;
     private final SmallBlockReviewRepository smallBlockReviewRepository;
 
     public List<SmallBlockReviewDto> getAllReviews(Long smallBlockId){
@@ -125,12 +124,13 @@ public class SmallBlockReviewService {
         }
 
     }
-    public void removeReview(Long smallBlockReviewId, Long memberId){
+    public void removeReview(Long smallBlockReviewId){
+        Member member = currentMember.getMember();
         QSmallBlockReview qSmallBlockReview = QSmallBlockReview.smallBlockReview;
 
         long executed = query.update(qSmallBlockReview).set(qSmallBlockReview.activeStatus, "n")
                 .where(qSmallBlockReview.smallBlockReviewId.eq(smallBlockReviewId)
-                        .and(qSmallBlockReview.member.memberId.eq(memberId)))
+                        .and(qSmallBlockReview.member.memberId.eq(member.getMemberId())))
                 .execute();
 
         if (executed != 1L) {

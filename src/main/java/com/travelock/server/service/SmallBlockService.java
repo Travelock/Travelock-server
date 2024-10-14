@@ -1,8 +1,11 @@
 package com.travelock.server.service;
 
+import com.querydsl.core.Tuple;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.travelock.server.client.SmallBlockSearchClient;
 import com.travelock.server.domain.MiddleBlock;
+import com.travelock.server.domain.QBigBlock;
 import com.travelock.server.domain.QSmallBlock;
 import com.travelock.server.domain.SmallBlock;
 import com.travelock.server.dto.MiddleBlockDTO;
@@ -40,15 +43,23 @@ public class SmallBlockService {
 
     // ReferenceCOunt가 높은 순으로 스몰블록 조회 (추천 기능)
 
-    public List<SmallBlock> getPopularSmallBlocks(int limit) {
+    public List<SmallBlock> getPopularSmallBlocks() {
         log.info("referenceCount가 높은 순으로 스몰블록 조회");
 
         QSmallBlock qSmallBlock = QSmallBlock.smallBlock;
-        return  queryFactory
+        QSmallBlock qSubBlock = new QSmallBlock("subBlock");
+
+        List<SmallBlock> smallBlocks = queryFactory
                 .selectFrom(qSmallBlock)
-                .orderBy(qSmallBlock.referenceCount.desc())
-                .limit(limit)
+                .where(qSmallBlock.referenceCount.eq(
+                        JPAExpressions
+                                .select(qSubBlock.referenceCount.max())  // 각 bigBlockId에 대한 최대 referenceCount를 찾는 서브쿼리
+                                .from(qSubBlock)
+                                .where(qSubBlock.bigBlock.bigBlockId.eq(qSmallBlock.bigBlock.bigBlockId))  // 동일한 bigBlockId에 대해 서브쿼리
+                ))
                 .fetch();
+
+        return smallBlocks;
     }
 
 
