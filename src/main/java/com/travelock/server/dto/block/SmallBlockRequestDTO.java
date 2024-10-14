@@ -14,6 +14,7 @@ public class SmallBlockRequestDTO {
     private String mapY;
     private String placeId;
     private String placeName;
+    private Long bigBlockId;
 }
 
 

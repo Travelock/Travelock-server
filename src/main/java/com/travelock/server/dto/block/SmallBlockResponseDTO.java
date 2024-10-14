@@ -15,6 +15,7 @@ public class SmallBlockResponseDTO {
     private String mapX;
     private String mapY;
     private Integer referenceCount;
+    private Long bigBlockId;
 
     public static SmallBlockResponseDTO fromDomainToResponseDTO(SmallBlock smallBlock) {
         if (smallBlock == null) {
@@ -27,7 +28,9 @@ public class SmallBlockResponseDTO {
                 smallBlock.getPlaceName(),
                 smallBlock.getMapX(),
                 smallBlock.getMapY(),
-                smallBlock.getReferenceCount()
+                smallBlock.getReferenceCount(),
+                smallBlock.getBigBlockId()
         );
     }
+
 }
