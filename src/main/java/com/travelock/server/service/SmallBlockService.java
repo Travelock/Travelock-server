@@ -1,5 +1,7 @@
 package com.travelock.server.service;
 
+import com.querydsl.core.Tuple;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.travelock.server.client.SmallBlockSearchClient;
 import com.travelock.server.domain.QSmallBlock;
@@ -53,25 +55,23 @@ public class SmallBlockService {
 //                .collect(Collectors.toList());
 //    }
 
-    // 지역별로 레퍼런스 카운트가 높은 순으로 추천
-
-    public List<SmallBlockResponseDTO> getPopularSmallBlocksByRegion(Long bigBlockId, int limit) {
-        log.info("BigBlock ID {}에 해당하는 지역에서 referenceCount가 높은 순으로 스몰블록 조회", bigBlockId);
+    public List<SmallBlock> getPopularSmallBlocks() {
+        log.info("referenceCount가 높은 순으로 스몰블록 조회");
 
         QSmallBlock qSmallBlock = QSmallBlock.smallBlock;
-
-        // BigBlock ID를 기준으로 필터링 후, referenceCount로 정렬
+        QSmallBlock qSubBlock = new QSmallBlock("subBlock");
 
         List<SmallBlock> smallBlocks = queryFactory
                 .selectFrom(qSmallBlock)
-                .where(qSmallBlock.bigBlockId.eq(bigBlockId))
-                .orderBy(qSmallBlock.referenceCount.desc())
-                .limit(limit)
+                .where(qSmallBlock.referenceCount.eq(
+                        JPAExpressions
+                                .select(qSubBlock.referenceCount.max())  // 각 bigBlockId에 대한 최대 referenceCount를 찾는 서브쿼리
+                                .from(qSubBlock)
+                                .where(qSubBlock.bigBlock.bigBlockId.eq(qSmallBlock.bigBlock.bigBlockId))  // 동일한 bigBlockId에 대해 서브쿼리
+                ))
                 .fetch();
 
-        return smallBlocks.stream()
-                .map(SmallBlockResponseDTO::fromDomainToResponseDTO)
-                .collect(Collectors.toList());
+        return smallBlocks;
     }
 
     // 전체 스몰블록 조회

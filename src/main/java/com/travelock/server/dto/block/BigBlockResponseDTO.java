@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BigBlockResponseDTO {
     private Long bigBlockId;
+    private Long stateId;
     private String cityCode;
     private String cityName;
     private String stateName;

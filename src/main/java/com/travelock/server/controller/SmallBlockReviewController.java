@@ -119,8 +119,8 @@ public class SmallBlockReviewController {
                     @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
             })
     @DeleteMapping
-    public ResponseEntity<?> removeReview(@RequestBody SmallBlockReviewDto smallBlockReviewDto){
-        smallBlockReviewService.removeReview(smallBlockReviewDto.getSmallBlockReviewId(), smallBlockReviewDto.getMemberId());
+    public ResponseEntity<?> removeReview(@PathVariable Long smallBlockReviewId){
+        smallBlockReviewService.removeReview(smallBlockReviewId);
         return ResponseEntity.status(HttpStatus.OK).body("리뷰 삭제 성공");
     }
 }

@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 
 @Entity
 @Getter
@@ -29,5 +31,8 @@ public class BigBlock extends BaseTime {
     @JoinColumn(name = "state_id", nullable = false)
     @JsonBackReference
     private State state;  // State 테이블 참조
+
+    @OneToMany(mappedBy = "bigBlock")
+    private List<SmallBlock> smallBlocks;
 
 }

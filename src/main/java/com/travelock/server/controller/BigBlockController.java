@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,6 +75,13 @@ public class BigBlockController {
         return ResponseEntity.ok(responseDTO);
     }
 
+
+    //메인화면에서 사용
+    @GetMapping
+    public ResponseEntity<?> getAllCities(){
+        List<BigBlockResponseDTO> allCities = bigBlockService.getAllCities();
+        return ResponseEntity.status(HttpStatus.OK).body(allCities);
+    }
 }
 
 
