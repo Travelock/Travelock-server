@@ -7,6 +7,7 @@ import com.travelock.server.dto.oauth2DTO.MemberDTO;
 import com.travelock.server.exception.base_exceptions.ResourceNotFoundException;
 import com.travelock.server.filter.JWTUtil;
 import com.travelock.server.repository.MemberRepository;
+import com.travelock.server.util.CurrentMember;
 import com.travelock.server.util.GenerateRandomData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final JWTUtil jwtUtil;
+    private final CurrentMember currentMember;
 
 
     public void leave(Long memberId){
@@ -76,5 +78,9 @@ public class MemberService {
         // 닉네임 저장
         member.setNickName(nickName);
         memberRepository.save(member);
+    }
+
+    public Member getInfo() {
+        return currentMember.getMember();
     }
 }

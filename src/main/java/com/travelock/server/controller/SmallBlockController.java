@@ -86,7 +86,7 @@ public class SmallBlockController {
                     @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json"))
             })
 
-    @GetMapping("/popular")
+    @GetMapping("/popular/t1")
     public ResponseEntity<Map<Long, SmallBlockResponseDTO>> getPopularSmallBlocks() {
 
 

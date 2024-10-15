@@ -3,7 +3,10 @@ package com.travelock.server.controller;
 
 import com.travelock.server.domain.DailyCourseScrap;
 import com.travelock.server.domain.FullCourseScrap;
+import com.travelock.server.domain.Member;
 import com.travelock.server.dto.block.SmallBlockReviewDto;
+import com.travelock.server.dto.course.daily.DailyCourseResponseDTO;
+import com.travelock.server.dto.course.full.FullCourseResponseDTO;
 import com.travelock.server.dto.oauth2DTO.MemberDTO;
 import com.travelock.server.service.DailyCourseService;
 import com.travelock.server.service.FullCourseService;
@@ -33,6 +36,33 @@ public class MemberController {
     private final DailyCourseService dailyCourseService;
     private final SmallBlockReviewService smallBlockReviewService;
     private final MemberService memberService;
+
+
+    @GetMapping("/info") //사용자 정보 조회
+    public ResponseEntity<?> getMemberInfo(){
+        Member member = memberService.getInfo();
+
+        System.out.println(member.getMemberId());
+
+        MemberDTO memberDTO = new MemberDTO();
+        memberDTO.setMemberId(member.getMemberId());
+        memberDTO.setNickName(member.getNickName());
+        memberDTO.setEmail(memberDTO.getEmail());
+
+        return ResponseEntity.status(HttpStatus.OK).body(memberDTO);
+    }
+
+    @GetMapping("/course/full")
+    public ResponseEntity<?> getMyFullCourse(){
+        List<FullCourseResponseDTO> myScraps = fullCourseService.getMyScraps(1L);
+        return ResponseEntity.status(HttpStatus.OK).body(myScraps);
+    }
+
+    @GetMapping("/course/daily")
+    public ResponseEntity<?> getMyDailyCourse(){
+        List<DailyCourseResponseDTO> myScraps = dailyCourseService.getMyScraps(1L);
+        return ResponseEntity.status(HttpStatus.OK).body(myScraps);
+    }
 
 
     @Operation(summary = "회원 탈퇴",
@@ -81,7 +111,7 @@ public class MemberController {
             })
     @GetMapping("/course/full/scraps/{memberId}")
     public ResponseEntity<?> getMyFullCourseScraps(@PathVariable Long memberId){
-        List<FullCourseScrap> myScraps = fullCourseService.getMyScraps(memberId);
+        List<FullCourseResponseDTO> myScraps = fullCourseService.getMyScraps(memberId);
         return ResponseEntity.status(HttpStatus.OK).body(myScraps);
     }
 
@@ -100,7 +130,7 @@ public class MemberController {
             })
     @GetMapping("/course/daily/scraps/{memberId}")
     public ResponseEntity<?> getMyDailyCourseScraps(@PathVariable Long memberId){
-        List<DailyCourseScrap> myScraps = dailyCourseService.getMyScraps(memberId);
+        List<DailyCourseResponseDTO> myScraps = dailyCourseService.getMyScraps(memberId);
         return ResponseEntity.status(HttpStatus.OK).body(myScraps);
 
     }

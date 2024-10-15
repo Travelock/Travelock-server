@@ -71,4 +71,6 @@ public class FullCourse implements Serializable {
     public void changeTitle(String title){
         this.title = title;
     }
+
+
 }
