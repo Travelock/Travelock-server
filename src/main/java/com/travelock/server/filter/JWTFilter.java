@@ -28,7 +28,8 @@ public class JWTFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         // 특정 경로(/api 등)는 인증 없이도 접근 가능하도록 예외 처리
-        if (request.getServletPath().contains("/api")) {
+        if (request.getServletPath().contains("/t1")) {
+            System.out.println("filter passed::::::::::::::::");
             filterChain.doFilter(request, response);
             return;
         }

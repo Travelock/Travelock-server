@@ -2,8 +2,10 @@ package com.travelock.server.service;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.travelock.server.converter.DTOConverter;
 import com.travelock.server.domain.*;
 import com.travelock.server.dto.course.full.FullCourseRequestDTO;
+import com.travelock.server.dto.course.full.FullCourseResponseDTO;
 import com.travelock.server.dto.course.full_modify.FullCourseModifyDto;
 import com.travelock.server.exception.base_exceptions.BadRequestException;
 import com.travelock.server.exception.base_exceptions.ResourceNotFoundException;
@@ -321,20 +323,46 @@ public class FullCourseService {
         return fullCourseFavorites;
     }
 
-    /**스크랩한 전체일정 목로*/
-    public List<FullCourseScrap> getMyScraps(Long memberId) {
+    /**
+     * 스크랩한 전체일정 목로
+     */
+    public List<FullCourseResponseDTO> getMyScraps(Long memberId) {
         QFullCourseScrap qFullCourseScrap = QFullCourseScrap.fullCourseScrap;
+        QFullCourse qFullCourse = QFullCourse.fullCourse;
 
         List<FullCourseScrap> fullCourseScraps = query
                 .selectFrom(qFullCourseScrap)
                 .where(qFullCourseScrap.member.memberId.eq(memberId))
                 .fetch();
 
+
+
         if (fullCourseScraps == null) {
             throw new ResourceNotFoundException("FullCourseScrap not found with Member id: " + memberId);
         }
 
-        return fullCourseScraps;
+        List<Long> fcsid = new ArrayList<>();
+        for(FullCourseScrap f : fullCourseScraps){
+            fcsid.add(f.getFullCourse().getFullCourseId());
+        }
+
+        List<FullCourse> fetched = query.selectFrom(qFullCourse)
+                .where(qFullCourse.fullCourseId.in(fcsid))
+                .fetch();
+
+        List<FullCourseResponseDTO> dtoList = DTOConverter.toDtoList(fetched, fullCourse -> new FullCourseResponseDTO(
+                fullCourse.getFullCourseId(),
+                fullCourse.getMember().getMemberId(),
+                fullCourse.getMember().getNickName(),
+                fullCourse.getTitle(),
+                fullCourse.getFavoriteCount(),
+                fullCourse.getScarpCount(),
+                null,
+                null
+        ));
+
+
+        return dtoList;
     }
 
 

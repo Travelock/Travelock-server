@@ -2,10 +2,13 @@ package com.travelock.server.service;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.travelock.server.converter.DTOConverter;
 import com.travelock.server.domain.*;
 import com.travelock.server.dto.block.FullBlockRequestDTO;
 import com.travelock.server.dto.course.daily.DailyCourseRequestDTO;
 import com.travelock.server.dto.block.SmallBlockRequestDTO;
+import com.travelock.server.dto.course.daily.DailyCourseResponseDTO;
+import com.travelock.server.dto.course.full.FullCourseResponseDTO;
 import com.travelock.server.exception.base_exceptions.BadRequestException;
 import com.travelock.server.exception.base_exceptions.ResourceNotFoundException;
 import com.travelock.server.exception.course.AddDailyCourseFavoriteException;
@@ -537,8 +540,9 @@ public class DailyCourseService {
     /**
      * 스크랩한 일일일정 목록
      */
-    public List<DailyCourseScrap> getMyScraps(Long memberId) {
+    public List<DailyCourseResponseDTO> getMyScraps(Long memberId) {
         QDailyCourseScrap qDailyCourseFavorite = QDailyCourseScrap.dailyCourseScrap;
+        QDailyCourse qDailyCourse = QDailyCourse.dailyCourse;
 
         List<DailyCourseScrap> dailyCourseScraps = query
                 .selectFrom(qDailyCourseFavorite)
@@ -549,7 +553,26 @@ public class DailyCourseService {
             throw new ResourceNotFoundException("DailyCourseScrap not found with Member id: " + memberId);
         }
 
-        return dailyCourseScraps;
+        List<Long> dcsid = new ArrayList<>();
+        for(DailyCourseScrap d: dailyCourseScraps){
+            dcsid.add(d.getDailyCourse().getDailyCourseId());
+        }
+
+        List<DailyCourse> fetched = query.selectFrom(qDailyCourse)
+                .where(qDailyCourse.dailyCourseId.in(dcsid))
+                .fetch();
+
+        List<DailyCourseResponseDTO> dtoList = DTOConverter.toDtoList(fetched, dailyCourse -> new DailyCourseResponseDTO(
+                dailyCourse.getDailyCourseId(),
+                null,
+                dailyCourse.getMember().getMemberId(),
+                dailyCourse.getMember().getNickName(),
+                dailyCourse.getFavoriteCount(),
+                dailyCourse.getScarpCount(),
+                null
+        ));
+
+        return dtoList;
 
     }
 }

@@ -31,7 +31,7 @@ public class BigBlockController {
                     @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json")),
                     @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json"))
             })
-    @GetMapping("/list")
+    @GetMapping("/list/t1")
     public ResponseEntity<List<StateResponseDTO>> getAllStates() {
         List<StateResponseDTO> states = bigBlockService.getAllStates();
         return ResponseEntity.ok(states);
@@ -77,7 +77,7 @@ public class BigBlockController {
 
 
     //메인화면에서 사용
-    @GetMapping
+    @GetMapping("/t1")
     public ResponseEntity<?> getAllCities(){
         List<BigBlockResponseDTO> allCities = bigBlockService.getAllCities();
         return ResponseEntity.status(HttpStatus.OK).body(allCities);
