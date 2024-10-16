@@ -31,14 +31,24 @@ public class CustomOAuth2User implements OAuth2User {
     }
 
     @Override
+//    public String getName() {
+//        return  memberDTO.getName();
+//    }
+
     public String getName() {
-        return  memberDTO.getName();
+        // memberDTO.getName()이 null이거나 비어있으면 예외 발생
+        if (memberDTO.getUsername() == null || memberDTO.getUsername().isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be null or empty");
+        }
+        return memberDTO.getUsername();
     }
 
-    public String getUsername() {
-        return  memberDTO.getUsername();
+    public String getProvider() {
+        return  memberDTO.getProvider();
     }
 
     public Long getMemberId() {return memberDTO.getMemberId();}
+
+
 
 }

@@ -67,13 +67,15 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
         // 토큰이 유효한 경우, 토큰에서 필요한 정보 추출
-        String username = jwtUtil.getUsername(token);
+        String username=jwtUtil.getName(token);
+        String provider = jwtUtil.getProvider(token);
         String role = jwtUtil.getRole(token);
         Long memberId = jwtUtil.getMemberId(token);
 
         // 회원 정보를 담은 DTO 생성
         MemberDTO memberDTO = new MemberDTO();
         memberDTO.setUsername(username);
+        memberDTO.setProvider(provider);
         memberDTO.setRole(role);
         memberDTO.setMemberId(memberId);
 

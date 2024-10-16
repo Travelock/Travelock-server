@@ -10,14 +10,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/directions")
 @Slf4j
 @RequiredArgsConstructor
+
+
 public class DirectionsController {
     private final DirectionsService directionsService;
+
 
     @PostMapping
     public ResponseEntity<?> searchDirections(@RequestBody List<DirectionsRequestDTO> requestDTO) {
@@ -28,4 +34,5 @@ public class DirectionsController {
                 //    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
                 //});
     }
+
 }

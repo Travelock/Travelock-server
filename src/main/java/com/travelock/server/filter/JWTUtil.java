@@ -24,9 +24,13 @@ public class JWTUtil {
         key = Keys.hmacShaKeyFor(byteSecretKey);
     }
 
-    public String getUsername(String token) {
-
+    public String getName(String token){
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("username", String.class);
+    }
+
+    public String getProvider(String token) {
+
+        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("provider", String.class);
     }
 
     public String getRole(String token) {
@@ -43,10 +47,11 @@ public class JWTUtil {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getExpiration().before(new Date());
     }
 
-    public String createJwt(String username, String role, Long expiredMs, Long memberId) {
+    public String createJwt(String username, String provider, String role, Long expiredMs, Long memberId) {
 
         Claims claims = Jwts.claims();
         claims.put("username", username);
+        claims.put("provider", provider);
         claims.put("role", role);
         claims.put("memberId", memberId);
 
@@ -58,10 +63,11 @@ public class JWTUtil {
                 .compact();
     }
 
-    public String createRefreshToken(String username, Long expiredMs, Long memberId) {
+    public String createRefreshToken(String username, String provider, Long expiredMs, Long memberId) {
 
         Claims claims = Jwts.claims();
         claims.put("username", username);
+        claims.put("provider", provider);
         claims.put("memberId", memberId);
 
         return Jwts.builder()
