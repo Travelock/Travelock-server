@@ -1,7 +1,6 @@
 package com.travelock.server.controller;
 
 import com.travelock.server.converter.DTOConverter;
-import com.travelock.server.domain.FullCourse;
 import com.travelock.server.dto.course.cache.FullCourseCacheDto;
 import com.travelock.server.dto.course.full.FullCourseRequestDTO;
 import com.travelock.server.dto.course.full.FullCourseResponseDTO;
@@ -30,6 +29,22 @@ public class FullCourseController {
    private final FullCourseService fullCourseService;
    private final CourseRecommendService courseRecommendService;
 
+    @Operation(summary = "전체일정 조회",
+            tags = {"전체일정 API - V1"},
+            description = "전체일정 조회",
+            parameters = {
+                    @Parameter(name = "fullCourseId", description = "전체일정 ID", required = true, in = ParameterIn.PATH),
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
+            })
+    @GetMapping("/{fullCourseId}")
+    public ResponseEntity<?> getFullCourseById(@PathVariable Long fullCourseId) {
+        return ResponseEntity.ok(DTOConverter.toDto(fullCourseService.findFullCourse(fullCourseId)
+                , FullCourseResponseDTO::fromDomainToResponseDTO));
+    }
 
     @Operation(summary = "사용자의 전체일정 조회",
             tags = {"전체일정 API - V1"},
