@@ -16,7 +16,7 @@ public class KakaoResponse implements OAuth2Response {
     }
 
     @Override
-    public String getUsername() {
+    public String getProviderSecret() {
         return attributes.get("id").toString();
     }
 

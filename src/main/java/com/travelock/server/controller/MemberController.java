@@ -26,6 +26,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/member")
@@ -46,7 +47,7 @@ public class MemberController {
 
         MemberDTO memberDTO = new MemberDTO();
         memberDTO.setMemberId(member.getMemberId());
-        memberDTO.setNickName(member.getNickName());
+        memberDTO.setNickname(member.getNickName());
         memberDTO.setEmail(memberDTO.getEmail());
 
         return ResponseEntity.status(HttpStatus.OK).body(memberDTO);
@@ -82,19 +83,6 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body("또 만나요");
     }
 
-//    사용안하기로함
-//
-//    @GetMapping("/course/full/favorites/{memberId}")
-//    public ResponseEntity<?> getMyFullCourseFavorites(@PathVariable Long memberId){
-//        List<FullCourseFavorite> myFavorites = fullCourseService.getMyFavorites(memberId);
-//        return ResponseEntity.status(HttpStatus.OK).body(myFavorites);
-//
-//    }
-//    @GetMapping("/course/daily/favorites/{memberId}")
-//    public ResponseEntity<?> getMyDailyCourseFavorites(@PathVariable Long memberId){
-//        List<DailyCourseFavorite> myFavorites = dailyCourseService.getMyFavorites(memberId);
-//        return ResponseEntity.status(HttpStatus.OK).body(myFavorites);
-//    }
 
     @Operation(summary = "사용자의 전체일정 스크랩 조회",
             tags = {"사용자 API - V1"},
@@ -155,33 +143,88 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(reviews);
     }
 
-    // 토큰을 통해 사용자 조회 및 닉네임 확인
     @GetMapping("/nickname")
     public ResponseEntity<?> checkNickName(@RequestHeader("Authorization") String token) {
         try {
+            // 토큰 확인
+            System.out.println("Received token: " + token);
+
+            // Bearer 제거 (필요시)
+            if (token.startsWith("Bearer ")) {
+                token = token.substring(7);
+            }
+
             // 서비스에서 닉네임 체크
             MemberDTO memberDTO = memberService.checkNickName(token);
-            if (memberDTO.getNickName() == null || memberDTO.getNickName().isEmpty()) {
+            if (memberDTO.getNickname() == null || memberDTO.getNickname().isEmpty()) {
                 // 닉네임이 없는 경우 닉네임 입력 요청
                 return ResponseEntity.status(HttpStatus.OK).body("닉네임 입력 필요");
             }
             return ResponseEntity.status(HttpStatus.OK).body(memberDTO);
         } catch (UsernameNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            // 예상치 못한 오류 처리
+            System.err.println("Unexpected error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류 발생");
         }
     }
 
-    // 닉네임 저장
+//    // 닉네임 저장
+//    @PutMapping("/nickname")
+//    public ResponseEntity<?> putNickName(@RequestHeader("Authorization") String token, @RequestBody String nickName) {
+//        if (nickName == null || nickName.trim().isEmpty()) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("닉네임 누락");
+//        }
+//
+//        try {
+//            // 닉네임 저장 서비스 호출
+//            memberService.saveNickName(token, nickName);
+//            return ResponseEntity.status(HttpStatus.OK).body("닉네임 저장 완료");
+//        } catch (UsernameNotFoundException e) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+//        }
+//    }
     @PutMapping("/nickname")
-    public ResponseEntity<?> putNickName(@RequestHeader("Authorization") String token, @RequestBody String nickName) {
+    public ResponseEntity<?> putNickName(@RequestHeader("Authorization") String token, @RequestBody Map<String, String> request) {
+        String nickName = request.get("nickName");
         if (nickName == null || nickName.trim().isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("닉네임 누락");
         }
-
         try {
-            // 닉네임 저장 서비스 호출
             memberService.saveNickName(token, nickName);
             return ResponseEntity.status(HttpStatus.OK).body("닉네임 저장 완료");
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    // 닉네임 중복 확인 API
+    @GetMapping("/check-nickname")
+    public ResponseEntity<String> checkNickNameDuplicate(@RequestParam String nickName) {
+        // 주어진 닉네임으로 Member 조회
+        boolean exists = memberService.existsByNickName(nickName); // memberService에서 닉네임 중복 확인 호출
+        if (exists) {
+            // 닉네임이 이미 존재하면 "닉네임 중복" 메시지를 반환
+            return ResponseEntity.status(HttpStatus.OK).body("닉네임 중복");
+        } else {
+            // 닉네임이 존재하지 않으면 "닉네임 사용 가능" 메시지를 반환
+            return ResponseEntity.status(HttpStatus.OK).body("닉네임 사용 가능");
+        }
+    }
+
+    // 닉네임 수정 API
+    @PutMapping("/update-nickname")
+    public ResponseEntity<?> updateNickName(@RequestHeader("Authorization") String token, @RequestBody Map<String, String> request) {
+        String nickName = request.get("nickName"); // 요청 본문에서 닉네임 추출
+        if (nickName == null || nickName.trim().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("닉네임이 유효하지 않습니다.");
+        }
+
+        try {
+            // 서비스에서 닉네임 수정 처리
+            memberService.updateNickName(token, nickName);
+            return ResponseEntity.status(HttpStatus.OK).body("닉네임 수정 완료");
         } catch (UsernameNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }

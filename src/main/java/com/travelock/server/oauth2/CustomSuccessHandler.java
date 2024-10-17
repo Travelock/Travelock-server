@@ -30,27 +30,27 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
-
-
         // 로그인한 사용자 정보 가져오기
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal(); // CustomOAuth2User에서 사용자 정보를 가져오기
 
-        String username = customUserDetails.getUsername();
+        String username = customUserDetails.getName();
+        String provider = customUserDetails.getProvider();
         Long memberId = customUserDetails.getMemberId();
+
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
         // 액세스 토큰과 리프레시 토큰 생성
-        String accessToken = jwtUtil.createJwt(username, role, 60*60*60L, memberId); // 1시간 동안 유효한 액세스 토큰
-        String refreshToken = jwtUtil.createRefreshToken(username, 60*60*24*7L, memberId); // 7일 동안 유효한 리프레시 토큰
+        String accessToken = jwtUtil.createJwt(username, provider, role, 60*60*60L, memberId); // 1시간 동안 유효한 액세스 토큰
+        String refreshToken = jwtUtil.createRefreshToken(username, provider, 60*60*24*7L, memberId); // 7일 동안 유효한 리프레시 토큰
 
         // 쿠키에 저장 (보안을 위해 Secure, HttpOnly 설정 가능)
         response.addCookie(createCookie("Authorization", accessToken)); // 액세스 토큰 저장 (쿠키 방식으로 전달)
         response.addCookie(createCookie("RefreshToken", refreshToken)); // 리프레시 토큰 저장
 
-        response.sendRedirect("http://localhost:5173/success"); // 프론트측 특정 url에 리다이렉팅
+        response.sendRedirect("http://localhost:5173"); // 프론트측 특정 url에 리다이렉팅
     }
 
     private Cookie createCookie(String key, String value) { // 쿠키 만들기
@@ -59,7 +59,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         cookie.setMaxAge(60*60*60); // 쿠키 살아있는 시간
         //cookie.setSecure(true); // http 통신에서만 사용
         cookie.setPath("/");
-        cookie.setHttpOnly(true); // js가 해당 쿠키를 가져가지 못하게 설정
+//        cookie.setHttpOnly(true); // js가 해당 쿠키를 가져가지 못하게 설정
         return cookie;
     }
 }

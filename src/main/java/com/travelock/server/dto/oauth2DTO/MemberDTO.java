@@ -10,9 +10,9 @@ import lombok.ToString;
 @ToString
 public class MemberDTO {
     private String role;
-    private String name;
     private String username;
     private String email;
     private Long memberId;
-    private String nickName;
+    private String nickname;
+    private String provider;
 }

@@ -92,7 +92,7 @@ public class SecurityConfig {
         //oauth2 -> 디폴트 url 을 프론트 url로 설정하면됨
         http
                 .oauth2Login((oauth2)->oauth2
-                        .loginPage("http://localhost:5173/signup")
+                        .loginPage("http://localhost:5173/login")
                         .failureUrl("http://localhost:5173/error")
                         .userInfoEndpoint((userInfoEndpointConfig)->userInfoEndpointConfig
                                 .userService(customOAuth2UserService))

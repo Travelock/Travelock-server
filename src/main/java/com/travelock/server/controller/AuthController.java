@@ -1,12 +1,15 @@
 package com.travelock.server.controller;
 
 import com.travelock.server.domain.Member;
+import com.travelock.server.dto.oauth2DTO.MemberDTO;
 import com.travelock.server.repository.MemberRepository;
+import com.travelock.server.service.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.ProviderNotFoundException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -92,7 +95,7 @@ public class AuthController {
         if (!users.isEmpty()) {
             // 여러 사용자 계정을 돌면서 각 소셜 제공자 정보를 추출
             List<String> providers = users.stream()
-                    .map(user -> user.getUsername().split(" ")[0]) // username에서 소셜 제공자 추출
+                    .map(user -> user.getProvider().split(" ")[0]) // provider에서 소셜 제공자 추출
                     .distinct() // 중복 소셜 제공자 제거
                     .collect(Collectors.toList());
 
@@ -107,18 +110,6 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/nickName")
-    public ResponseEntity<?> checkNickName(){
-        Member member = memberRepository.findById(1L).orElseThrow(() -> new UsernameNotFoundException("Member not Found"));
-        return ResponseEntity.status(HttpStatus.OK).body(member);
-    }
 
-    @PutMapping("/member/{nickName}")
-    public ResponseEntity<?> putNickName(@PathVariable String nickName){
-        if(nickName == null){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("닉네임 누락");
-        }
 
-        return ResponseEntity.status(HttpStatus.OK).body("닉네임 저장 완료");
-    }
 }

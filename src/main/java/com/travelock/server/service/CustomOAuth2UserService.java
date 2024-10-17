@@ -49,41 +49,43 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         // 리소스 서버에서 받은 데이터를 OauthService에 전달되면 OauthUser의 dto에 담아 프로바이드에 전달해주면 로그인 완료
         // 리소스 서버에서 발급 받은 정보로 사용자를 특정할 아이디값을 만듬 (프로바이더와 해당 id 값을 받아옴)
-        String username = oAuth2Response.getProvider() + " " + oAuth2Response.getUsername();
+        String provider = oAuth2Response.getProvider() + " " + oAuth2Response.getProviderSecret();
 
-        Member existData = memberRepository.findByUsername(username); // 해당 유저가 존재하는지 조회
+        Member existData = memberRepository.findByProvider(provider); // 해당 유저가 존재하는지 조회
 
 
         if (existData == null) { // 한번도 로그인을 하지 않은 경우
 
 
             Member member = new Member();
-            member.setUsername(username);
+            member.setUsername(oAuth2Response.getName());
+            member.setProvider(provider);
             member.setEmail(oAuth2Response.getEmail());
-            member.setNickName(oAuth2Response.getName());
             member.setRole("ROLE_USER");
 
-            memberRepository.save(member); // 새로운 데이터 저장
+            Member savedMember = memberRepository.save(member);
 
 
             MemberDTO memberDTO = new MemberDTO(); //MemberDTO에 데이터 담기
-            memberDTO.setUsername(username);
-            memberDTO.setName(oAuth2Response.getName());
+            memberDTO.setUsername(oAuth2Response.getName());
+            memberDTO.setProvider(provider);
             memberDTO.setRole("ROLE_USER");
+            memberDTO.setMemberId(savedMember.getMemberId());
 
             return new CustomOAuth2User(memberDTO);
         }
         else { // 한번이라도 로그인을 해서 데이터가 존재하는 경우
 
             existData.setEmail(oAuth2Response.getEmail()); // 데이터 업데이트
-            existData.setNickName(oAuth2Response.getName());
+            existData.setUsername(oAuth2Response.getName());
 
-            memberRepository.save(existData);
+            Member updatedMember = memberRepository.save(existData); // 업데이트 후 저장된 객체 반환
 
             MemberDTO memberDTO = new MemberDTO(); // 특정한 dto에 담아 CustomOAuth2User에 넘겨주면 로그인 완료
-            memberDTO.setUsername(existData.getUsername());
-            memberDTO.setName(oAuth2Response.getName());
+            memberDTO.setProvider(existData.getProvider());
+            memberDTO.setUsername(oAuth2Response.getName());
             memberDTO.setRole(existData.getRole());
+            memberDTO.setMemberId(updatedMember.getMemberId());
 
             return new CustomOAuth2User(memberDTO);
         }

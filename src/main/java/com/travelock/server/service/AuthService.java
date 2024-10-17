@@ -23,16 +23,6 @@ public class AuthService {
         }
     }
 
-    /*닉네임 중복 확인*/
-    public void validateNickName(String nickName){
-        QMember qMember = QMember.member;
-
-        Integer fetched = query.selectOne().from(qMember).where(qMember.nickName.eq(nickName)).fetchFirst();
-
-        if(fetched != null){
-            throw new ValidateNickNameException("이미 사용중인 닉네임");
-        }
-    }
     public void register(String email, String nickName) {
 
     }

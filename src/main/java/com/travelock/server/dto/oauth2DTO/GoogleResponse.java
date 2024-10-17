@@ -17,7 +17,7 @@ public class GoogleResponse implements OAuth2Response {
 
 
     @Override
-    public String getUsername() {
+    public String getProviderSecret() {
         // Google OAuth2에서 사용자 고유 ID는 "sub" 필드에 있음
         Object sub = attribute.get("sub");
         if (sub == null) {
