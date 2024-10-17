@@ -11,5 +11,5 @@ public class PlaceSummaryResponseDTO {
     private String title;
     private String description;
     private String extract;
-    private String thumbnailUrl;  // 이미지가 있는 경우
+    private String thumbnailUrl;
 }

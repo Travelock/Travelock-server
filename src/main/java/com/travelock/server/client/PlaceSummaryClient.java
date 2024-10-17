@@ -42,7 +42,6 @@ public class PlaceSummaryClient {
         } catch (Exception e) {
             log.error("Error fetching city summary from Wikipedia: ", e);
         }
-
         log.info("PlaceSummaryClient::fetchCitySummary END");
         return placeSummaryResponseDTO;
     }

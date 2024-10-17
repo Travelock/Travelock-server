@@ -14,4 +14,5 @@ public class PlaceSummaryService {
     public PlaceSummaryResponseDTO getCitySummary(String cityName) {
         return placeSummaryClient.fetchCitySummary(cityName);
     }
+    
 }

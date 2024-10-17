@@ -21,7 +21,6 @@ public class PlaceSummaryController {
 
     private final PlaceSummaryService placeSummaryService;
 
-
     @Operation(summary = "도시 요약 정보 조회",
             tags = {"Place Summary API"},
             description = "지정된 도시 이름으로 위키피디아에서 도시 요약 정보를 가져옵니다.",
