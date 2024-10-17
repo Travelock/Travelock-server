@@ -35,7 +35,7 @@ public class FullCourseController {
             tags = {"전체일정 API - V1"},
             description = "사용자의 전체일정 조회",
             parameters = {
-                    @Parameter(name = "memberId", description = "사용자 ID", required = true, in = ParameterIn.QUERY)
+                    @Parameter(name = "memberId", description = "사용자 ID", required = true, in = ParameterIn.PATH)
             },
             responses = {
                     @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(

@@ -48,10 +48,22 @@ public class DailyCourseService {
                 .fetchOne(); // 데이터가 없으면 빈리스트 반환
 
         if (dailyCourse == null) {
-            throw new ResourceNotFoundException("Full Course not found by ID(" + dailyCourseId + ")");
+            throw new ResourceNotFoundException("Daily Course not found by ID(" + dailyCourseId + ")");
         }
 
         return dailyCourse;
+    }
+    /**
+     * 사용자별 일일 일정 조회 By MemberId
+     */
+    public List<DailyCourse> findMemberDailyCourses(Long memberId) {
+        QDailyCourse qDailyCourse = QDailyCourse.dailyCourse;
+        List<DailyCourse> dailyCourses = query
+                .selectFrom(qDailyCourse)
+                .where(qDailyCourse.member.memberId.eq(memberId))
+                .fetch(); // 데이터가 없으면 빈리스트 반환
+
+        return dailyCourses;
     }
 
     /**
