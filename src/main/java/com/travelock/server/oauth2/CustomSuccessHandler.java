@@ -36,6 +36,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String username = customUserDetails.getName();
         String provider = customUserDetails.getProvider();
         Long memberId = customUserDetails.getMemberId();
+
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
@@ -58,7 +59,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         cookie.setMaxAge(60*60*60); // 쿠키 살아있는 시간
         //cookie.setSecure(true); // http 통신에서만 사용
         cookie.setPath("/");
-        cookie.setHttpOnly(true); // js가 해당 쿠키를 가져가지 못하게 설정
+//        cookie.setHttpOnly(true); // js가 해당 쿠키를 가져가지 못하게 설정
         return cookie;
     }
 }

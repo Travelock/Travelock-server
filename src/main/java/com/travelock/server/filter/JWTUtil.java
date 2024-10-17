@@ -38,8 +38,14 @@ public class JWTUtil {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("role", String.class);
     }
 
+//    public Long getMemberId(String token) {
+//        return  Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("memberId", Long.class);
+//    }
+
     public Long getMemberId(String token) {
-        return  Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("memberId", Long.class);
+        Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        System.out.println("Claims 내용: " + claims); // 로그로 확인
+        return claims.get("memberId", Long.class); // memberId를 잘 가져오는지 확인
     }
 
     public Boolean isExpired(String token) {
@@ -68,6 +74,10 @@ public class JWTUtil {
         Claims claims = Jwts.claims();
         claims.put("username", username);
         claims.put("provider", provider);
+
+        if (memberId == null) {
+            throw new IllegalArgumentException("MemberId cannot be null when creating JWT");
+        }
         claims.put("memberId", memberId);
 
         return Jwts.builder()
@@ -86,6 +96,8 @@ public class JWTUtil {
             return false;
         }
     } // 리프레쉬 토큰 검증
+
+
 
 
 }

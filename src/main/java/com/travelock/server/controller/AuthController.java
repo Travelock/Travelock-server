@@ -1,7 +1,9 @@
 package com.travelock.server.controller;
 
 import com.travelock.server.domain.Member;
+import com.travelock.server.dto.oauth2DTO.MemberDTO;
 import com.travelock.server.repository.MemberRepository;
+import com.travelock.server.service.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -108,18 +110,6 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/nickName")
-    public ResponseEntity<?> checkNickName(){
-        Member member = memberRepository.findById(1L).orElseThrow(() -> new ProviderNotFoundException("Member not Found"));
-        return ResponseEntity.status(HttpStatus.OK).body(member);
-    }
 
-    @PutMapping("/member/{nickName}")
-    public ResponseEntity<?> putNickName(@PathVariable String nickName){
-        if(nickName == null){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("닉네임 누락");
-        }
 
-        return ResponseEntity.status(HttpStatus.OK).body("닉네임 저장 완료");
-    }
 }

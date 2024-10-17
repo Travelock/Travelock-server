@@ -16,7 +16,10 @@ import java.util.List;
 @NoArgsConstructor
 public class Member extends BaseTime{
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Column(name = "member_id")
     private Long memberId;
+
     @Size(max = 100) @Column(nullable = false, columnDefinition = "varchar(100)")
     private String email;
 

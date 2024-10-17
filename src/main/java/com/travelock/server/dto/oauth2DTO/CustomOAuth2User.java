@@ -31,10 +31,6 @@ public class CustomOAuth2User implements OAuth2User {
     }
 
     @Override
-//    public String getName() {
-//        return  memberDTO.getName();
-//    }
-
     public String getName() {
         // memberDTO.getName()이 null이거나 비어있으면 예외 발생
         if (memberDTO.getUsername() == null || memberDTO.getUsername().isEmpty()) {
@@ -47,7 +43,14 @@ public class CustomOAuth2User implements OAuth2User {
         return  memberDTO.getProvider();
     }
 
-    public Long getMemberId() {return memberDTO.getMemberId();}
+//    public Long getMemberId() {return memberDTO.getMemberId();}
+
+    public Long getMemberId() {
+        if (memberDTO.getMemberId() == null) {
+            throw new IllegalStateException("MemberId is null in CustomOAuth2User");
+        }
+        return memberDTO.getMemberId(); // MemberDTO에서 memberId 반환
+    }
 
 
 
