@@ -58,7 +58,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
 
             Member member = new Member();
-            member.setUsername(oAuth2Response.getName());
             member.setProvider(provider);
             member.setEmail(oAuth2Response.getEmail());
             member.setRole("ROLE_USER");
@@ -67,7 +66,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
 
             MemberDTO memberDTO = new MemberDTO(); //MemberDTO에 데이터 담기
-            memberDTO.setUsername(oAuth2Response.getName());
             memberDTO.setProvider(provider);
             memberDTO.setRole("ROLE_USER");
             memberDTO.setMemberId(savedMember.getMemberId());
@@ -77,13 +75,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         else { // 한번이라도 로그인을 해서 데이터가 존재하는 경우
 
             existData.setEmail(oAuth2Response.getEmail()); // 데이터 업데이트
-            existData.setUsername(oAuth2Response.getName());
+
 
             Member updatedMember = memberRepository.save(existData); // 업데이트 후 저장된 객체 반환
 
             MemberDTO memberDTO = new MemberDTO(); // 특정한 dto에 담아 CustomOAuth2User에 넘겨주면 로그인 완료
             memberDTO.setProvider(existData.getProvider());
-            memberDTO.setUsername(oAuth2Response.getName());
             memberDTO.setRole(existData.getRole());
             memberDTO.setMemberId(updatedMember.getMemberId());
 

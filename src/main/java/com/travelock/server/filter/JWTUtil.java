@@ -24,9 +24,6 @@ public class JWTUtil {
         key = Keys.hmacShaKeyFor(byteSecretKey);
     }
 
-    public String getName(String token){
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("username", String.class);
-    }
 
     public String getProvider(String token) {
 
@@ -38,9 +35,6 @@ public class JWTUtil {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("role", String.class);
     }
 
-//    public Long getMemberId(String token) {
-//        return  Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("memberId", Long.class);
-//    }
 
     public Long getMemberId(String token) {
         Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
@@ -53,10 +47,9 @@ public class JWTUtil {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getExpiration().before(new Date());
     }
 
-    public String createJwt(String username, String provider, String role, Long expiredMs, Long memberId) {
+    public String createJwt(String provider, String role, Long expiredMs, Long memberId) {
 
         Claims claims = Jwts.claims();
-        claims.put("username", username);
         claims.put("provider", provider);
         claims.put("role", role);
         claims.put("memberId", memberId);
@@ -69,10 +62,9 @@ public class JWTUtil {
                 .compact();
     }
 
-    public String createRefreshToken(String username, String provider, Long expiredMs, Long memberId) {
+    public String createRefreshToken(String provider, Long expiredMs, Long memberId) {
 
         Claims claims = Jwts.claims();
-        claims.put("username", username);
         claims.put("provider", provider);
 
         if (memberId == null) {

@@ -26,10 +26,10 @@ public class TokenController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Refresh token expired");
         }
 
-        String username=jwtUtil.getName(refreshToken);
+
         String provider = jwtUtil.getProvider(refreshToken);
         Long memberId = jwtUtil.getMemberId(refreshToken); // memberId 추출
-        String newAccessToken = jwtUtil.createJwt(username, provider, "ROLE_USER", memberId, 60 * 60 * 60L);
+        String newAccessToken = jwtUtil.createJwt( provider, "ROLE_USER", memberId, 60 * 60 * 60L);
 
         // HttpOnly 쿠키로 Access Token 설정
         Cookie accessTokenCookie = new Cookie("Authorization", newAccessToken);

@@ -24,9 +24,6 @@ public class Member extends BaseTime{
     private String email;
 
     @Size(max = 50) @Column(columnDefinition = "varchar(50)")
-    private String username;
-
-    @Size(max = 50) @Column(columnDefinition = "varchar(50)")
     private String role;
 
     @Size(max = 50) @Column(unique = true, columnDefinition = "varchar(50)")
