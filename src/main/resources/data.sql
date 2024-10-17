@@ -316,23 +316,66 @@ INSERT INTO full_course (favorite_count, scarp_count, member_id, active_status, 
 INSERT INTO full_course (favorite_count, scarp_count, member_id, active_status, title) VALUES (0, 0, 1, 'y', '미국여행');
 INSERT INTO full_course (favorite_count, scarp_count, member_id, active_status, title) VALUES (0, 0, 1, 'y', '제주도여행');
 
--- 테스트용 데이터 (data.sql)
-INSERT INTO small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name) VALUES (0, 1, 1, '127.123456', '37.198765', '453875', '이마트');
-INSERT INTO small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name) VALUES (2, 2, 2, '127.123456', '37.198765', '1234567890', 'Place_1');
-INSERT INTO small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name) VALUES (3, 3, 3, '127.223456', '37.298765', '2234567890', 'Place_2');
-INSERT INTO small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name) VALUES (4, 1, 4, '127.323456', '37.398765', '3234567890', 'Place_3');
-INSERT INTO small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name) VALUES (5, 2, 5, '127.423456', '37.498765', '4234567890', 'Place_4');
-INSERT INTO small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name) VALUES (1, 3, 6, '127.523456', '37.598765', '5234567890', 'Place_5');
-INSERT INTO small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name) VALUES (2, 1, 7, '127.623456', '37.698765', '6234567890', 'Place_6');
-INSERT INTO small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name) VALUES (3, 2, 8, '127.723456', '37.798765', '7234567890', 'Place_7');
-INSERT INTO small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name) VALUES (4, 3, 9, '127.823456', '37.898765', '8234567890', 'Place_8');
-INSERT INTO small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name) VALUES (5, 1, 10, '127.923456', '37.998765', '9234567890', 'Place_9');
-INSERT INTO small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name) VALUES (1, 2, 11, '127.1023456', '37.1098765', '10234567890', 'Place_10');
-INSERT INTO small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name) VALUES (2, 3, 12, '127.1123456', '37.1198765', '11234567890', 'Place_11');
-INSERT INTO small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name) VALUES (3, 1, 13, '127.1223456', '37.1298765', '12234567890', 'Place_12');
-INSERT INTO small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name) VALUES (4, 2, 14, '127.1323456', '37.1398765', '13234567890', 'Place_13');
-INSERT INTO small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name) VALUES (5, 3, 15, '127.1423456', '37.1498765', '14234567890', 'Place_14');
-INSERT INTO small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name) VALUES (1, 1, 16, '127.023456', '37.098765', '0234567890', 'Place_0');
+
+--
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (3, 1, 1, '4524837837', '4837832783', '453875', '이마트', 1);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (2, 2, 2, '127.123456', '37.198765', '1234567890', 'Place_1', 2);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (8, 3, 3, '127.223456', '37.298765', '2234567890', 'Place_2', 3);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (1, 1, 4, '127.323456', '37.398765', '3234567890', 'Place_3', 4);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (5, 2, 5, '127.423456', '37.498765', '4234567890', 'Place_4', 5);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (7, 3, 6, '127.523456', '37.598765', '5234567890', 'Place_5', 6);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (3, 1, 7, '127.623456', '37.698765', '6234567890', 'Place_6', 7);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (7, 2, 8, '127.723456', '37.798765', '7234567890', 'Place_7', 8);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (54, 3, 9, '127.823456', '37.898765', '8234567890', 'Place_8', 9);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (3, 1, 10, '127.923456', '37.998765', '9234567890', 'Place_9', 10);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (58, 2, 11, '127.1023456', '37.1098765', '10234567890', 'Place_10', 11);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (4, 3, 12, '127.1123456', '37.1198765', '11234567890', 'Place_11', 12);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (6, 1, 13, '127.1223456', '37.1298765', '12234567890', 'Place_12', 13);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (4, 2, 14, '127.1323456', '37.1398765', '13234567890', 'Place_13', 14);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (58, 3, 15, '127.1423456', '37.1498765', '14234567890', 'Place_14', 15);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (64, 1, 16, '127.023456', '37.098765', '0234567890', 'Place_0', 16);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (0, 1, 114, '4524837837', '4837832783', '453875123', '홈플러스', 17);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (48, 3, 115, '333.33333331', '333.33333331', '3333333333', '남순남', 18);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (5, 2, 116, '666.6666662', '666.6666662', '66666666', '카린지', 19);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (8, 4, 117, '777.77777777', '777.77777777', '7777777777', '담소', 20);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (826, 1, 118, '4524837837', '4837832783', '453875', '이마트', 21);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (6, 3, 119, '127.523456', '37.598765', '5234567890', 'Place_5', 27);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (45, 1, 120, '127.623456', '37.698765', '6234567890', 'Place_6', 28);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (682, 2, 121, '127.723456', '37.798765', '7234567890', 'Place_7', 29);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (5, 3, 122, '127.823456', '37.898765', '8234567890', 'Place_8', 30);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (264, 1, 123, '127.923456', '37.998765', '9234567890', 'Place_9', 31);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (8, 2, 124, '127.1023456', '37.1098765', '10234567890', 'Place_10', 32);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (24, 3, 125, '127.1123456', '37.1198765', '11234567890', 'Place_11', 33);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (6, 1, 126, '127.1223456', '37.1298765', '12234567890', 'Place_12', 34);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (2, 2, 127, '127.1323456', '37.1398765', '13234567890', 'Place_13', 35);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (8, 3, 128, '127.1423456', '37.1498765', '14234567890', 'Place_14', 36);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (27, 1, 129, '127.023456', '37.098765', '0234567890', 'Place_0', 37);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (36, 1, 130, '4524837837', '4837832783', '453875123', '홈플러스', 38);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (52, 3, 131, '333.33333331', '333.33333331', '3333333333', '남순남', 39);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (36, 2, 132, '666.6666662', '666.6666662', '66666666', '카린지', 40);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (2, 4, 133, '777.77777777', '777.77777777', '7777777777', '담소', 41);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (35, 1, 134, '4524837837', '4837832783', '453875123', '홈플러스', 22);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (2, 3, 135, '333.33333331', '333.33333331', '3333333333', '남순남', 23);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (4, 2, 136, '666.6666662', '666.6666662', '66666666', '카린지', 24);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (23, 4, 137, '777.77777777', '777.77777777', '7777777777', '담소', 25);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (5, 1, 138, '4524837837', '4837832783', '453875123', '홈플러스', 26);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (34, 3, 139, '333.33333331', '333.33333331', '3333333333', '남순남', 23);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (1, 2, 140, '666.6666662', '666.6666662', '66666666', '카린지', 24);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (54, 1, 141, '4524837837', '4837832783', '453875123', '홈플러스', 22);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (3, 3, 142, '333.33333331', '333.33333331', '3333333333', '남순남', 23);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (7, 2, 143, '666.6666662', '666.6666662', '66666666', '카린지', 24);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (5, 4, 144, '777.77777777', '777.77777777', '7777777777', '담소', 25);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (6, 4, 145, '777.77777777', '777.77777777', '7777777777', '담소', 25);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (8, 4, 146, '777.77777777', '777.77777777', '7777777777', '담소', 25);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (2, 4, 147, '777.77777777', '777.77777777', '7777777777', '담소', 25);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (1, 4, 148, '777.77777777', '777.77777777', '7777777777', '담소', 25);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (0, 4, 149, '777.77777777', '777.77777777', '7777777777', '담소', 25);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (8, 4, 150, '777.77777777', '777.77777777', '7777777777', '담소', 25);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (7, 4, 151, '777.77777777', '777.77777777', '7777777777', '담소', 25);
+INSERT INTO travelock_db.small_block (reference_count, middle_block_id, small_block_id, mapx, mapy, place_id, place_name, big_block_id) VALUES (33, 4, 152, '777.77777777', '777.77777777', '7777777777', '담소', 25);
+
+
+
 
 INSERT INTO travelock_db.full_block (big_block_id, full_block_id, middle_block_id, small_block_id, created_date, last_modified_date) VALUES (1, 1, 1, 1, null, null);
 INSERT INTO travelock_db.full_block (big_block_id, full_block_id, middle_block_id, small_block_id, created_date, last_modified_date) VALUES (2, 2, 2, 2, null, null);
@@ -344,39 +387,39 @@ INSERT INTO travelock_db.full_block (big_block_id, full_block_id, middle_block_i
 INSERT INTO travelock_db.full_block (big_block_id, full_block_id, middle_block_id, small_block_id, created_date, last_modified_date) VALUES (3, 12, 3, 12, '24. 10. 8. 오전 4:25', '24. 10. 8. 오전 4:25');
 INSERT INTO travelock_db.full_block (big_block_id, full_block_id, middle_block_id, small_block_id, created_date, last_modified_date) VALUES (2, 13, 2, 13, '24. 10. 8. 오전 4:25', '24. 10. 8. 오전 4:25');
 INSERT INTO travelock_db.full_block (big_block_id, full_block_id, middle_block_id, small_block_id, created_date, last_modified_date) VALUES (4, 14, 4, 14, '24. 10. 8. 오전 4:25', '24. 10. 8. 오전 4:25');
-
-
--- INSERT INTO travelock_db.daily_course (favorite_count, scarp_count, daily_course_id, member_id) VALUES (52, 17, 1, 1);
+-- 수정된 daily_course 테이블
+INSERT INTO travelock_db.daily_course (favorite_count, scarp_count, daily_course_id, member_id) VALUES (52, 17, 1, 1);
 INSERT INTO travelock_db.daily_course (favorite_count, scarp_count, daily_course_id, member_id) VALUES (0, 5, 2, 1);
 INSERT INTO travelock_db.daily_course (favorite_count, scarp_count, daily_course_id, member_id) VALUES (5, 78, 3, 1);
 INSERT INTO travelock_db.daily_course (favorite_count, scarp_count, daily_course_id, member_id) VALUES (0, 0, 4, 2);
 INSERT INTO travelock_db.daily_course (favorite_count, scarp_count, daily_course_id, member_id) VALUES (0, 0, 5, 2);
+INSERT INTO travelock_db.daily_course (favorite_count, scarp_count, daily_course_id, member_id) VALUES (13, 0, 6, 2);
 
-
-
+-- 수정된 daily_block_connect 테이블
 INSERT INTO travelock_db.daily_block_connect (block_num, daily_block_connect_id, daily_course_id, full_block_id) VALUES (1, 1, 1, 1);
 INSERT INTO travelock_db.daily_block_connect (block_num, daily_block_connect_id, daily_course_id, full_block_id) VALUES (2, 2, 1, 3);
 INSERT INTO travelock_db.daily_block_connect (block_num, daily_block_connect_id, daily_course_id, full_block_id) VALUES (3, 3, 1, 2);
 INSERT INTO travelock_db.daily_block_connect (block_num, daily_block_connect_id, daily_course_id, full_block_id) VALUES (4, 4, 1, 6);
 
-INSERT INTO travelock_db.full_and_daily_course_connect (daily_num, daily_course_id, full_course_id, full_daily_course_connect_id, member_id) VALUES (2, 2, 1, 2, 1);
-INSERT INTO travelock_db.full_and_daily_course_connect (daily_num, daily_course_id, full_course_id, full_daily_course_connect_id, member_id) VALUES (3, 3, 1, 3, 1);
-INSERT INTO travelock_db.full_and_daily_course_connect (daily_num, daily_course_id, full_course_id, full_daily_course_connect_id, member_id) VALUES (1, 4, 2, 4, 2);
-INSERT INTO travelock_db.full_and_daily_course_connect (daily_num, daily_course_id, full_course_id, full_daily_course_connect_id, member_id) VALUES (1, 4, 1, 9, 1);
-INSERT INTO travelock_db.full_and_daily_course_connect (daily_num, daily_course_id, full_course_id, full_daily_course_connect_id, member_id) VALUES (1, 5, 2, 10, 2);
+-- 수정된 full_and_daily_course_connect 테이블
+INSERT INTO travelock_db.full_and_daily_course_connect (daily_num, daily_course_id, full_course_id, full_daily_course_connect_id, member_id) VALUES (2, 2, 1, 5, 1);
+INSERT INTO travelock_db.full_and_daily_course_connect (daily_num, daily_course_id, full_course_id, full_daily_course_connect_id, member_id) VALUES (3, 3, 1, 6, 1);
+INSERT INTO travelock_db.full_and_daily_course_connect (daily_num, daily_course_id, full_course_id, full_daily_course_connect_id, member_id) VALUES (1, 4, 2, 7, 2);
+INSERT INTO travelock_db.full_and_daily_course_connect (daily_num, daily_course_id, full_course_id, full_daily_course_connect_id, member_id) VALUES (1, 4, 1, 8, 1);
+INSERT INTO travelock_db.full_and_daily_course_connect (daily_num, daily_course_id, full_course_id, full_daily_course_connect_id, member_id) VALUES (1, 5, 2, 9, 2);
 
+-- 수정된 daily_course_favorite 테이블
+INSERT INTO travelock_db.daily_course_favorite (daily_course_favorite_id, daily_course_id, member_id, created_date, last_modified_date) VALUES (1, 5, 1, '2024-10-06 18:43', '2024-10-06 18:43');
+INSERT INTO travelock_db.daily_course_favorite (daily_course_favorite_id, daily_course_id, member_id, created_date, last_modified_date) VALUES (2, 6, 1, '2024-10-06 22:20', '2024-10-06 22:20');
 
+-- 수정된 daily_course_scrap 테이블
+INSERT INTO travelock_db.daily_course_scrap (daily_course_id, daily_course_scrap_id, member_id, created_date, last_modified_date) VALUES (1, 1, 1, '2024-10-06 18:44', '2024-10-06 18:44');
+INSERT INTO travelock_db.daily_course_scrap (daily_course_id, daily_course_scrap_id, member_id, created_date, last_modified_date) VALUES (2, 2, 1, '2024-10-06 22:19', '2024-10-06 22:19');
 
-INSERT INTO travelock_db.daily_course_favorite (daily_course_favorite_id, daily_course_id, member_id, created_date, last_modified_date) VALUES (1, 1, 1, '24. 10. 6. 오후 6:43', '24. 10. 6. 오후 6:43');
-INSERT INTO travelock_db.daily_course_favorite (daily_course_favorite_id, daily_course_id, member_id, created_date, last_modified_date) VALUES (2, 2, 1, '24. 10. 6. 오후 10:20', '24. 10. 6. 오후 10:20');
+-- 수정된 full_course_favorite 테이블
+INSERT INTO travelock_db.full_course_favorite (full_course_favorite_id, full_course_id, member_id, created_date, last_modified_date) VALUES (1, 1, 1, '2024-10-06 18:35', '2024-10-06 18:35');
+INSERT INTO travelock_db.full_course_favorite (full_course_favorite_id, full_course_id, member_id, created_date, last_modified_date) VALUES (2, 2, 1, '2024-10-06 22:20', '2024-10-06 22:20');
 
-
-INSERT INTO travelock_db.daily_course_scrap (daily_course_id, daily_course_scrap_id, member_id, created_date, last_modified_date) VALUES (1, 1, 1, '24. 10. 6. 오후 6:44', '24. 10. 6. 오후 6:44');
-INSERT INTO travelock_db.daily_course_scrap (daily_course_id, daily_course_scrap_id, member_id, created_date, last_modified_date) VALUES (2, 2, 1, '24. 10. 6. 오후 10:19', '24. 10. 6. 오후 10:19');
-
-
-INSERT INTO travelock_db.full_course_favorite (full_course_favorite_id, full_course_id, member_id, created_date, last_modified_date) VALUES (1, 1, 1, '24. 10. 6. 오후 6:35', '24. 10. 6. 오후 6:35');
-INSERT INTO travelock_db.full_course_favorite (full_course_favorite_id, full_course_id, member_id, created_date, last_modified_date) VALUES (2, 2, 1, '24. 10. 6. 오후 10:20', '24. 10. 6. 오후 10:20');
-
-INSERT INTO travelock_db.full_course_scrap (full_course_id, full_course_scrap_id, member_id, created_date, last_modified_date) VALUES (1, 1, 1, '24. 10. 6. 오후 6:36', '24. 10. 6. 오후 6:36');
-INSERT INTO travelock_db.full_course_scrap (full_course_id, full_course_scrap_id, member_id, created_date, last_modified_date) VALUES (2, 3, 1, '24. 10. 6. 오후 10:20', '24. 10. 6. 오후 10:20');
+-- 수정된 full_course_scrap 테이블
+INSERT INTO travelock_db.full_course_scrap (full_course_id, full_course_scrap_id, member_id, created_date, last_modified_date) VALUES (1, 1, 1, '2024-10-06 18:36', '2024-10-06 18:36');
+INSERT INTO travelock_db.full_course_scrap (full_course_id, full_course_scrap_id, member_id, created_date, last_modified_date) VALUES (2, 3, 1, '2024-10-06 22:20', '2024-10-06 22:20');
