@@ -46,6 +46,23 @@ public class DailyCourseController {
                 ,DailyCourseResponseDTO::fromDomainToResponseDTO));
     }
 
+    @Operation(summary = "사용자의 일일일정 조회",
+            tags = {"일일일정 API - V1"},
+            description = "사용자의 일일일정 조회",
+            parameters = {
+                    @Parameter(name = "memberId", description = "사용자 ID", required = true, in = ParameterIn.PATH),
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
+            })
+    @GetMapping("/member/{memberId}")
+    public ResponseEntity<?> getDailyCourseByMember(@PathVariable Long memberId) {
+        return ResponseEntity.ok(DTOConverter.toDtoList(dailyCourseService.findMemberDailyCourses(memberId)
+                ,DailyCourseResponseDTO::fromDomainToResponseDTO));
+    }
+
     @Operation(summary = "일일일정 저장",
             tags = {"일일일정 API - V1"},
             description = "일일일정 저장",
