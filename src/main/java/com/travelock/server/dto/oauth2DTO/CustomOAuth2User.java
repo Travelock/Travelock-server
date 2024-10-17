@@ -14,7 +14,20 @@ public class CustomOAuth2User implements OAuth2User {
     private final MemberDTO memberDTO;
     public CustomOAuth2User(MemberDTO memberDTO) {
         this.memberDTO = memberDTO;
+        // 로그를 추가하여 memberId가 제대로 설정되었는지 확인
+        if (memberDTO.getMemberId() == null) {
+            System.out.println("Error: MemberId is null in CustomOAuth2User constructor");
+        } else {
+            System.out.println("Success: MemberId in CustomOAuth2User constructor is " + memberDTO.getMemberId());
+        }
     }
+
+    @Override
+    public String getName() {
+        // 이 메서드는 사용자의 고유 식별자를 반환해야 합니다. -> OAuth2User의 필수 메서드라 memberid를 반환하도록 설정함
+        return memberDTO.getMemberId().toString();
+    }
+
 
 
     @Override
@@ -30,14 +43,6 @@ public class CustomOAuth2User implements OAuth2User {
         return authorities;
     }
 
-    @Override
-    public String getName() {
-        // memberDTO.getName()이 null이거나 비어있으면 예외 발생
-        if (memberDTO.getUsername() == null || memberDTO.getUsername().isEmpty()) {
-            throw new IllegalArgumentException("Name cannot be null or empty");
-        }
-        return memberDTO.getUsername();
-    }
 
     public String getProvider() {
         return  memberDTO.getProvider();

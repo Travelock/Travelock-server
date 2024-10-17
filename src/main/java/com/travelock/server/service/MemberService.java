@@ -44,17 +44,17 @@ public class MemberService {
 
     }
 
-    public String getProvider(String email){
-        QMember qMember = QMember.member;
-
-        String provider = query.select(qMember.username).from(qMember)
-                .where(qMember.email.eq(email))
-                .fetchOne();
-        if (provider == null){
-            throw new ResourceNotFoundException("Provider not found in DB by email");
-        }
-        return provider;
-    }
+//    public String getProvider(String email){
+//        QMember qMember = QMember.member;
+//
+//        String provider = query.select(qMember.username).from(qMember)
+//                .where(qMember.email.eq(email))
+//                .fetchOne();
+//        if (provider == null){
+//            throw new ResourceNotFoundException("Provider not found in DB by email");
+//        }
+//        return provider;
+//    }
 
 
     // 닉네임 체크 로직

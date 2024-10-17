@@ -33,7 +33,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         // 로그인한 사용자 정보 가져오기
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal(); // CustomOAuth2User에서 사용자 정보를 가져오기
 
-        String username = customUserDetails.getName();
+
         String provider = customUserDetails.getProvider();
         Long memberId = customUserDetails.getMemberId();
 
@@ -43,8 +43,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String role = auth.getAuthority();
 
         // 액세스 토큰과 리프레시 토큰 생성
-        String accessToken = jwtUtil.createJwt(username, provider, role, 60*60*60L, memberId); // 1시간 동안 유효한 액세스 토큰
-        String refreshToken = jwtUtil.createRefreshToken(username, provider, 60*60*24*7L, memberId); // 7일 동안 유효한 리프레시 토큰
+        String accessToken = jwtUtil.createJwt( provider, role, 60*60*60L, memberId); // 1시간 동안 유효한 액세스 토큰
+        String refreshToken = jwtUtil.createRefreshToken(provider, 60*60*24*7L, memberId); // 7일 동안 유효한 리프레시 토큰
 
         // 쿠키에 저장 (보안을 위해 Secure, HttpOnly 설정 가능)
         response.addCookie(createCookie("Authorization", accessToken)); // 액세스 토큰 저장 (쿠키 방식으로 전달)

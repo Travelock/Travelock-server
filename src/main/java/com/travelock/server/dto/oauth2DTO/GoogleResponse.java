@@ -35,12 +35,5 @@ public class GoogleResponse implements OAuth2Response {
         return email.toString();
     }
 
-    @Override
-    public String getName() {
-        Object name = attribute.get("name");
-        if (name == null) {
-            throw new NullPointerException("Google OAuth2 response does not contain 'name' field.");
-        }
-        return name.toString();
-    }
+
 }

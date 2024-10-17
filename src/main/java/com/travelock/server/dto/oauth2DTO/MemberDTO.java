@@ -10,7 +10,6 @@ import lombok.ToString;
 @ToString
 public class MemberDTO {
     private String role;
-    private String username;
     private String email;
     private Long memberId;
     private String nickname;
