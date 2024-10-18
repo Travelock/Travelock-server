@@ -11,8 +11,7 @@ public class PlaceSummaryService {
 
     private final PlaceSummaryClient placeSummaryClient;
 
-    public PlaceSummaryResponseDTO getCitySummary(String cityName) {
-        return placeSummaryClient.fetchCitySummary(cityName);
+    public PlaceSummaryResponseDTO getCitySummary(String stateName, String cityName) {
+        return placeSummaryClient.fetchCitySummary(stateName, cityName);
     }
-    
 }
