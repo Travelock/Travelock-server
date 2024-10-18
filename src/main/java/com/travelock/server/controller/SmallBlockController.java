@@ -50,27 +50,6 @@ public class SmallBlockController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-//
-//    @Operation(summary = "추천 스몰블록 조회",
-//            tags = {"스몰블록 API - V1"},
-//            description = "referenceCount가 높은 순으로 스몰블록을 조회.",
-//            parameters = {
-//                    @Parameter(name = "limit", description = "조회할 개수", required = true, in = ParameterIn.QUERY)
-//            },
-//            responses = {
-//                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json")),
-//                    @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json"))
-//            })
-//    @GetMapping("/popular")
-//    public ResponseEntity<List<SmallBlockResponseDTO>> getPopularSmallBlocks(@RequestParam int limit) {
-//        try {
-//            List<SmallBlockResponseDTO> popularSmallBlocks = smallBlockService.getPopularSmallBlocks(limit);
-//            return ResponseEntity.ok(popularSmallBlocks);
-//        } catch (Exception e) {
-//            log.error("Error fetching popular SmallBlocks", e);
-//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
 
     @Operation(summary = "시군구별 추천 스몰블록 조회",
             tags = {"스몰블록 API - V1"},

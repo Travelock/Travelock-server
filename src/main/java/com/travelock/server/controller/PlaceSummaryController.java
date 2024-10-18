@@ -23,8 +23,9 @@ public class PlaceSummaryController {
 
     @Operation(summary = "도시 요약 정보 조회",
             tags = {"Place Summary API"},
-            description = "지정된 도시 이름으로 위키피디아에서 도시 요약 정보를 가져옵니다.",
+            description = "지정된 시/도 이름과 도시 이름으로 위키피디아에서 도시 요약 정보를 가져옵니다.",
             parameters = {
+                    @Parameter(name = "stateName", description = "조회할 시/도 이름", required = true, in = ParameterIn.QUERY),
                     @Parameter(name = "cityName", description = "조회할 도시 이름", required = true, in = ParameterIn.QUERY),
             },
             responses = {
@@ -32,9 +33,9 @@ public class PlaceSummaryController {
                     @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json")),
                     @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
             })
-    @GetMapping("/info")
-    public ResponseEntity<PlaceSummaryResponseDTO> getCitySummary(@RequestParam String cityName) {
-        PlaceSummaryResponseDTO citySummary = placeSummaryService.getCitySummary(cityName);
+    @GetMapping("/info/t1")
+    public ResponseEntity<PlaceSummaryResponseDTO> getCitySummary(@RequestParam String stateName, @RequestParam String cityName) {
+        PlaceSummaryResponseDTO citySummary = placeSummaryService.getCitySummary(stateName, cityName);
         return ResponseEntity.ok(citySummary);
     }
 }
